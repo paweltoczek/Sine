@@ -19,6 +19,6 @@ data class MoviesModel(/*
     val voteAverage: String?*/
 
     @SerializedName("results")
-    val page: String?
+    val page: Int?
 
 )

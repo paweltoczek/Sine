@@ -2,12 +2,15 @@ package com.amadev.rando
 
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.amadev.rando.repository.Repository
 import kotlinx.android.synthetic.main.fragment_choice.*
 
 class ChoiceFragment : Fragment() {
@@ -26,9 +29,19 @@ class ChoiceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val repository = Repository()
+        val viewModelFactory = ChoiceFragmentViewModelFactory(repository)
         choiceFragmentViewModel =
-            ViewModelProviders.of(this).get(ChoiceFragmentViewModel::class.java)
-        choiceFragmentViewModel.refresh()
+            ViewModelProvider(this, viewModelFactory).get(ChoiceFragmentViewModel::class.java)
+
+        choiceFragmentViewModel.getMovies()
+        choiceFragmentViewModel.moviesResponse.observe(viewLifecycleOwner, Observer { response ->
+            Log.d("response", response.page.toString() )
+        })
+
+
+
+
 
 
         draw_btn.setOnClickListener {
