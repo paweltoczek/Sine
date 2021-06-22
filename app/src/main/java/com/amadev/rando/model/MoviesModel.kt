@@ -2,8 +2,8 @@ package com.amadev.rando.model
 
 import com.google.gson.annotations.SerializedName
 
-data class MoviesModel(/*
-    @SerializedName("title")
+data class MoviesModel(
+/*    @SerializedName("title")
     val title: String?,
 
     @SerializedName("release_date")

@@ -31,17 +31,14 @@ class ChoiceFragment : Fragment() {
 
         val repository = Repository()
         val viewModelFactory = ChoiceFragmentViewModelFactory(repository)
+
         choiceFragmentViewModel =
             ViewModelProvider(this, viewModelFactory).get(ChoiceFragmentViewModel::class.java)
 
         choiceFragmentViewModel.getMovies()
-        choiceFragmentViewModel.moviesResponse.observe(viewLifecycleOwner, Observer { response ->
+        choiceFragmentViewModel.moviesResponse.observe(this@ChoiceFragment, Observer { response ->
             Log.d("response", response.page.toString() )
         })
-
-
-
-
 
 
         draw_btn.setOnClickListener {
