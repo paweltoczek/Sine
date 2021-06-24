@@ -1,17 +1,18 @@
 package com.amadev.rando
 
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.amadev.rando.repository.Repository
+import com.amadev.rando.api.MoviesApi
+import com.amadev.rando.api.RetrofitInstance
+import com.amadev.rando.model.MoviesModel
 import kotlinx.android.synthetic.main.fragment_choice.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ChoiceFragment : Fragment() {
 
@@ -29,88 +30,37 @@ class ChoiceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val repository = Repository()
-        val viewModelFactory = ChoiceFragmentViewModelFactory(repository)
+//        choiceFragmentViewModel =
+//            ViewModelProvider(this, viewModelFactory).get(ChoiceFragmentViewModel::class.java)
 
-        choiceFragmentViewModel =
-            ViewModelProvider(this, viewModelFactory).get(ChoiceFragmentViewModel::class.java)
 
-        choiceFragmentViewModel.getMovies()
-        choiceFragmentViewModel.moviesResponse.observe(this@ChoiceFragment, Observer { response ->
-            Log.d("response", response.page.toString() )
-        })
 
 
         draw_btn.setOnClickListener {
+            val request = RetrofitInstance.buildService(MoviesApi::class.java)
+            val call = request.getMovies(getString(R.string.api_key))
+            val list = ArrayList<Any>()
 
-            if (spinner1.visibility == View.VISIBLE) {
-                Toast.makeText(requireContext(), "Wait a second", Toast.LENGTH_SHORT).show()
-                Toast.LENGTH_SHORT
+            call.enqueue(object : Callback<MoviesModel> {
+                override fun onResponse(call: Call<MoviesModel>, response: Response<MoviesModel>) {
+                    if (response.isSuccessful) {
+                        val responseBody = response.body()!!
+                        val l = list.add(responseBody!!.results.random())
 
-            } else {
-                food_tv_randomchoice.text = ""
-                movie_tv_randomchoice.text = ""
-                spinner1.visibility = View.VISIBLE
-                spinner2.visibility = View.VISIBLE
+                        Log.e("res", list.toString())
 
-                Handler().postDelayed({
-                    spinner1.visibility = View.GONE
-                    spinner2.visibility = View.GONE
-                    drawFood()
-                    drawMovieGenre()
-                }, 1500)
-            }
+
+                    }
+                }
+
+                override fun onFailure(call: Call<MoviesModel>, t: Throwable) {/*
+                Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()*/
+                    Log.e("error", t.message.toString())
+                }
+            })
+
         }
     }
 
-    fun drawFood() {
-        val foodList = listOf<String>(
-            "Burgers",
-            "Pizza",
-            "Fish & chips",
-            "Kebab",
-            "Chinese food",
-            "Taco",
-            "Sushi",
-            "Indian Food",
-            "Salads",
-            "Steak",
-            "Baguette",
-            "Fries",
-            "Hot Dogs",
-            "Sea food"
-        )
-
-        var rnd = (0..foodList.size - 1).shuffled().first()
-
-        food_tv_randomchoice.text = foodList[rnd]
-
-    }
-
-    fun drawMovieGenre() {
-        val movieGenreList = listOf<String>(
-            "Action",
-            "Animation",
-            "Comedy",
-            "Romantic Comedy",
-            "Criminal",
-            "Drama",
-            "Horror",
-            "War movie",
-            "Biographic",
-            "Action",
-            "Advenure",
-            "Sciene Fiction",
-            "Thriller",
-            "Western",
-            "Historical",
-            "Romance",
-            "Fantasy"
-        )
-
-        var rnd = (0..movieGenreList.size - 1).shuffled().first()
-
-        movie_tv_randomchoice.text = movieGenreList[rnd]
-    }
 
 }

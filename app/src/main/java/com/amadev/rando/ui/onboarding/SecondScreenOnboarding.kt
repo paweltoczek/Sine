@@ -18,17 +18,6 @@ class SecondScreenOnboarding : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_second_screen_onboarding, container, false)
-
-        val viewPager = activity?.findViewById<ViewPager2>(R.id.viewPager)
-
-        view.back_btn.setOnClickListener {
-            viewPager?.currentItem = 0
-        }
-
-        view.enjoy_btn.setOnClickListener {
-            findNavController().navigate(R.id.action_viewPagerFragment_to_choiceFragment)
-        }
-
         return view
     }
 

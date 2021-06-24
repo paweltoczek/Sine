@@ -21,7 +21,7 @@
     </fragment>
     <fragment
         android:id="@+id/viewPagerFragment"
-        android:name="com.amadev.rando.ui.ViewPagerFragment"
+        android:name="com.amadev.rando.ui.onboarding.ViewPagerFragment"
         android:label="fragment_view_pager"
         tools:layout="@layout/fragment_view_pager" >
         <action

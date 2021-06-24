@@ -2,4 +2,5 @@
     <string name="app_name">Rando</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="api_key">611dca8cf117ec0c95b0da6ed0fbe87a</string>
 </resources>
