@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.amadev.rando.R
+import com.amadev.rando.util.Animations.animateAlphaWithHandlerDelay
+import kotlinx.android.synthetic.main.fragment_first_screen_onboarding.*
 import kotlinx.android.synthetic.main.fragment_first_screen_onboarding.view.*
 
 
@@ -21,6 +23,8 @@ class FirstScreenOnboarding : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        animateAlphaWithHandlerDelay(howlongdoes,1000,1.0f,700)
         super.onViewCreated(view, savedInstanceState)
     }
+
 }

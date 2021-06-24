@@ -31,7 +31,7 @@
 
 
     <TextView
-        android:id="@+id/description_food_one"
+        android:id="@+id/howlongdoes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
@@ -39,6 +39,7 @@
         android:fontFamily="@font/glacial_indifference_regular"
         android:lines="2"
         android:text="How long does it take \nto find a good movie?"
+        android:alpha="0"
         android:textColor="@color/white"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"

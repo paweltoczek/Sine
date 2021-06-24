@@ -1,4 +1,4 @@
-package com.amadev.rando.utils
+package com.amadev.rando.util
 
 class Constants {
 

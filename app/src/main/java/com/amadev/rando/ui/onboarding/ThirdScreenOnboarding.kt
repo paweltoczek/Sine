@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.amadev.rando.R
+import com.amadev.rando.util.Animations
+import kotlinx.android.synthetic.main.fragment_third_screen_onboarding.*
 
 class ThirdScreenOnboarding : Fragment() {
 
@@ -20,5 +22,9 @@ class ThirdScreenOnboarding : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Animations.animateAlphaWithHandlerDelay(stop_tv, 700, 1.0f, 300)
+        Animations.animateAlphaWithHandlerDelay(browsingtheweb_tv, 700, 1.0f, 1000)
+        Animations.animateAlphaWithHandlerDelay(shuffleit_tv, 1000, 1.0f, 2000)
     }
 }
