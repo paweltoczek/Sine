@@ -26,10 +26,6 @@ class ViewPagerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
-
-
         val fragmentList = arrayListOf(
             FirstScreenOnboarding(),
             SecondScreenOnboarding(),
@@ -42,12 +38,10 @@ class ViewPagerFragment : Fragment() {
             lifecycle
         )
 
-        view.viewPager.adapter = adapter
+        viewPager.adapter = adapter
 
         val wormDotsIndicator = dots_indicator
         val viewPager = viewPager
-        val adapter2 = ViewPagerAdapter(fragmentList, requireActivity().supportFragmentManager, lifecycle)
-        viewPager.adapter = adapter2
         wormDotsIndicator.setViewPager2(viewPager)
     }
 

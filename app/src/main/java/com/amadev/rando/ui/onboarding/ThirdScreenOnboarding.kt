@@ -5,12 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.amadev.rando.R
 import com.amadev.rando.util.Animations
 import kotlinx.android.synthetic.main.fragment_third_screen_onboarding.*
 
 class ThirdScreenOnboarding : Fragment() {
 
+    lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,5 +29,13 @@ class ThirdScreenOnboarding : Fragment() {
         Animations.animateAlphaWithHandlerDelay(stop_tv, 700, 1.0f, 300)
         Animations.animateAlphaWithHandlerDelay(browsingtheweb_tv, 700, 1.0f, 1000)
         Animations.animateAlphaWithHandlerDelay(shuffleit_tv, 1000, 1.0f, 2000)
+
+
+
+        stop_tv.setOnClickListener {
+            findNavController().navigate(R.id.action_viewPagerFragment_to_choiceFragment)
+        }
+
+
     }
 }

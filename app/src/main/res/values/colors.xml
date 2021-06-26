@@ -20,4 +20,5 @@
 
 
     <color name="blue">#00204A</color>
+    <color name="yellow_rating">#FFE203</color>
 </resources>

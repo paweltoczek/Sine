@@ -4,95 +4,156 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ChoiceFragment"
-    android:background="@color/lavender_blue">
+    tools:context=".ui.fragments.ChoiceFragment"
+    android:background="@color/blue">
 
-    <Button
-        android:id="@+id/draw_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="Draw"
-        android:textColor="@color/space_cadet"
-        android:textSize="16sp"
+    <ImageView
+        android:id="@+id/bcg_image"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/movie_tv_randomchoice" />
-
-    <TextView
-        android:id="@+id/food_tv_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="200dp"
-        android:text="Food"
-        android:textSize="36sp"
-        android:textColor="@color/space_cadet"
-        android:fontFamily="sans-serif-condensed-medium"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/food_tv_randomchoice"
+        android:id="@+id/moviegenre1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-condensed-light"
-        android:text=""
-        android:textColor="@color/space_cadet"
-        android:textSize="36sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/food_tv_description" />
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="15dp"
+        android:alpha="0.5"
+        android:background="@drawable/radius_stroke_background"
+        android:fontFamily="@font/glacial_indifference_bold"
+        android:padding="5dp"
+        android:shadowColor="@color/black"
+        android:shadowRadius="1"
+        android:text="ACTION"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/movie_tv_description"
+        android:id="@+id/moviegenre2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:fontFamily="sans-serif-condensed-medium"
-        android:text="Movie"
-        android:textColor="@color/space_cadet"
-        android:textSize="36sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/food_tv_randomchoice" />
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="15dp"
+        android:alpha="0.5"
+        android:background="@drawable/radius_stroke_background"
+        android:fontFamily="@font/glacial_indifference_bold"
+        android:padding="5dp"
+        android:shadowColor="@color/black"
+        android:shadowRadius="1"
+        android:text="THRILLER"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintStart_toEndOf="@+id/moviegenre1" />
+
 
     <TextView
-        android:id="@+id/movie_tv_randomchoice"
-        android:layout_width="wrap_content"
+        android:id="@+id/releasedate"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-condensed-light"
-        android:text=""
-        android:textColor="@color/space_cadet"
-        android:textSize="36sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/movie_tv_description" />
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/radius_stroke_background"
+        android:fontFamily="@font/glacial_indifference_bold"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="2018"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/moviegenre1"
+        app:layout_constraintStart_toStartOf="@+id/moviegenre1" />
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/spinner1"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="5dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/food_tv_description"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        app:lottie_rawRes="@raw/spinner_loading_lottie" />
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/spinner2"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="5dp"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:alpha="0.9"
+        android:background="@drawable/radius_background"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/movie_tv_description"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        app:lottie_rawRes="@raw/spinner_loading_lottie"
-        android:visibility="gone"/>
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent">
+
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/glacial_indifference_bold"
+            android:gravity="left"
+            android:text="VIRTUOSO"
+            android:textColor="@color/white"
+            android:textSize="28sp"
+            app:layout_constraintStart_toStartOf="@+id/linearLayout"
+            app:layout_constraintTop_toTopOf="@+id/linearLayout" />
+
+        <TextView
+            android:id="@+id/rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:fontFamily="@font/glacial_indifference_bold"
+            android:shadowColor="@color/yellow_rating"
+            android:shadowRadius="10"
+            android:text="7.6"
+            android:textColor="@color/yellow_rating"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="@+id/title"
+            app:layout_constraintTop_toBottomOf="@+id/title" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="30dp"
+            android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rating" />
+
+        <TextView
+            android:id="@+id/overview"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="30dp"
+            android:fontFamily="@font/glacial_indifference_regular"
+            android:scrollbarStyle="outsideInset"
+            android:scrollbars="vertical"
+            android:text="A lonesome stranger with nerves of steel must track down and kill a rogue hitman to satisfy an outstanding debt. But the only information he's been given is a time and location where to find his quarry. No name. No description. Nothing."
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider2" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/circle_background"
+        android:padding="5dp"
+        android:src="@drawable/shuffle"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

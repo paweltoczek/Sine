@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/choiceFragment"
-        android:name="com.amadev.rando.ChoiceFragment"
+        android:name="com.amadev.rando.ui.fragments.ChoiceFragment"
         android:label="fragment_choice"
         tools:layout="@layout/fragment_choice" />
 </navigation>
