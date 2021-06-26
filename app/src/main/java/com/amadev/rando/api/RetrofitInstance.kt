@@ -1,7 +1,6 @@
 package com.amadev.rando.api
 
 import com.amadev.rando.BuildConfig
-import com.amadev.rando.util.Constants.Companion.BASE_URL
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

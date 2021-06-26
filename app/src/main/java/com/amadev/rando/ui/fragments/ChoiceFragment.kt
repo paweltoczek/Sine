@@ -19,6 +19,8 @@ class ChoiceFragment : Fragment() {
 
     private lateinit var choiceFragmentViewModel: ChoiceFragmentViewModel
 
+    private lateinit var imageEndPoint: String
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -31,20 +33,35 @@ class ChoiceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val request = RetrofitInstance.buildService(MoviesApi::class.java)
-        val call = request.getMovies(BuildConfig.API_KEY, 1)
-
-        var imageEndPoint: String
-
-        overview.movementMethod = ScrollingMovementMethod.getInstance()
-
         this.let {
             choiceFragmentViewModel =
                 ViewModelProvider(this).get(ChoiceFragmentViewModel::class.java)
         }
 
-        customizeVisibility()
+        setUpApiRequestAndCall()
 
+        doOverviewTvScrollable()
+
+        adaptDataToViews()
+
+        customizeVisibilityWhileDataNotAvailable()
+
+        shufflebtn.setOnClickListener {
+            setUpApiRequestAndCall()
+        }
+    }
+
+    private fun setUpApiRequestAndCall() {
+        val request = RetrofitInstance.buildService(MoviesApi::class.java)
+        val call = request.getMovies(BuildConfig.API_KEY, 1)
+        choiceFragmentViewModel.getData(call)
+    }
+
+    private fun doOverviewTvScrollable() {
+        overview.movementMethod = ScrollingMovementMethod.getInstance()
+    }
+
+    private fun adaptDataToViews() {
         choiceFragmentViewModel.movieResponseLiveData.observe(viewLifecycleOwner) {
             title.text = it[0].title.trim()
             rating.text = it[0].vote_average.toString().trim()
@@ -55,14 +72,9 @@ class ChoiceFragment : Fragment() {
             customizeVisibilityWhileDataIsLoaded()
             loadImageWithGlide(imageEndPoint)
         }
-
-        shuffle.setOnClickListener {
-            choiceFragmentViewModel.getData(call)
-        }
-
     }
 
-    private fun customizeVisibility() {
+    private fun customizeVisibilityWhileDataNotAvailable() {
         title.alpha = 0f
         rating.alpha = 0f
         overview.alpha = 0f

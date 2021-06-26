@@ -15,6 +15,7 @@ import retrofit2.Response
 class ChoiceFragmentViewModel : ViewModel() {
 
     val list = ArrayList<Results>()
+    val list2 = ArrayList<Any>()
 
     private val moviesResponseMutableLiveData = MutableLiveData<ArrayList<Results>>()
     val movieResponseLiveData = moviesResponseMutableLiveData
@@ -25,8 +26,10 @@ class ChoiceFragmentViewModel : ViewModel() {
             override fun onResponse(call: Call<MoviesModel>, response: Response<MoviesModel>) {
                 if (response.isSuccessful) {
                     var responseBody = response.body()!!
+                    list2.add(response.body()!!.results)
                     list.add(responseBody.results.random())
                     moviesResponseMutableLiveData.value = list
+
                 }
             }
 

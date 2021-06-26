@@ -17,7 +17,7 @@ android {
         multiDexEnabled true
 
         buildConfigField "String", "API_KEY", "\"611dca8cf117ec0c95b0da6ed0fbe87a\""
-        buildConfigField "String", "BASE_URL", "\"https://api.themoviedb.org\""
+        buildConfigField "String", "BASE_URL", "\"https://api.themoviedb.org/\""
     }
 
     buildTypes {
