@@ -2,7 +2,6 @@ package com.amadev.rando.ui.fragments
 
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,7 +33,8 @@ class ChoiceFragment : Fragment() {
 
         val request = RetrofitInstance.buildService(MoviesApi::class.java)
         val call = request.getMovies(BuildConfig.API_KEY, 1)
-        var imageEndPoint = String()
+
+        var imageEndPoint: String
 
         overview.movementMethod = ScrollingMovementMethod.getInstance()
 
@@ -45,8 +45,6 @@ class ChoiceFragment : Fragment() {
 
         customizeVisibility()
 
-        choiceFragmentViewModel.getData(call)
-
         choiceFragmentViewModel.movieResponseLiveData.observe(viewLifecycleOwner) {
             title.text = it[0].title.trim()
             rating.text = it[0].vote_average.toString().trim()
@@ -56,14 +54,13 @@ class ChoiceFragment : Fragment() {
 
             customizeVisibilityWhileDataIsLoaded()
             loadImageWithGlide(imageEndPoint)
+        }
 
-            title.setOnClickListener {
-                choiceFragmentViewModel.getData(call)
-            }
+        shuffle.setOnClickListener {
+            choiceFragmentViewModel.getData(call)
         }
 
     }
-
 
     private fun customizeVisibility() {
         title.alpha = 0f
@@ -92,9 +89,5 @@ class ChoiceFragment : Fragment() {
             animateAlphaWithHandlerDelay(bcg_image,500, 1f, 200)
         }
     }
-
-
-
-
 
 }
