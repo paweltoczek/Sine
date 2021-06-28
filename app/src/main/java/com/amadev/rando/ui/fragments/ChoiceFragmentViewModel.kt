@@ -1,12 +1,15 @@
 package com.amadev.rando.ui.fragments
 
+import android.graphics.Movie
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.amadev.rando.api.MoviesApi
 import com.amadev.rando.api.RetrofitInstance
 import com.amadev.rando.model.MoviesModel
 import com.amadev.rando.model.Results
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -14,30 +17,36 @@ import retrofit2.Response
 
 class ChoiceFragmentViewModel : ViewModel() {
 
-    val list = ArrayList<Results>()
-    val list2 = ArrayList<Any>()
+    var list = ArrayList<Results>()
+
 
     private val moviesResponseMutableLiveData = MutableLiveData<ArrayList<Results>>()
     val movieResponseLiveData = moviesResponseMutableLiveData
 
 
+
     fun getData(call: Call<MoviesModel>) {
-        call.enqueue(object : Callback<MoviesModel> {
-            override fun onResponse(call: Call<MoviesModel>, response: Response<MoviesModel>) {
-                if (response.isSuccessful) {
-                    var responseBody = response.body()!!
-                    list2.add(response.body()!!.results)
-                    list.add(responseBody.results.random())
-                    moviesResponseMutableLiveData.value = list
+        viewModelScope.launch {
+            call.enqueue(object : Callback<MoviesModel> {
+                override fun onResponse(call: Call<MoviesModel>, response: Response<MoviesModel>) {
+                    if (response.isSuccessful) {
+                        var responseBody = response.body()!!
+                        list.addAll(responseBody.results)
+                        moviesResponseMutableLiveData.value = list
 
+                        Log.e("list", moviesResponseMutableLiveData.value.toString())
+                        Log.e("list", list.size.toString())
+
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<MoviesModel>, t: Throwable) {/*
+                override fun onFailure(call: Call<MoviesModel>, t: Throwable) {/*
                 Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()*/
-                Log.e("error", t.message.toString())
-            }
-        })
+                    Log.e("error", t.message.toString())
+                }
+            })
+        }
+
     }
 
 }

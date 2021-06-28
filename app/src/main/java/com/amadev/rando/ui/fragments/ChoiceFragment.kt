@@ -2,6 +2,7 @@ package com.amadev.rando.ui.fragments
 
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,8 +19,10 @@ import kotlinx.android.synthetic.main.fragment_choice.*
 class ChoiceFragment : Fragment() {
 
     private lateinit var choiceFragmentViewModel: ChoiceFragmentViewModel
-
     private lateinit var imageEndPoint: String
+
+
+    val declaredPages = 15
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,38 +40,53 @@ class ChoiceFragment : Fragment() {
             choiceFragmentViewModel =
                 ViewModelProvider(this).get(ChoiceFragmentViewModel::class.java)
         }
+//        val request = RetrofitInstance.buildService(MoviesApi::class.java)
+//        val call = request.getMovies(BuildConfig.API_KEY, 1)
+//        choiceFragmentViewModel.getData(call)
 
-        setUpApiRequestAndCall()
+        setUpApiRequestAndCall(declaredPages)
 
         doOverviewTvScrollable()
 
         adaptDataToViews()
 
         customizeVisibilityWhileDataNotAvailable()
-
+//
         shufflebtn.setOnClickListener {
-            setUpApiRequestAndCall()
+            adaptDataToViews()
         }
     }
 
-    private fun setUpApiRequestAndCall() {
+    private fun setUpApiRequestAndCall(declaredPages: Int) {
         val request = RetrofitInstance.buildService(MoviesApi::class.java)
-        val call = request.getMovies(BuildConfig.API_KEY, 1)
-        choiceFragmentViewModel.getData(call)
+        var i = 1
+        do {
+            val call = request.getMovies(BuildConfig.API_KEY, declaredPages)
+            choiceFragmentViewModel.getData(call)
+            i++
+            Log.e("page", i.toString())
+        } while (i != declaredPages)
+
+
     }
 
     private fun doOverviewTvScrollable() {
         overview.movementMethod = ScrollingMovementMethod.getInstance()
     }
 
-    private fun adaptDataToViews() {
-        choiceFragmentViewModel.movieResponseLiveData.observe(viewLifecycleOwner) {
-            title.text = it[0].title.trim()
-            rating.text = it[0].vote_average.toString().trim()
-            overview.text = it[0].overview.trim()
-            releasedate.text = it[0].release_date.trim().take(4)
-            imageEndPoint = it[0].poster_path
+    private fun adaptDataToViews(
+        randomPage: Int = (0 until declaredPages).random()
 
+    ) {
+        choiceFragmentViewModel.movieResponseLiveData.observe(viewLifecycleOwner) {
+            var randomDetails: Int = (0 until it.size).random()
+
+            title.text = it[randomDetails].title.trim()
+            rating.text = it[randomDetails].vote_average.toString().trim()
+            overview.text = it[randomDetails].overview.trim()
+            releasedate.text = it[randomDetails].release_date.take(4).trim()
+            imageEndPoint = it[randomDetails].poster_path.trim()
+//
             customizeVisibilityWhileDataIsLoaded()
             loadImageWithGlide(imageEndPoint)
         }
