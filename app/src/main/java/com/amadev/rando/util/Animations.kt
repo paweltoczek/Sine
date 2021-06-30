@@ -6,11 +6,21 @@ import android.view.View
 
 object Animations {
 
-    fun animateAlphaWithHandlerDelay(property : View, time : Long, targetAlpha : Float, delay : Long) {
-        Handler().postDelayed ({
-        property.animate().apply {
-            duration = (500)
-            alpha(targetAlpha)}
-        },delay)
+    fun animateAlphaWithHandlerDelay(property: View, time: Long, targetAlpha: Float, delay: Long) {
+        Handler().postDelayed({
+            property.animate().apply {
+                duration = (time)
+                alpha(targetAlpha)
+            }
+        }, delay)
     }
+
+    fun animationTravelDown(property: View, time: Long, targetY: Float) {
+        property.animate().apply {
+            duration = (time)
+            translationY(targetY)
+        }
+    }
+
+
 }

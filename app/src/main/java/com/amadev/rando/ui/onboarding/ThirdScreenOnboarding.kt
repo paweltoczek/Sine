@@ -13,8 +13,6 @@ import kotlinx.android.synthetic.main.fragment_third_screen_onboarding.*
 
 class ThirdScreenOnboarding : Fragment() {
 
-    lateinit var navController: NavController
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,9 +28,7 @@ class ThirdScreenOnboarding : Fragment() {
         Animations.animateAlphaWithHandlerDelay(browsingtheweb_tv, 700, 1.0f, 1000)
         Animations.animateAlphaWithHandlerDelay(shuffleit_tv, 1000, 1.0f, 2000)
 
-
-
-        stop_tv.setOnClickListener {
+        go.setOnClickListener {
             findNavController().navigate(R.id.action_viewPagerFragment_to_choiceFragment)
         }
 

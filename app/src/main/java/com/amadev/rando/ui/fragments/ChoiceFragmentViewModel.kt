@@ -2,6 +2,7 @@ package com.amadev.rando.ui.fragments
 
 import android.graphics.Movie
 import android.util.Log
+import android.util.Size
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,6 +23,7 @@ class ChoiceFragmentViewModel : ViewModel() {
 
     private val moviesResponseMutableLiveData = MutableLiveData<ArrayList<Results>>()
     val movieResponseLiveData = moviesResponseMutableLiveData
+    var moviesListSize = MutableLiveData<Int>()
 
 
 
@@ -34,8 +36,9 @@ class ChoiceFragmentViewModel : ViewModel() {
                         list.addAll(responseBody.results)
                         moviesResponseMutableLiveData.value = list
 
-                        Log.e("list", moviesResponseMutableLiveData.value.toString())
-                        Log.e("list", list.size.toString())
+//                        Log.e("listmut", moviesResponseMutableLiveData.value.toString())
+//                        Log.e("listsiz", list.size.toString())
+//                        Log.e("list", list.toString())
 
                     }
                 }
