@@ -15,10 +15,7 @@
     <color name="pink_lavnder">#E7BBE3</color>
     <color name="space_cadet">#283044</color>
 
-<!--    Onboarding colors -->
-
-
-
     <color name="blue">#00204A</color>
     <color name="yellow_rating">#FFE203</color>
+    <color name="transparent_black">#90000000</color>
 </resources>

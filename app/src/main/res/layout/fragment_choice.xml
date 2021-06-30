@@ -19,59 +19,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/moviegenre1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginBottom="15dp"
-        android:alpha="0.5"
-        android:background="@drawable/radius_stroke_background"
-        android:fontFamily="@font/glacial_indifference_bold"
-        android:padding="5dp"
-        android:shadowColor="@color/black"
-        android:shadowRadius="1"
-        android:text="ACTION"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/moviegenre2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginBottom="15dp"
-        android:alpha="0.5"
-        android:background="@drawable/radius_stroke_background"
-        android:fontFamily="@font/glacial_indifference_bold"
-        android:padding="5dp"
-        android:shadowColor="@color/black"
-        android:shadowRadius="1"
-        android:text="THRILLER"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintStart_toEndOf="@+id/moviegenre1" />
 
 
-    <TextView
-        android:id="@+id/releasedate"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/radius_stroke_background"
-        android:fontFamily="@font/glacial_indifference_bold"
-        android:gravity="center"
-        android:padding="5dp"
-        android:text="2018"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/moviegenre1"
-        app:layout_constraintStart_toStartOf="@+id/moviegenre1" />
 
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/details_layout"
         android:layout_width="match_parent"
         android:layout_height="350dp"
         android:alpha="0.9"
@@ -82,22 +35,12 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent">
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/ic_baseline_expand_more_24"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/linearLayout" />
-
 
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="10dp"
@@ -106,8 +49,8 @@
             android:text="VIRTUOSO"
             android:textColor="@color/white"
             android:textSize="28sp"
-            app:layout_constraintStart_toStartOf="@+id/linearLayout"
-            app:layout_constraintTop_toTopOf="@+id/linearLayout" />
+            app:layout_constraintStart_toStartOf="@+id/details_layout"
+            app:layout_constraintTop_toTopOf="@+id/details_layout" />
 
         <TextView
             android:id="@+id/rating"
@@ -124,7 +67,7 @@
             app:layout_constraintTop_toBottomOf="@+id/title" />
 
         <View
-            android:id="@+id/divider2"
+            android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_marginLeft="30dp"
@@ -137,7 +80,7 @@
             app:layout_constraintTop_toBottomOf="@+id/rating" />
 
         <TextView
-            android:id="@+id/overview"
+            android:id="@+id/overview_tv"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_marginStart="30dp"
@@ -157,17 +100,77 @@
     </LinearLayout>
 
 
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-
-        android:id="@+id/shufflebtn"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/releasedate_genre_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/transparent_black"
+        app:layout_constraintStart_toStartOf="@+id/bcg_image"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/releasedate"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/radius_stroke_background"
+            android:fontFamily="@font/glacial_indifference_bold"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="2018"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/moviegenre1"
+            app:layout_constraintStart_toStartOf="@+id/moviegenre1" />
+
+        <TextView
+            android:id="@+id/moviegenre1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:alpha="0.5"
+            android:background="@drawable/radius_stroke_background"
+            android:fontFamily="@font/glacial_indifference_bold"
+            android:padding="5dp"
+            android:shadowColor="@color/black"
+            android:shadowRadius="1"
+            android:text="ACTION"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/details_layout"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/moviegenre2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:alpha="0.5"
+            android:background="@drawable/radius_stroke_background"
+            android:fontFamily="@font/glacial_indifference_bold"
+            android:padding="5dp"
+            android:shadowColor="@color/black"
+            android:shadowRadius="1"
+            android:text="THRILLER"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/details_layout"
+            app:layout_constraintStart_toEndOf="@+id/moviegenre1" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/shufflebtn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_marginEnd="30dp"
-        android:clickable="true"
-        android:src="@android:drawable/ic_menu_search"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:background="@drawable/circle_background"
+        android:src="@drawable/shuffle"
+        app:layout_constraintBottom_toTopOf="@+id/details_layout"
+        app:layout_constraintEnd_toEndOf="@+id/bcg_image"
+        app:layout_constraintTop_toTopOf="@+id/details_layout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
