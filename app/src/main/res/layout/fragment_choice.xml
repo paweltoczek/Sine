@@ -5,7 +5,7 @@
     android:id="@+id/baselayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue"
+    android:background="@color/blackone"
     tools:context=".ui.fragments.ChoiceFragment">
 
     <Button
@@ -54,7 +54,7 @@
             android:layout_marginBottom="10dp"
             android:fontFamily="@font/glacial_indifference_bold"
             android:gravity="left"
-            android:text="VIRTUOSO"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="@+id/details_layout"
@@ -68,7 +68,7 @@
             android:fontFamily="@font/glacial_indifference_bold"
             android:shadowColor="@color/yellow_rating"
             android:shadowRadius="10"
-            android:text="7.6"
+            android:text=""
             android:textColor="@color/yellow_rating"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="@+id/title_tv"
@@ -97,7 +97,7 @@
             android:fontFamily="@font/glacial_indifference_regular"
             android:scrollbarStyle="outsideInset"
             android:scrollbars="vertical"
-            android:text="A lonesome stranger with nerves of steel must track down and kill a rogue hitman to satisfy an outstanding debt. But the only information he's been given is a time and location where to find his quarry. No name. No description. Nothing."
+            android:text=""
             android:textColor="@color/white"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -168,15 +168,15 @@
             app:layout_constraintStart_toEndOf="@+id/moviegenre1" />
     </LinearLayout>
 
-    <ImageView
+    <Button
         android:id="@+id/shufflebtn"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginEnd="30dp"
-        android:background="@drawable/circle_background"
-        android:src="@drawable/shuffle"
-        app:layout_constraintBottom_toTopOf="@+id/details_layout"
-        app:layout_constraintEnd_toEndOf="@+id/bcg_image"
-        app:layout_constraintTop_toTopOf="@+id/details_layout" />
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/ic_baseline_shuffle_24"
+        app:backgroundTint="#FFEB3B"
+        app:layout_constraintBottom_toTopOf="@+id/releasedate_genre_layout"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

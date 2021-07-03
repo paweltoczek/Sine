@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.widget.ViewPager2
 import com.amadev.rando.R
 import com.amadev.rando.util.Animations
 import kotlinx.android.synthetic.main.fragment_third_screen_onboarding.*
@@ -28,8 +28,14 @@ class ThirdScreenOnboarding : Fragment() {
         Animations.animateAlphaWithHandlerDelay(browsingtheweb_tv, 700, 1.0f, 1000)
         Animations.animateAlphaWithHandlerDelay(shuffleit_tv, 1000, 1.0f, 2000)
 
-        go.setOnClickListener {
+        val viewPager = activity?.findViewById<ViewPager2>(R.id.viewPager)
+
+        finish.setOnClickListener {
             findNavController().navigate(R.id.action_viewPagerFragment_to_choiceFragment)
+        }
+
+        previous.setOnClickListener {
+            viewPager?.currentItem = 1
         }
 
 

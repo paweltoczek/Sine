@@ -2,6 +2,7 @@ package com.amadev.rando.util
 
 import android.content.Context
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -18,12 +19,17 @@ object Util {
         }
     }
 
+    fun TextView.loading(context: Context, circularProgressDrawable: CircularProgressDrawable) {
+        val options = RequestOptions()
+            .placeholder(circularProgressDrawable)
+    }
+
     fun ImageView.loadImageWithGlide(
         uri: String?,
         circularProgressDrawable: CircularProgressDrawable
     ) {
-    val options = RequestOptions()
-        .placeholder(circularProgressDrawable)
+        val options = RequestOptions()
+            .placeholder(circularProgressDrawable)
         Glide.with(context)
             .setDefaultRequestOptions(options)
             .load(uri)

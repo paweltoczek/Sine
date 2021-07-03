@@ -1,23 +1,30 @@
 package com.amadev.rando.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.text.method.ScrollingMovementMethod
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.amadev.rando.R
+import com.amadev.rando.YoutubeActivity
 import com.amadev.rando.util.Animations.animateAlphaWithHandlerDelay
 import com.amadev.rando.util.Animations.animationTravelYWithAlpha
 import com.amadev.rando.util.Animations.scaleXY
+import com.amadev.rando.util.Util.loading
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_choice.*
 
 class ChoiceFragment : Fragment() {
 
     private lateinit var choiceFragmentViewModel: ChoiceFragmentViewModel
+
+    var movieId = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,29 +46,34 @@ class ChoiceFragment : Fragment() {
         observeMovieDetails()
         loadImageWithGlide()
         doOverviewTvScrollable()
-        adaptDataToViews()
 
-//        customizeVisibilityWhileDataNotAvailable()
+        title_tv.loading(requireContext(), CircularProgressDrawable(requireContext()))
+        choiceFragmentViewModel.videoEndPoint.observe(viewLifecycleOwner) {
 
-        trailer_btn.setOnClickListener {
-            //findNavController().navigate(R.id.action_choiceFragment_to_youtubeActivity)
         }
 
+//        customizeVisibilityWhileDataNotAvailable()
+        trailer_btn.setOnClickListener {
+            val intent = Intent(requireContext(), YoutubeActivity::class.java)
+            intent.putExtra("videoId", choiceFragmentViewModel.videoEndPoint.value)
+            startActivity(intent)
+
+        }
 
         baselayout.setOnClickListener {
-            dissapearAnimation()
+            disappearAnimation()
 
         }
 //
         shufflebtn.setOnClickListener {
             animateShuffleButton()
-            choiceFragmentViewModel.getRandomMovieDetails()
+            getPopularMoviesData()
             loadImageWithGlide()
 //            customizeVisibilityWhileDataNotAvailable()
         }
     }
     var i = 0
-    private fun dissapearAnimation() {
+    private fun disappearAnimation() {
         i++
         if (i == 1) {
             animationTravelYWithAlpha(details_layout, 200, -100f, 1f)
@@ -81,12 +93,12 @@ class ChoiceFragment : Fragment() {
 
 
     private fun getPopularMoviesData() {
-        choiceFragmentViewModel.getPopularMoviesDataPrivate()
+        choiceFragmentViewModel.getPopularMoviesData()
     }
 
     private fun setUpViewModel() {
         choiceFragmentViewModel.apply {
-            getPopularMoviesDataPrivate()
+            getPopularMoviesData()
         }
 
     }
@@ -108,8 +120,14 @@ class ChoiceFragment : Fragment() {
             movieRatingLiveData.observe(viewLifecycleOwner) {
                 rating.text = it.toString().trim()
             }
+
+            movieIdLiveData.observe(viewLifecycleOwner) {
+                choiceFragmentViewModel.getTrailerVideoData()
+
+            }
         }
     }
+
 
     private fun animateShuffleButton() {
         scaleXY(shufflebtn, 150, 0.9f)
@@ -122,20 +140,6 @@ class ChoiceFragment : Fragment() {
         overview_tv.movementMethod = ScrollingMovementMethod.getInstance()
     }
 
-    private fun adaptDataToViews() {
-//        choiceFragmentViewModel.movieResponseLiveData.observe(viewLifecycleOwner) {
-//            var randomDetails: Int = (0 until it.size).random()
-//            Log.e("mutablelistsize", it.size.toString())
-//            title.text = it[randomDetails].title.trim()
-//            rating.text = it[randomDetails].vote_average.toString().trim()
-//            overview_tv.text = it[randomDetails].overview.trim()
-//        //    releasedate.text = it[randomDetails].release_date.take(4).trim()
-//            imageEndPoint = it[randomDetails].poster_path.trim()
-////
-//            customizeVisibilityWhileDataIsLoaded()
-//            loadImageWithGlide(imageEndPoint)
-//        }
-    }
 
     private fun customizeVisibilityWhileDataNotAvailable() {
         title_tv.alpha = 0f

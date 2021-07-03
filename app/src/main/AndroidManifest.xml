@@ -17,8 +17,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Rando">
-        <activity android:name=".YoutubeActivity"></activity>
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".YoutubeActivity" android:screenOrientation="landscape"/>
+        <activity android:name=".ui.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
