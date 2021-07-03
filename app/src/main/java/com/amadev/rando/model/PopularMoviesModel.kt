@@ -2,15 +2,15 @@ package com.amadev.rando.model
 
 import com.google.gson.annotations.SerializedName
 
-data class MoviesModel(
+data class PopularMoviesModel(
 
     @SerializedName("page") val page : Int?,
-    @SerializedName("results") val results : List<Results>,
+    @SerializedName("results") val results : List<PopularMoviesResults>,
     @SerializedName("total_pages") val total_pages : Int?,
 //    @SerializedName("total_results") val total_results : Int
 )
 
-data class Results (
+data class PopularMoviesResults (
 
     @SerializedName("adult") val adult : Boolean?,
 //    @SerializedName("backdrop_path") val backdrop_path : String,

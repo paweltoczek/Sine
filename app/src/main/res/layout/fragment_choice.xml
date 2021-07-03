@@ -2,11 +2,25 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/baselayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/baselayout"
-    tools:context=".ui.fragments.ChoiceFragment"
-    android:background="@color/blue">
+    android:background="@color/blue"
+    tools:context=".ui.fragments.ChoiceFragment">
+
+    <Button
+        android:id="@+id/trailer_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:backgroundTint="@color/white"
+        android:fontFamily="@font/glacial_indifference_bold"
+        android:text="Trailer"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/bcg_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/bcg_image"
@@ -15,18 +29,13 @@
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-
-
-
 
     <LinearLayout
         android:id="@+id/details_layout"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="300dp"
         android:alpha="0.9"
         android:background="@drawable/radius_background"
         android:orientation="vertical"
@@ -35,20 +44,19 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent">
 
-
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/title_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
             android:layout_marginStart="30dp"
+            android:layout_marginTop="15dp"
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="10dp"
             android:fontFamily="@font/glacial_indifference_bold"
             android:gravity="left"
             android:text="VIRTUOSO"
             android:textColor="@color/white"
-            android:textSize="28sp"
+            android:textSize="24sp"
             app:layout_constraintStart_toStartOf="@+id/details_layout"
             app:layout_constraintTop_toTopOf="@+id/details_layout" />
 
@@ -56,15 +64,15 @@
             android:id="@+id/rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
             android:fontFamily="@font/glacial_indifference_bold"
             android:shadowColor="@color/yellow_rating"
             android:shadowRadius="10"
             android:text="7.6"
-            android:layout_marginLeft="30dp"
             android:textColor="@color/yellow_rating"
-            android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="@+id/title"
-            app:layout_constraintTop_toBottomOf="@+id/title" />
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/title_tv"
+            app:layout_constraintTop_toBottomOf="@+id/title_tv" />
 
         <View
             android:id="@+id/divider"
@@ -82,7 +90,7 @@
         <TextView
             android:id="@+id/overview_tv"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="100dp"
             android:layout_marginStart="30dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="30dp"
@@ -99,19 +107,18 @@
 
     </LinearLayout>
 
-
     <LinearLayout
         android:id="@+id/releasedate_genre_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:background="@color/transparent_black"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/details_layout"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@color/transparent_black"
-        app:layout_constraintStart_toStartOf="@+id/bcg_image"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="@+id/bcg_image">
 
         <TextView
             android:id="@+id/releasedate"
@@ -171,6 +178,5 @@
         app:layout_constraintBottom_toTopOf="@+id/details_layout"
         app:layout_constraintEnd_toEndOf="@+id/bcg_image"
         app:layout_constraintTop_toTopOf="@+id/details_layout" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
