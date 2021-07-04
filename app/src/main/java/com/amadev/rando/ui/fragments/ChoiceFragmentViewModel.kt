@@ -19,9 +19,7 @@ import retrofit2.Response
 
 class ChoiceFragmentViewModel : ViewModel() {
 
-
-    val request = RetrofitInstance.buildService(MoviesApi::class.java)
-
+    private val request = RetrofitInstance.buildService(MoviesApi::class.java)
 
     var moviesDetailsList = ArrayList<PopularMoviesResults>()
     var videosDetailsList = ArrayList<VideoDetailsResults>()
@@ -44,6 +42,9 @@ class ChoiceFragmentViewModel : ViewModel() {
     private val moviePosterEndPointMutableLiveData = MutableLiveData<String?>()
     val moviePosterEndPointLiveData = moviePosterEndPointMutableLiveData
 
+    private val movieGenreIdMutableLiveData = MutableLiveData<List<Int?>>()
+    val movieGenreIdLiveData = movieGenreIdMutableLiveData
+
     val pageAlreadyCalled = MutableLiveData<Int>()
     val currentPage = MutableLiveData<Int>()
 
@@ -64,7 +65,6 @@ class ChoiceFragmentViewModel : ViewModel() {
         viewModelScope.launch {
 
             currentPage.value = getRandomPage()
-
             while (pageAlreadyCalled.value == currentPage.value) {
                 currentPage.value = getRandomPage()
                 if (pageAlreadyCalled.value != currentPage.value) {
@@ -73,14 +73,10 @@ class ChoiceFragmentViewModel : ViewModel() {
                     break
             }
 
-            Log.e("page", pageAlreadyCalled.value.toString())
-            Log.e("pagecurrent", currentPage.toString())
-
             val callPopularMovies =
                 request.getPopularMovies(BuildConfig.TMDB_API_KEY, currentPage.value!!)
 
             callPopularMovies.enqueue(object : Callback<PopularMoviesModel> {
-
                 override fun onResponse(
                     call: Call<PopularMoviesModel>,
                     response: Response<PopularMoviesModel>
@@ -96,11 +92,13 @@ class ChoiceFragmentViewModel : ViewModel() {
                             movieReleaseDateMutableLiveData.value = release_date
                             movieRatingMutableLiveData.value = vote_average
                             moviePosterEndPointMutableLiveData.value = poster_path
+                            movieGenreIdMutableLiveData.value = genre_ids
+
+                            Log.e("movieid", movieIdMutableLiveData.value.toString())
                         }
                         pageAlreadyCalled.value = currentPage.value
                     }
                 }
-
                 override fun onFailure(call: Call<PopularMoviesModel>, t: Throwable) {/*
                 Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()*/
                     Log.e("error", t.message.toString())
@@ -128,12 +126,9 @@ class ChoiceFragmentViewModel : ViewModel() {
                         videoEndPoint.value = responseBody?.results?.last()?.key.toString()
                     }
                 }
-
                 override fun onFailure(call: Call<VideoDetailsModel>, t: Throwable) {
                 }
             })
         }
     }
-
-
 }

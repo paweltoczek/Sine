@@ -22,8 +22,11 @@ class FirstScreenOnboarding : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        animateAlphaWithHandlerDelay(howlongdoes,1000,1.0f,700)
         super.onViewCreated(view, savedInstanceState)
+
+        animateAlphaWithHandlerDelay(howlongdoes,1000,1.0f,700)
+        animateAlphaWithHandlerDelay(next,1000,1.0f,1500)
+
 
 
         val viewPager = activity?.findViewById<ViewPager2>(R.id.viewPager)

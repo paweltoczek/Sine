@@ -1,5 +1,6 @@
 package com.amadev.rando.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -16,18 +17,26 @@ class WelcomeScreen : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_welcome_screen, container, false)
-
-        Handler().postDelayed({
-            findNavController().navigate(R.id.action_welcomeScreen_to_viewPagerFragment)
-        }, 3000)
-
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Handler().postDelayed({
+            if(onBoardingFinished()) {
+                findNavController().navigate(R.id.action_welcomeScreen_to_choiceFragment)
+            } else {
+                findNavController().navigate(R.id.action_welcomeScreen_to_viewPagerFragment)
 
+            }
+        }, 2000)
+
+    }
+
+    private fun onBoardingFinished(): Boolean {
+        val sharedPreferences = requireActivity().getSharedPreferences("onBoarding", Context.MODE_PRIVATE)
+        return sharedPreferences.getBoolean("Finished", false)
     }
 
 

@@ -1,5 +1,6 @@
 package com.amadev.rando.ui.onboarding
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,11 +28,14 @@ class ThirdScreenOnboarding : Fragment() {
         Animations.animateAlphaWithHandlerDelay(stop_tv, 700, 1.0f, 300)
         Animations.animateAlphaWithHandlerDelay(browsingtheweb_tv, 700, 1.0f, 1000)
         Animations.animateAlphaWithHandlerDelay(shuffleit_tv, 1000, 1.0f, 2000)
+        Animations.animateAlphaWithHandlerDelay(finish, 1000, 1.0f, 2000)
+        Animations.animateAlphaWithHandlerDelay(previous, 1000, 1.0f, 2000)
 
         val viewPager = activity?.findViewById<ViewPager2>(R.id.viewPager)
 
         finish.setOnClickListener {
             findNavController().navigate(R.id.action_viewPagerFragment_to_choiceFragment)
+            onBoardingFinished()
         }
 
         previous.setOnClickListener {
@@ -39,5 +43,13 @@ class ThirdScreenOnboarding : Fragment() {
         }
 
 
+    }
+
+    private fun onBoardingFinished() {
+        val sharedPreferences =
+            requireActivity().getSharedPreferences("onBoarding", Context.MODE_PRIVATE)
+        val sharedPrefEditor = sharedPreferences.edit()
+        sharedPrefEditor.putBoolean("Finished", true)
+        sharedPrefEditor.apply()
     }
 }

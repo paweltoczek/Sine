@@ -27,6 +27,8 @@ class SecondScreenOnboarding : Fragment() {
         Animations.animateAlphaWithHandlerDelay(ittakes_tv, 700, 1.0f, 300)
         Animations.animateAlphaWithHandlerDelay(long_tv, 700, 1.0f, 1000)
         Animations.animateAlphaWithHandlerDelay(so_tv, 1000, 1.0f, 1500)
+        Animations.animateAlphaWithHandlerDelay(next, 1000, 1.0f, 1500)
+        Animations.animateAlphaWithHandlerDelay(previous, 1000, 1.0f, 1500)
 
         val viewPager = activity?.findViewById<ViewPager2>(R.id.viewPager)
         next.setOnClickListener {
