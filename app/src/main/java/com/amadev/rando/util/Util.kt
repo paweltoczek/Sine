@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import com.amadev.rando.BuildConfig
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.fragment_choice.view.*
@@ -19,11 +20,6 @@ object Util {
         }
     }
 
-    fun TextView.loading(context: Context, circularProgressDrawable: CircularProgressDrawable) {
-        val options = RequestOptions()
-            .placeholder(circularProgressDrawable)
-    }
-
     fun ImageView.loadImageWithGlide(
         uri: String?,
         circularProgressDrawable: CircularProgressDrawable
@@ -32,7 +28,7 @@ object Util {
             .placeholder(circularProgressDrawable)
         Glide.with(context)
             .setDefaultRequestOptions(options)
-            .load(uri)
-            .into(bcg_image)
+            .load(BuildConfig.TMDB_PICTURE_BASE_URL+uri)
+            .into(this)
     }
 }

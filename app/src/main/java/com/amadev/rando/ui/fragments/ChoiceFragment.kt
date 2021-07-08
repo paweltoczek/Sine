@@ -7,22 +7,25 @@ import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.HorizontalScrollView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.amadev.rando.R
 import com.amadev.rando.YoutubeActivity
+import com.amadev.rando.adapter.CastAdapter
 import com.amadev.rando.util.Animations.animateAlphaWithHandlerDelay
 import com.amadev.rando.util.Animations.animationTravelYWithAlpha
 import com.amadev.rando.util.Animations.scaleXY
 import com.amadev.rando.util.Genres.getGenres
-import com.bumptech.glide.Glide
+import com.amadev.rando.util.Util.getProgressDrawable
+import com.amadev.rando.util.Util.loadImageWithGlide
 import kotlinx.android.synthetic.main.fragment_choice.*
 
 class ChoiceFragment : Fragment() {
 
     private lateinit var choiceFragmentViewModel: ChoiceFragmentViewModel
-
-    var movieId = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,9 +45,10 @@ class ChoiceFragment : Fragment() {
 
         getPopularMoviesData()
         observeMovieDetails()
-        loadImageWithGlide()
-        doOverviewTvScrollable()
+        setTextViewVerticalMovementMethod(overview_tv)
+        setTextViewHorizontalMovementMethod(title_tv)
         customizeAlphaWhileDataIsNotAvailable()
+        setUpAdapter()
 
         trailer_btn.setOnClickListener {
             setProgressBarVisible()
@@ -54,36 +58,32 @@ class ChoiceFragment : Fragment() {
 
         }
 
-        baselayout.setOnClickListener {
-            disappearAnimation()
-
+        bcg_image.setOnClickListener{
+            disappearAnimation(details_layout)
         }
 
         shufflebtn.setOnClickListener {
+            overview_tv.verticalScrollbarPosition = 0
+            customizeAlphaWhileShuffleButtonIsPressed()
             setProgressBarVisible()
             animateShuffleButton()
             getPopularMoviesData()
-            loadImageWithGlide()
-            customizeAlphaWhileDataIsNotAvailable()
         }
     }
 
 
     var i = 0
-    private fun disappearAnimation() {
+    private fun disappearAnimation(property : View) {
         i++
         if (i == 1) {
-            animationTravelYWithAlpha(details_layout, 200, -100f, 1f)
-            animationTravelYWithAlpha(releasedate_genre_layout, 200, -100f, 1f)
+            animationTravelYWithAlpha(property, 200, -100f, 1f)
             Handler().postDelayed({
-                animationTravelYWithAlpha(details_layout, 150, 500f, 0f)
-                animationTravelYWithAlpha(releasedate_genre_layout, 150, 500f, 0f)
+                animationTravelYWithAlpha(property, 150, 500f, 0f)
             }, 300)
         } else {
             i = 0
             Handler().postDelayed({
-                animationTravelYWithAlpha(details_layout, 150, 0f, 0.9f)
-                animationTravelYWithAlpha(releasedate_genre_layout, 150, 0f, 0.9f)
+                animationTravelYWithAlpha(property, 150, 0f, 0.9f)
             }, 100)
         }
     }
@@ -97,11 +97,14 @@ class ChoiceFragment : Fragment() {
         choiceFragmentViewModel.apply {
             movieTitleLiveData.observe(viewLifecycleOwner) {
                 title_tv.text = it?.trim()
-                customizeAlphaWhileDataIsLoaded()
+                Handler().postDelayed({
+                    customizeAlphaWhileDataIsLoaded()
+                }, 1000)
             }
 
             movieOverviewLiveData.observe(viewLifecycleOwner) {
                 overview_tv.text = it?.trim()
+                setProgressBarGone()
             }
 
             movieReleaseDateLiveDate.observe(viewLifecycleOwner) {
@@ -116,18 +119,26 @@ class ChoiceFragment : Fragment() {
             }
 
             movieIdLiveData.observe(viewLifecycleOwner) {
-                choiceFragmentViewModel.getTrailerVideoData()
+                choiceFragmentViewModel.apply {
+                    getTrailerVideoData()
+                    getCastDetails()
+                }
+            }
 
+            moviePosterEndPointLiveData.observe(viewLifecycleOwner){
+                bcg_image.loadImageWithGlide(it, getProgressDrawable(requireContext()))
             }
 
             movieGenreIdLiveData.observe(viewLifecycleOwner) {
                 if (it.size > 1) {
                     moviegenre2.visibility = View.VISIBLE
-                    moviegenre1.text = getGenres(it[0]).uppercase()
-                    moviegenre2.text = getGenres(it[1]).uppercase()
+                    dotseparator2.visibility = View.VISIBLE
+                    moviegenre1.text = getGenres(it[0])
+                    moviegenre2.text = getGenres(it[1])
                 } else if (it.isNotEmpty()) {
-                    moviegenre1.text = getGenres(it[0]).uppercase()
+                    moviegenre1.text = getGenres(it[0])
                     moviegenre2.visibility = View.GONE
+                    dotseparator2.visibility = View.GONE
                 }
             }
         }
@@ -141,8 +152,13 @@ class ChoiceFragment : Fragment() {
         }, 200)
     }
 
-    private fun doOverviewTvScrollable() {
-        overview_tv.movementMethod = ScrollingMovementMethod.getInstance()
+    private fun setTextViewVerticalMovementMethod(property: TextView) {
+        property.movementMethod = ScrollingMovementMethod.getInstance()
+
+    }
+
+    private fun setTextViewHorizontalMovementMethod(property : TextView) {
+        property.movementMethod = ScrollingMovementMethod.getInstance()
     }
 
 
@@ -151,35 +167,35 @@ class ChoiceFragment : Fragment() {
         rating.alpha = 0f
         overview_tv.alpha = 0f
         bcg_image.alpha = 0f
-        divider.alpha = 0f
         ratingBar.alpha = 0f
-
+        trailer_btn.alpha = 0f
     }
 
     private fun customizeAlphaWhileDataIsLoaded() {
-        animateAlphaWithHandlerDelay(title_tv, 1000, 1f, 300)
-        animateAlphaWithHandlerDelay(rating, 1000, 1f, 300)
-        animateAlphaWithHandlerDelay(overview_tv, 1000, 1f, 300)
-        animateAlphaWithHandlerDelay(bcg_image, 1000, 1f, 300)
-        animateAlphaWithHandlerDelay(divider, 1000, 1f, 300)
+        animateAlphaWithHandlerDelay(title_tv, 300, 1f, 100)
+        animateAlphaWithHandlerDelay(rating, 300, 1f, 300)
+        animateAlphaWithHandlerDelay(overview_tv, 300, 1f, 600)
         animateAlphaWithHandlerDelay(ratingBar, 1000, 1f, 300)
+        animateAlphaWithHandlerDelay(bcg_image, 500, 1f, 500)
+        animateAlphaWithHandlerDelay(trailer_btn, 500, 1f, 500)
     }
 
-    private fun loadImageWithGlide() {
-        choiceFragmentViewModel.moviePosterEndPointLiveData.observe(viewLifecycleOwner) {
-            val imageUrl = it?.trim()
-            val media = "https://image.tmdb.org/t/p/original$imageUrl"
-            Glide.with(requireView())
-                .load(media)
-                .into(bcg_image)
-            if (bcg_image != null) {
-                animateAlphaWithHandlerDelay(bcg_image, 500, 1f, 200)
-            }
-            setProgressBarGone()
-
-        }
-
+    private fun customizeAlphaWhileShuffleButtonIsPressed() {
+        animateAlphaWithHandlerDelay(title_tv, 100, 0f, 0)
+        animateAlphaWithHandlerDelay(rating, 100, 0f, 0)
+        animateAlphaWithHandlerDelay(overview_tv, 100, 0f, 0)
+        animateAlphaWithHandlerDelay(ratingBar, 100, 0f, 0)
+        animateAlphaWithHandlerDelay(bcg_image, 100, 0f, 0)
+        animateAlphaWithHandlerDelay(trailer_btn, 100, 0f, 0)
     }
+
+//    private fun loadImageWithGlide() {
+//        choiceFragmentViewModel. {
+//            Glide.with(requireView())
+//                .load(it)
+//                .into(bcg_image)
+//        }
+//    }
 
     private fun setProgressBarVisible() {
         progressBar.visibility = View.VISIBLE
@@ -188,5 +204,20 @@ class ChoiceFragment : Fragment() {
     private fun setProgressBarGone() {
         progressBar.visibility = View.GONE
     }
+
+    private fun setUpAdapter() {
+        val adapter = CastAdapter(requireView(), requireContext(), arrayListOf())
+        choiceFragmentViewModel.castList.observe(viewLifecycleOwner) { list ->
+            adapter.list.apply {
+                clear()
+                addAll(list)
+            }
+            adapter.notifyDataSetChanged()
+            cast_recyclerview.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            cast_recyclerview.adapter = adapter
+        }
+    }
+
 }
 

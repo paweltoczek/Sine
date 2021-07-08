@@ -7,10 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.amadev.rando.BuildConfig
 import com.amadev.rando.api.MoviesApi
 import com.amadev.rando.api.RetrofitInstance
-import com.amadev.rando.model.PopularMoviesModel
-import com.amadev.rando.model.PopularMoviesResults
-import com.amadev.rando.model.VideoDetailsModel
-import com.amadev.rando.model.VideoDetailsResults
+import com.amadev.rando.model.*
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -44,6 +41,10 @@ class ChoiceFragmentViewModel : ViewModel() {
 
     private val movieGenreIdMutableLiveData = MutableLiveData<List<Int?>>()
     val movieGenreIdLiveData = movieGenreIdMutableLiveData
+
+    private val castDetailsMutableLiveData = MutableLiveData<Cast>()
+    val castDetailsLiveData = castDetailsMutableLiveData
+    val castList = MutableLiveData<List<CastModelResults>>()
 
     val pageAlreadyCalled = MutableLiveData<Int>()
     val currentPage = MutableLiveData<Int>()
@@ -123,12 +124,45 @@ class ChoiceFragmentViewModel : ViewModel() {
                         if (responseBody?.results?.isEmpty() == true) {
                             videoEndPoitError.value = "empty"
                         } else
-                        videoEndPoint.value = responseBody?.results?.last()?.key.toString()
+                            videoEndPoint.value = responseBody?.results?.last()?.key.toString()
                     }
                 }
+
                 override fun onFailure(call: Call<VideoDetailsModel>, t: Throwable) {
                 }
             })
         }
     }
+
+    fun getCastDetails() {
+        viewModelScope.launch {
+            val callCastDetails =
+                request.getCastDetails(movieIdMutableLiveData.value!!, BuildConfig.TMDB_API_KEY)
+            callCastDetails.enqueue(object : Callback<Cast> {
+                override fun onResponse(
+                    call: Call<Cast>,
+                    response: Response<Cast>
+                ) {
+                    var listMovies: ArrayList<CastModelResults> = ArrayList<CastModelResults>()
+                    if (response.isSuccessful) {
+                        val rawList = response.body()!!.cast
+                        listMovies.addAll(rawList)
+
+                        castList.value = rawList
+                        Log.e("rawlist", listMovies.toString())
+                    }
+
+
+                }
+
+
+                override fun onFailure(call: Call<Cast>, t: Throwable) {
+                    Log.e("castError", "error")
+
+                }
+
+            })
+        }
+    }
 }
+
