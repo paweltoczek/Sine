@@ -18,10 +18,8 @@
             app:popUpTo="@id/welcomeScreen"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_welcomeScreen_to_choiceFragment"
-            app:destination="@id/choiceFragment"
-            app:popUpTo="@id/welcomeScreen"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_welcomeScreen_to_signinOrSignUpFragment"
+            app:destination="@id/signinOrSignUpFragment" />
     </fragment>
     <fragment
         android:id="@+id/viewPagerFragment"
@@ -29,14 +27,12 @@
         android:label="fragment_view_pager"
         tools:layout="@layout/fragment_view_pager" >
         <action
-            android:id="@+id/action_viewPagerFragment_to_choiceFragment"
-            app:destination="@id/choiceFragment"
-            app:popUpTo="@id/viewPagerFragment"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_viewPagerFragment_to_signinOrSignUpFragment"
+            app:destination="@id/signinOrSignUpFragment" />
     </fragment>
     <fragment
         android:id="@+id/choiceFragment"
-        android:name="com.amadev.rando.ui.fragments.ChoiceFragment"
+        android:name="com.amadev.rando.ui.fragments.choice.ChoiceFragment"
         android:label="fragment_choice"
         tools:layout="@layout/fragment_choice" >
         <action
@@ -53,5 +49,44 @@
         android:name="com.amadev.rando.YoutubeActivity"
         android:label="activity_youtube"
         tools:layout="@layout/activity_youtube" />
+    <fragment
+        android:id="@+id/signinOrSignUpFragment"
+        android:name="com.amadev.rando.ui.fragments.signup.SigninOrSignUpFragment"
+        android:label="fragment_signin_or_sign_up"
+        tools:layout="@layout/fragment_signin_or_sign_up" >
+        <action
+            android:id="@+id/action_signinOrSignUpFragment_to_choiceFragment"
+            app:destination="@id/choiceFragment" />
+        <action
+            android:id="@+id/action_signinOrSignUpFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+        <action
+            android:id="@+id/action_signinOrSignUpFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.amadev.rando.ui.fragments.signin.SignInFragment"
+        android:label="fragment_sign_in"
+        tools:layout="@layout/fragment_sign_in" >
+        <action
+            android:id="@+id/action_signInFragment_to_choiceFragment"
+            app:destination="@id/choiceFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_signinOrSignUpFragment"
+            app:destination="@id/signinOrSignUpFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.amadev.rando.ui.fragments.signinorsignup.SignUpFragment"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" >
+        <action
+            android:id="@+id/action_signUpFragment_to_signinOrSignUpFragment"
+            app:destination="@id/signinOrSignUpFragment" />
+        <action
+            android:id="@+id/action_signUpFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
 
 </navigation>

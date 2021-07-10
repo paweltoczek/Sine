@@ -34,7 +34,7 @@ class ThirdScreenOnboarding : Fragment() {
         val viewPager = activity?.findViewById<ViewPager2>(R.id.viewPager)
 
         finish.setOnClickListener {
-            findNavController().navigate(R.id.action_viewPagerFragment_to_choiceFragment)
+            findNavController().navigate(R.id.action_viewPagerFragment_to_signinOrSignUpFragment)
             onBoardingFinished()
         }
 

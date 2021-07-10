@@ -39,10 +39,6 @@ class ViewPagerFragment : Fragment() {
         )
 
         viewPager.adapter = adapter
-
-        val wormDotsIndicator = dots_indicator
-        val viewPager = viewPager
-        wormDotsIndicator.setViewPager2(viewPager)
     }
 
 }

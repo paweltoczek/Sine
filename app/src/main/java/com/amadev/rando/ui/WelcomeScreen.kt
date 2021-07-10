@@ -25,7 +25,7 @@ class WelcomeScreen : Fragment() {
 
         Handler().postDelayed({
             if(onBoardingFinished()) {
-                findNavController().navigate(R.id.action_welcomeScreen_to_choiceFragment)
+                findNavController().navigate(R.id.action_welcomeScreen_to_signinOrSignUpFragment)
             } else {
                 findNavController().navigate(R.id.action_welcomeScreen_to_viewPagerFragment)
 

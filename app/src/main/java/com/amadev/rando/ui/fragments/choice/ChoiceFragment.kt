@@ -1,4 +1,4 @@
-package com.amadev.rando.ui.fragments
+package com.amadev.rando.ui.fragments.choice
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,7 +7,6 @@ import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.HorizontalScrollView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider

@@ -1,4 +1,4 @@
-package com.amadev.rando.ui.fragments
+package com.amadev.rando.ui.fragments.choice
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
