@@ -1,4 +1,4 @@
-package com.amadev.rando.ui.fragments.signinorsignup
+package com.amadev.rando.ui.fragments.signup
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.amadev.rando.R
-import com.amadev.rando.ui.fragments.signup.SignUpViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_sign_up.*
 

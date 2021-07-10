@@ -1,4 +1,4 @@
-package com.amadev.rando.ui
+package com.amadev.rando.ui.fragments
 
 import android.content.Context
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.amadev.rando.ui.fragments.signup
+package com.amadev.rando.ui.fragments.signinorsignup
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

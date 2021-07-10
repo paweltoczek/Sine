@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/welcomeScreen"
-        android:name="com.amadev.rando.ui.WelcomeScreen"
+        android:name="com.amadev.rando.ui.fragments.WelcomeScreen"
         android:label="fragment_welcome_screen"
         tools:layout="@layout/fragment_welcome_screen" >
         <action
@@ -51,7 +51,7 @@
         tools:layout="@layout/activity_youtube" />
     <fragment
         android:id="@+id/signinOrSignUpFragment"
-        android:name="com.amadev.rando.ui.fragments.signup.SigninOrSignUpFragment"
+        android:name="com.amadev.rando.ui.fragments.signinorsignup.SigninOrSignUpFragment"
         android:label="fragment_signin_or_sign_up"
         tools:layout="@layout/fragment_signin_or_sign_up" >
         <action
@@ -78,7 +78,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.amadev.rando.ui.fragments.signinorsignup.SignUpFragment"
+        android:name="com.amadev.rando.ui.fragments.signup.SignUpFragment"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" >
         <action
