@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -45,10 +46,14 @@ class ChoiceFragment : Fragment() {
         getPopularMoviesData()
         observeMovieDetails()
         setTextViewVerticalMovementMethod(overview_tv)
-        setTextViewHorizontalMovementMethod(title_tv)
         customizeAlphaWhileDataIsNotAvailable()
         setUpAdapter()
+        setUpOnClickListeners()
+        setUpOnBackPressedCallback()
 
+    }
+
+    private fun setUpOnClickListeners() {
         trailer_btn.setOnClickListener {
             setProgressBarVisible()
             val intent = Intent(requireContext(), YoutubeActivity::class.java)
@@ -57,7 +62,7 @@ class ChoiceFragment : Fragment() {
 
         }
 
-        bcg_image.setOnClickListener{
+        bcg_image.setOnClickListener {
             disappearAnimation(details_layout)
         }
 
@@ -72,7 +77,7 @@ class ChoiceFragment : Fragment() {
 
 
     var i = 0
-    private fun disappearAnimation(property : View) {
+    private fun disappearAnimation(property: View) {
         i++
         if (i == 1) {
             animationTravelYWithAlpha(property, 200, -100f, 1f)
@@ -156,11 +161,6 @@ class ChoiceFragment : Fragment() {
 
     }
 
-    private fun setTextViewHorizontalMovementMethod(property : TextView) {
-        property.movementMethod = ScrollingMovementMethod.getInstance()
-    }
-
-
     private fun customizeAlphaWhileDataIsNotAvailable() {
         title_tv.alpha = 0f
         rating.alpha = 0f
@@ -188,14 +188,6 @@ class ChoiceFragment : Fragment() {
         animateAlphaWithHandlerDelay(trailer_btn, 100, 0f, 0)
     }
 
-//    private fun loadImageWithGlide() {
-//        choiceFragmentViewModel. {
-//            Glide.with(requireView())
-//                .load(it)
-//                .into(bcg_image)
-//        }
-//    }
-
     private fun setProgressBarVisible() {
         progressBar.visibility = View.VISIBLE
     }
@@ -216,6 +208,15 @@ class ChoiceFragment : Fragment() {
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             cast_recyclerview.adapter = adapter
         }
+    }
+
+    private fun setUpOnBackPressedCallback() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                activity?.finish()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
 }

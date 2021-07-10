@@ -44,6 +44,7 @@
             android:background="@drawable/four_corners_radius_background"
             android:fontFamily="@font/glacial_indifference_regular"
             android:hint="email adress"
+            android:singleLine="true"
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
             android:textColor="@color/white"
@@ -55,6 +56,8 @@
             app:layout_constraintTop_toBottomOf="@+id/login_tv" />
 
         <EditText
+            android:singleLine="true"
+            android:inputType="textPassword"
             android:id="@+id/password_input"
             android:layout_width="300dp"
             android:layout_height="50dp"

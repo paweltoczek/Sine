@@ -47,8 +47,8 @@ class SignInFragment : Fragment() {
     private fun setUpOnClickListeners() {
         signin_btn.setOnClickListener {
             signInViewModel.validateInput(
-                username_input.toString(),
-                password_input.toString())
+                username_input.text.toString(),
+                password_input.text.toString())
         }
     }
 

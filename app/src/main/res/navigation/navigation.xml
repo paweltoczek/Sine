@@ -19,7 +19,9 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_welcomeScreen_to_signinOrSignUpFragment"
-            app:destination="@id/signinOrSignUpFragment" />
+            app:destination="@id/signinOrSignUpFragment"
+            app:popUpTo="@id/welcomeScreen"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/viewPagerFragment"
@@ -28,7 +30,9 @@
         tools:layout="@layout/fragment_view_pager" >
         <action
             android:id="@+id/action_viewPagerFragment_to_signinOrSignUpFragment"
-            app:destination="@id/signinOrSignUpFragment" />
+            app:destination="@id/signinOrSignUpFragment"
+            app:popUpTo="@id/viewPagerFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/choiceFragment"

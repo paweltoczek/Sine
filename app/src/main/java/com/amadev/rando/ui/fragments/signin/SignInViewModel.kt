@@ -14,9 +14,6 @@ class SignInViewModel : ViewModel() {
     private val passwordInputErrorMutableLiveData = MutableLiveData<String>()
     val passwordInputErrorLiveData = passwordInputErrorMutableLiveData
 
-    private val emptyRepeatPasswordInputMutableLiveData = MutableLiveData<String>()
-    val emptyRepeatPasswordInputLiveData = emptyRepeatPasswordInputMutableLiveData
-
     private val invalidUsernameMutableLiveData = MutableLiveData<String>()
     val invalidUsernameLiveData = invalidUsernameMutableLiveData
 
