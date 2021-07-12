@@ -16,8 +16,6 @@ import kotlinx.android.synthetic.main.custom_recyclerview_pattern.view.*
 class CastAdapter(val view: View, var context: Context, var list: ArrayList<CastModelResults>) :
     RecyclerView.Adapter<CastAdapter.ViewHolder>() {
 
-    internal var listResult: ArrayList<CastModelResults> = list
-
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var castName: TextView = itemView.actorName
         var castImage: ImageView = itemView.actor_image_recyclerview
@@ -37,8 +35,6 @@ class CastAdapter(val view: View, var context: Context, var list: ArrayList<Cast
             list[position]?.profile_path?.trim(),
             getProgressDrawable(context)
         )
-
-
     }
 
     override fun getItemCount(): Int {

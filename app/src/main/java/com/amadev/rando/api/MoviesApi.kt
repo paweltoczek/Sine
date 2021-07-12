@@ -1,6 +1,7 @@
 package com.amadev.rando.api
 
 import com.amadev.rando.model.Cast
+import com.amadev.rando.model.Genre
 import com.amadev.rando.model.PopularMoviesModel
 import com.amadev.rando.model.VideoDetailsModel
 import retrofit2.Call
@@ -20,13 +21,16 @@ interface MoviesApi {
     @GET("movie/{movie_id}/videos")
     fun getTrailerVideo(
         @Path("movie_id") movieId: Int,
-        @Query("api_key") key: String
+        @Query("api_key") key: String,
     ): Call<VideoDetailsModel>
 
     @GET("movie/{movie_id}/credits")
     fun getCastDetails(
         @Path("movie_id") movieId: Int,
-        @Query("api_key") key: String
+        @Query("api_key") key: String,
     ): Call<Cast>
+
+    @GET("genre/movie/list")
+    fun getGenreList(@Query("api_key") key: String) : Call<Genre>
 
 }

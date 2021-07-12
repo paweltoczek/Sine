@@ -42,9 +42,14 @@ class ChoiceFragmentViewModel : ViewModel() {
     private val movieGenreIdMutableLiveData = MutableLiveData<List<Int?>>()
     val movieGenreIdLiveData = movieGenreIdMutableLiveData
 
-    private val castDetailsMutableLiveData = MutableLiveData<Cast>()
-    val castDetailsLiveData = castDetailsMutableLiveData
-    val castList = MutableLiveData<List<CastModelResults>>()
+    private val castListMutableLiveData = MutableLiveData<List<CastModelResults>>()
+    val castListLiveData = castListMutableLiveData
+
+    private val moviesGenreListMutableLiveData = MutableLiveData<List<GenresList>>()
+    val moviesGenreListLiveData = moviesGenreListMutableLiveData
+
+    private val genreNameListMutableLiveData = MutableLiveData<List<String>>()
+    val genreNameListLiveData = genreNameListMutableLiveData
 
     val pageAlreadyCalled = MutableLiveData<Int>()
     val currentPage = MutableLiveData<Int>()
@@ -64,7 +69,6 @@ class ChoiceFragmentViewModel : ViewModel() {
 
     private fun getPopularMoviesDataPrivate() {
         viewModelScope.launch {
-
             currentPage.value = getRandomPage()
             while (pageAlreadyCalled.value == currentPage.value) {
                 currentPage.value = getRandomPage()
@@ -73,10 +77,8 @@ class ChoiceFragmentViewModel : ViewModel() {
                 } else
                     break
             }
-
             val callPopularMovies =
                 request.getPopularMovies(BuildConfig.TMDB_API_KEY, currentPage.value!!)
-
             callPopularMovies.enqueue(object : Callback<PopularMoviesModel> {
                 override fun onResponse(
                     call: Call<PopularMoviesModel>,
@@ -85,7 +87,6 @@ class ChoiceFragmentViewModel : ViewModel() {
                     if (response.isSuccessful) {
                         val responseBody = response.body()!!
                         val randomResults = responseBody.results.random()
-
                         randomResults.apply {
                             movieIdMutableLiveData.value = id
                             movieTitleMutableLiveData.value = title
@@ -94,14 +95,12 @@ class ChoiceFragmentViewModel : ViewModel() {
                             movieRatingMutableLiveData.value = vote_average
                             moviePosterEndPointMutableLiveData.value = poster_path
                             movieGenreIdMutableLiveData.value = genre_ids
-
                             Log.e("movieid", movieIdMutableLiveData.value.toString())
                         }
                         pageAlreadyCalled.value = currentPage.value
                     }
                 }
-                override fun onFailure(call: Call<PopularMoviesModel>, t: Throwable) {/*
-                Toast.makeText(requireContext(), "${t.message}", Toast.LENGTH_SHORT).show()*/
+                override fun onFailure(call: Call<PopularMoviesModel>, t: Throwable) {
                     Log.e("error", t.message.toString())
                 }
             })
@@ -127,7 +126,6 @@ class ChoiceFragmentViewModel : ViewModel() {
                             videoEndPoint.value = responseBody?.results?.last()?.key.toString()
                     }
                 }
-
                 override fun onFailure(call: Call<VideoDetailsModel>, t: Throwable) {
                 }
             })
@@ -143,26 +141,40 @@ class ChoiceFragmentViewModel : ViewModel() {
                     call: Call<Cast>,
                     response: Response<Cast>
                 ) {
-                    var listMovies: ArrayList<CastModelResults> = ArrayList<CastModelResults>()
+                    val listMovies: ArrayList<CastModelResults> = ArrayList<CastModelResults>()
                     if (response.isSuccessful) {
-                        val rawList = response.body()!!.cast
-                        listMovies.addAll(rawList)
-
-                        castList.value = rawList
+                        val responseBody = response.body()!!.cast
+                        listMovies.addAll(responseBody)
+                        castListMutableLiveData.value = responseBody
                         Log.e("rawlist", listMovies.toString())
                     }
-
-
                 }
-
-
                 override fun onFailure(call: Call<Cast>, t: Throwable) {
                     Log.e("castError", "error")
-
                 }
-
             })
         }
+    }
+
+    fun getGenresList() {
+        val callGenresList = request.getGenreList(BuildConfig.TMDB_API_KEY)
+        callGenresList.enqueue(object : Callback<Genre> {
+            override fun onResponse(call: Call<Genre>, response: Response<Genre>) {
+                val genreList: ArrayList<GenresList> = ArrayList()
+                val genreNameList = ArrayList<String>()
+                val responseBody = response.body()!!.genres
+                genreNameList.add(0,"Any")
+                for (i in responseBody) {
+                    genreNameList.add(i.name)
+                    genreNameListMutableLiveData.value = genreNameList
+                    Log.e("genreList", genreNameList.toString())
+                }
+                genreList.addAll(responseBody)
+                moviesGenreListMutableLiveData.value = genreList
+            }
+            override fun onFailure(call: Call<Genre>, t: Throwable) {
+            }
+        })
     }
 }
 

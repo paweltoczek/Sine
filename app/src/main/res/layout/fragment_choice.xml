@@ -133,7 +133,7 @@
             app:layout_constraintTop_toBottomOf="@+id/releasedate" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/watch_trailer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="90dp"
@@ -226,7 +226,7 @@
         app:layout_constraintTop_toTopOf="@+id/details_layout" />
 
     <Spinner
-        android:id="@+id/movie_genre"
+        android:id="@+id/movie_genre_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
