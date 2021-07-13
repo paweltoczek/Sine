@@ -11,6 +11,8 @@ import kotlinx.android.synthetic.main.fragment_choice.view.*
 
 object Util {
 
+    fun getRandomPage(): Int = (0 until 200).random()
+
     fun getProgressDrawable(context: Context): CircularProgressDrawable {
         return CircularProgressDrawable(context).apply {
             strokeWidth = 10f

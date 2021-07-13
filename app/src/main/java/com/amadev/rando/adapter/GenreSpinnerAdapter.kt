@@ -10,7 +10,7 @@ import android.widget.TextView
 import com.amadev.rando.R
 import com.amadev.rando.model.GenresList
 
-class GenreSpinnerAdapter(val context: Context, val list: List<String>) : BaseAdapter() {
+class GenreSpinnerAdapter(val context: Context, val list: List<GenresList>) : BaseAdapter() {
     private val layoutInflater: LayoutInflater
 
     init {
@@ -33,13 +33,13 @@ class GenreSpinnerAdapter(val context: Context, val list: List<String>) : BaseAd
             viewHolder = view.tag as ViewHolder
         }
         view?.tag = viewHolder
-        viewHolder.genreName.text = list[position]
+        viewHolder.genreName.text = list[position].name
         return view
     }
 
     class ViewHolder(view: View) {
         var genreName: TextView = view.findViewById(R.id.spinner_genre_name)
-    }
 
+    }
 
 }

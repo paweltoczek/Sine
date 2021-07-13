@@ -1,4 +1,4 @@
-package com.amadev.rando.api
+package com.amadev.rando.data
 
 import com.amadev.rando.model.Cast
 import com.amadev.rando.model.Genre
@@ -10,7 +10,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 
-interface MoviesApi {
+interface ApiInterface {
 
     @GET("movie/popular")
     fun getPopularMovies(

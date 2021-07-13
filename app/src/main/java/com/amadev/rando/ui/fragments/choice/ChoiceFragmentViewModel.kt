@@ -5,8 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.amadev.rando.BuildConfig
-import com.amadev.rando.api.MoviesApi
-import com.amadev.rando.api.RetrofitInstance
+import com.amadev.rando.data.ApiClient
+import com.amadev.rando.data.ApiInterface
+import com.amadev.rando.data.ApiService
 import com.amadev.rando.model.*
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -16,7 +17,7 @@ import retrofit2.Response
 
 class ChoiceFragmentViewModel : ViewModel() {
 
-    private val request = RetrofitInstance.buildService(MoviesApi::class.java)
+    private val request = ApiClient.buildService(ApiInterface::class.java)
 
     var moviesDetailsList = ArrayList<PopularMoviesResults>()
     var videosDetailsList = ArrayList<VideoDetailsResults>()
@@ -51,6 +52,8 @@ class ChoiceFragmentViewModel : ViewModel() {
     private val genreNameListMutableLiveData = MutableLiveData<List<String>>()
     val genreNameListLiveData = genreNameListMutableLiveData
 
+    val genreIdMutableLiveData = MutableLiveData<GenresList>()
+
     val pageAlreadyCalled = MutableLiveData<Int>()
     val currentPage = MutableLiveData<Int>()
 
@@ -61,8 +64,7 @@ class ChoiceFragmentViewModel : ViewModel() {
         getPopularMoviesDataPrivate()
     }
 
-
-    fun getRandomPage(): Int {
+    private fun getRandomPage(): Int {
         val page = (1 until 200).random()
         return page
     }
@@ -106,7 +108,6 @@ class ChoiceFragmentViewModel : ViewModel() {
             })
         }
     }
-
 
     fun getTrailerVideoData() {
         viewModelScope.launch {
@@ -156,6 +157,8 @@ class ChoiceFragmentViewModel : ViewModel() {
         }
     }
 
+
+    // fun getGenreList is not finished yet. Skip code until u see "dick" word
     fun getGenresList() {
         val callGenresList = request.getGenreList(BuildConfig.TMDB_API_KEY)
         callGenresList.enqueue(object : Callback<Genre> {
@@ -170,11 +173,19 @@ class ChoiceFragmentViewModel : ViewModel() {
                     Log.e("genreList", genreNameList.toString())
                 }
                 genreList.addAll(responseBody)
-                moviesGenreListMutableLiveData.value = genreList
+                moviesGenreListMutableLiveData.value = response.body()!!.genres
+                Log.e("movgenid", movieGenreIdMutableLiveData.value.toString())
             }
             override fun onFailure(call: Call<Genre>, t: Throwable) {
             }
         })
     }
+
+    fun getGenreId(selectedPositionNo: Int) {
+        var sele = moviesGenreListMutableLiveData.value?.get(selectedPositionNo)?.id
+        Log.e("selectedPos", sele.toString())
+    }
+
+    //dick
 }
 
