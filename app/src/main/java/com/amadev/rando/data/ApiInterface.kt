@@ -13,7 +13,7 @@ import retrofit2.http.Query
 interface ApiInterface {
 
     @GET("movie/popular")
-    fun getPopularMovies(
+    fun getPopularMoviesByPage(
         @Query("api_key") key: String,
         @Query("page") page: Int
     ): Call<PopularMoviesModel>

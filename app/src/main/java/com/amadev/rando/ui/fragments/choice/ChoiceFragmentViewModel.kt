@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.amadev.rando.BuildConfig
 import com.amadev.rando.data.ApiClient
 import com.amadev.rando.data.ApiInterface
-import com.amadev.rando.data.ApiService
+import com.amadev.rando.data.provideTmdbApi
 import com.amadev.rando.model.*
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -15,7 +15,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class ChoiceFragmentViewModel : ViewModel() {
+class ChoiceFragmentViewModel(val api : ApiClient) : ViewModel() {
 
     private val request = ApiClient.buildService(ApiInterface::class.java)
 
@@ -80,7 +80,7 @@ class ChoiceFragmentViewModel : ViewModel() {
                     break
             }
             val callPopularMovies =
-                request.getPopularMovies(BuildConfig.TMDB_API_KEY, currentPage.value!!)
+                request.getPopularMoviesByPage(BuildConfig.TMDB_API_KEY, currentPage.value!!)
             callPopularMovies.enqueue(object : Callback<PopularMoviesModel> {
                 override fun onResponse(
                     call: Call<PopularMoviesModel>,
@@ -187,5 +187,20 @@ class ChoiceFragmentViewModel : ViewModel() {
     }
 
     //dick
+
+
+    // first with koin
+    private val popularMovies = MutableLiveData<Callback<PopularMoviesModel>>()
+    fun getPPLMV(){
+        api.buildService(ApiInterface::class.java)
+            .getPopularMoviesByPage(BuildConfig.TMDB_API_KEY,2)
+            .enqueue(popularMovies.value!!)
+
+        Log.e("koin", popularMovies.value.toString())
+
+    }
+
+
+
 }
 
