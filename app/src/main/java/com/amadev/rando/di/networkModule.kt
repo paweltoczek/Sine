@@ -1,10 +1,7 @@
 package com.amadev.rando.data
 
 import com.amadev.rando.BuildConfig
-import com.amadev.rando.ui.fragments.choice.ChoiceFragment
-import com.amadev.rando.ui.fragments.choice.ChoiceFragmentViewModel
 import okhttp3.OkHttpClient
-import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -12,9 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 val networkModule = module {
     single { provideRetrofit(get()) }
     single { provideTmdbApi(get()) }
-    single { PopularMoviesService(get()) }
-    factory { ChoiceFragment() }
-    viewModel { ChoiceFragmentViewModel(get()) }
+    single { ApiService(get()) }
 }
 
 fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
@@ -23,3 +18,5 @@ fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
 }
 
 fun provideTmdbApi(retrofit: Retrofit): ApiInterface = retrofit.create(ApiInterface::class.java)
+
+
