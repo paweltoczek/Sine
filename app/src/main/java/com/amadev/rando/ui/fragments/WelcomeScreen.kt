@@ -3,6 +3,7 @@ package com.amadev.rando.ui.fragments
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +24,7 @@ class WelcomeScreen : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Handler().postDelayed({
+        Handler(Looper.myLooper()!!).postDelayed({
             if(onBoardingFinished()) {
                 findNavController().navigate(R.id.action_welcomeScreen_to_signinOrSignUpFragment)
             } else {

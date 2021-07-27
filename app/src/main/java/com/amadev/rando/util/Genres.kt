@@ -1,67 +1,28 @@
 package com.amadev.rando.util
 
+enum class Genre(val nameValue: String, val id: Int) {
+    Action("Action", 28),
+    Adventure("Adventure", 12),
+    Animation("Animation", 16),
+    Comedy("Comedy", 35),
+    Crime("Crime", 80),
+    Documentary("Documentary", 99),
+    Drama("Drama", 18),
+    Family("Family", 10751),
+    Fantasy("Fantasy", 14),
+    History("History", 36),
+    Horror("Horror", 27),
+    Music("Music", 10402),
+    Mystery("Mystery", 9648),
+    Romance("Romance", 10749),
+    ScienceFiction("Science Fiction", 878),
+    TvMovie("TV Movie", 10770),
+    Thriller("Thriller", 53),
+    War("War", 10752),
+    Western("Western", 37)
+}
+
 object Genres {
-    fun getGenres(genreId: Int?): String {
-        var genre = ""
-        when (genreId) {
-            28 -> {
-                genre = "Action"
-            }
-            12 -> {
-                genre = "Adventure"
-            }
-            16 -> {
-                genre = "Animation"
-            }
-            35 -> {
-                genre = "Comedy"
-            }
-            80 -> {
-                genre = "Crime"
-            }
-            99 -> {
-                genre = "Documentary"
-            }
-            18 -> {
-                genre = "Drama"
-            }
-            10751 -> {
-                genre = "Family"
-            }
-            14 -> {
-                genre = "Fantasy"
-            }
-            36 -> {
-                genre = "History"
-            }
-            27 -> {
-                genre = "Horror"
-            }
-            10402 -> {
-                genre = "Music"
-            }
-            9648 -> {
-                genre = "Mystery"
-            }
-            10749 -> {
-                genre = "Romance"
-            }
-            878 -> {
-                genre = "Scienie Fiction"
-            }
-            10770 -> {
-                genre = "TV Movie"
-            }
-            53 -> {
-                genre = "Thriller"
-            }
-            10752 -> {
-                genre = "War"
-            }
-            37 -> {
-                genre = "Western"
-            }
-        }
-        return genre
-    }
+    fun findGenreNameById(id: Int?): String = Genre.values().firstOrNull { it.id == id }?.nameValue
+        ?: throw IllegalArgumentException("Genre with $id does not exist")
 }

@@ -61,8 +61,7 @@ class ChoiceFragmentViewModel(val api : ApiClient) : ViewModel() {
     val videoEndPoitError = MutableLiveData<String>()
 
     private fun getRandomPage(): Int {
-        val page = (1 until 200).random()
-        return page
+        return (1 until 200).random()
     }
 
     fun getTrailerVideo() {

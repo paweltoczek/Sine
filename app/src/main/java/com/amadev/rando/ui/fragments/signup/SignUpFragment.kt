@@ -53,11 +53,11 @@ class SignUpFragment : Fragment() {
 
     private fun sendInputsToViewModel() {
         signUpViewModel.apply {
-            validateInput(
-                username_input.text.toString(),
-                password_input.text.toString(),
-                password_repeat_input.text.toString()
-            )
+//            validateInput(
+//                username_input.text.toString(),
+//                password_input.text.toString(),
+//                password_repeat_input.text.toString()
+//            )
         }
     }
 

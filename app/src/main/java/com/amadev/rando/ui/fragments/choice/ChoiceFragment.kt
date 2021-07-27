@@ -3,6 +3,7 @@ package com.amadev.rando.ui.fragments.choice
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +18,7 @@ import com.amadev.rando.adapter.CastAdapter
 import com.amadev.rando.util.Animations.animateAlphaWithHandlerDelay
 import com.amadev.rando.util.Animations.animationTravelYWithAlpha
 import com.amadev.rando.util.Animations.scaleXY
-import com.amadev.rando.util.Genres.getGenres
+import com.amadev.rando.util.Genres.findGenreNameById
 import com.amadev.rando.util.Util.getProgressDrawable
 import com.amadev.rando.util.Util.loadImageWithGlide
 import kotlinx.android.synthetic.main.fragment_choice.*
@@ -25,9 +26,8 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 class ChoiceFragment : Fragment() {
 
-
+    var i = 0
     private val choiceFragmentViewModel: ChoiceFragmentViewModel by viewModel<ChoiceFragmentViewModel>()
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,9 +39,7 @@ class ChoiceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         choiceFragmentViewModel.getPopularMovies()
-
         setUpViewModel()
         setUpObservers()
         setTextViewVerticalMovementMethod(overview_tv)
@@ -49,9 +47,7 @@ class ChoiceFragment : Fragment() {
         setUpAdapter()
         setUpOnClickListeners()
         setUpOnBackPressedCallback()
-
     }
-
 
     private fun setUpViewModel() {
         choiceFragmentViewModel.apply {
@@ -91,17 +87,16 @@ class ChoiceFragment : Fragment() {
     }
 
 
-    var i = 0
     private fun disappearAnimation(property: View) {
         i++
         if (i == 1) {
             animationTravelYWithAlpha(property, 200, -100f, 1f)
-            Handler().postDelayed({
+            Handler(Looper.myLooper()!!).postDelayed({
                 animationTravelYWithAlpha(property, 150, 500f, 0f)
             }, 300)
         } else {
             i = 0
-            Handler().postDelayed({
+            Handler(Looper.myLooper()!!).postDelayed({
                 animationTravelYWithAlpha(property, 150, 0f, 0.9f)
             }, 100)
         }
@@ -112,7 +107,7 @@ class ChoiceFragment : Fragment() {
         choiceFragmentViewModel.apply {
             movieTitleLiveData.observe(viewLifecycleOwner) {
                 title_tv.text = it?.trim()
-                Handler().postDelayed({
+                Handler(Looper.myLooper()!!).postDelayed({
                     customizeAlphaWhileDataIsLoaded()
                 }, 1000)
             }
@@ -147,10 +142,10 @@ class ChoiceFragment : Fragment() {
                 if (it.size > 1) {
                     moviegenre2.visibility = View.VISIBLE
                     dotseparator2.visibility = View.VISIBLE
-                    moviegenre1.text = getGenres(it[0])
-                    moviegenre2.text = getGenres(it[1])
+                    moviegenre1.text = findGenreNameById(it[0])
+                    moviegenre2.text = findGenreNameById(it[1])
                 } else if (it.isNotEmpty()) {
-                    moviegenre1.text = getGenres(it[0])
+                    moviegenre1.text = findGenreNameById(it[0])
                     moviegenre2.visibility = View.GONE
                     dotseparator2.visibility = View.GONE
                 }
@@ -180,7 +175,7 @@ class ChoiceFragment : Fragment() {
 //
     private fun animateShuffleButton() {
         scaleXY(shufflebtn, 150, 0.9f)
-        Handler().postDelayed({
+        Handler(Looper.myLooper()!!).postDelayed({
             scaleXY(shufflebtn, 100, 1f)
         }, 200)
     }
@@ -189,7 +184,6 @@ class ChoiceFragment : Fragment() {
         property.movementMethod = ScrollingMovementMethod.getInstance()
     }
 
-    //
     private fun customizeAlphaWhileDataIsNotAvailable() {
         title_tv.alpha = 0f
         rating.alpha = 0f
@@ -200,7 +194,6 @@ class ChoiceFragment : Fragment() {
         watch_trailer.alpha = 0f
     }
 
-    //
     private fun customizeAlphaWhileDataIsLoaded() {
         animateAlphaWithHandlerDelay(title_tv, 300, 1f, 100)
         animateAlphaWithHandlerDelay(rating, 300, 1f, 300)
@@ -211,7 +204,7 @@ class ChoiceFragment : Fragment() {
         animateAlphaWithHandlerDelay(watch_trailer, 500, 1f, 500)
     }
 
-    private fun customizeAlphaWhileShuffleButtonIsPressed() {
+    fun customizeAlphaWhileShuffleButtonIsPressed() {
         animateAlphaWithHandlerDelay(title_tv, 100, 0f, 0)
         animateAlphaWithHandlerDelay(rating, 100, 0f, 0)
         animateAlphaWithHandlerDelay(overview_tv, 100, 0f, 0)
