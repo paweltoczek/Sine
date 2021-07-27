@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.amadev.rando.data.ApiClient
-import com.amadev.rando.data.ApiInterface
 import com.amadev.rando.data.ApiService
 import com.amadev.rando.model.CastModelResults
 import com.amadev.rando.model.GenresList
@@ -17,28 +16,11 @@ import kotlinx.coroutines.launch
 
 class ChoiceFragmentViewModel(val api : ApiClient) : ViewModel() {
 
-    private val request = ApiClient.buildService(ApiInterface::class.java)
-
     var moviesDetailsList = ArrayList<PopularMoviesResults>()
     var videosDetailsList = ArrayList<VideoDetailsResults>()
 
     private val movieIdMutableLiveData = MutableLiveData<Int?>()
     val movieIdLiveData = movieIdMutableLiveData
-
-    private val movieTitleMutableLiveData = MutableLiveData<String?>()
-    val movieTitleLiveData = movieTitleMutableLiveData
-
-    private val movieOverviewMutableLiveData = MutableLiveData<String?>()
-    val movieOverviewLiveData = movieOverviewMutableLiveData
-
-    private val movieReleaseDateMutableLiveData = MutableLiveData<String?>()
-    val movieReleaseDateLiveDate = movieReleaseDateMutableLiveData
-
-    private val movieRatingMutableLiveData = MutableLiveData<Double?>()
-    val movieRatingLiveData = movieRatingMutableLiveData
-
-    private val moviePosterEndPointMutableLiveData = MutableLiveData<String?>()
-    val moviePosterEndPointLiveData = moviePosterEndPointMutableLiveData
 
     private val movieGenreIdMutableLiveData = MutableLiveData<List<Int?>>()
     val movieGenreIdLiveData = movieGenreIdMutableLiveData
@@ -51,7 +33,6 @@ class ChoiceFragmentViewModel(val api : ApiClient) : ViewModel() {
 
     private val genreNameListMutableLiveData = MutableLiveData<List<String>>()
     val genreNameListLiveData = genreNameListMutableLiveData
-
     val genreIdMutableLiveData = MutableLiveData<GenresList>()
 
     val pageAlreadyCalled = MutableLiveData<Int>()
@@ -59,6 +40,12 @@ class ChoiceFragmentViewModel(val api : ApiClient) : ViewModel() {
 
     val videoEndPoint = MutableLiveData<String>()
     val videoEndPoitError = MutableLiveData<String>()
+
+    private val popularMoviesResultsMutableLiveData = MutableLiveData<PopularMoviesResults>()
+    val popularMoviesResultsLiveData = popularMoviesResultsMutableLiveData
+
+    private val messageMutableLiveData = MutableLiveData<String>()
+    val messageLiveData = messageMutableLiveData
 
     private fun getRandomPage(): Int {
         return (1 until 200).random()
@@ -147,21 +134,21 @@ class ChoiceFragmentViewModel(val api : ApiClient) : ViewModel() {
                     responseBody?.let {
                         val randomResults = responseBody.results.random()
                         randomResults.apply {
-                            movieIdMutableLiveData.postValue(id)
-                            movieTitleMutableLiveData.postValue(title)
-                            movieOverviewMutableLiveData.postValue(overview)
-                            movieReleaseDateMutableLiveData.postValue(release_date)
-                            movieRatingMutableLiveData.postValue(vote_average)
-                            moviePosterEndPointMutableLiveData.postValue(poster_path)
+                            popularMoviesResultsMutableLiveData.postValue(randomResults)
                             movieGenreIdMutableLiveData.postValue(genre_ids)
                             Log.e("movieid", movieIdMutableLiveData.value.toString())
                         }
                         pageAlreadyCalled.postValue(currentPage.value)
                     }
+                } else {
+                    messageMutableLiveData.postValue("Please check internet connection")
                 }
             }
         }
     }
 }
+
+
+
 
 

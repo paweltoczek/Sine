@@ -105,38 +105,29 @@ class ChoiceFragment : Fragment() {
 
     private fun setUpObservers() {
         choiceFragmentViewModel.apply {
-            movieTitleLiveData.observe(viewLifecycleOwner) {
-                title_tv.text = it?.trim()
-                Handler(Looper.myLooper()!!).postDelayed({
+            popularMoviesResultsLiveData.observe(viewLifecycleOwner) {
+                it?.let {
+                    title_tv.text = it.title?.trim()
+                    overview_tv.text = it.overview?.trim()
+                    releasedate.text = it.release_date?.take(4)?.trim()
+                    rating.text = it.vote_average?.toString()?.trim()
+                    if (it.vote_average != null) {
+                        ratingBar.rating = (it.vote_average / 2).toFloat()
+                    }
+                    if (it.id != null) {
+                        getTrailerVideo()
+                        getCastDetails()
+                    }
+                    bcg_image.loadImageWithGlide(it.poster_path,
+                        getProgressDrawable(requireContext()))
+
+//                    if (it.genre_ids?.size!! > 1) {
+//
+//                    }
                     customizeAlphaWhileDataIsLoaded()
-                }, 1000)
-            }
-
-            movieOverviewLiveData.observe(viewLifecycleOwner) {
-                overview_tv.text = it?.trim()
-            }
-
-            movieReleaseDateLiveDate.observe(viewLifecycleOwner) {
-                releasedate.text = it?.take(4)?.trim()
-            }
-
-            movieRatingLiveData.observe(viewLifecycleOwner) {
-                rating.text = it.toString().trim()
-                if (it != null) {
-                    ratingBar.rating = (it / 2).toFloat()
                 }
             }
 
-            movieIdLiveData.observe(viewLifecycleOwner) {
-                choiceFragmentViewModel.apply {
-                    getTrailerVideo()
-                    getCastDetails()
-                }
-            }
-
-            moviePosterEndPointLiveData.observe(viewLifecycleOwner) {
-                bcg_image.loadImageWithGlide(it, getProgressDrawable(requireContext()))
-            }
 
             movieGenreIdLiveData.observe(viewLifecycleOwner) {
                 if (it.size > 1) {
@@ -150,6 +141,7 @@ class ChoiceFragment : Fragment() {
                     dotseparator2.visibility = View.GONE
                 }
             }
+
         }
 
 
