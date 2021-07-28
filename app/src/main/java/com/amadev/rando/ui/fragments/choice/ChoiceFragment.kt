@@ -26,15 +26,14 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 class ChoiceFragment : Fragment() {
 
-    var i = 0
-    private val choiceFragmentViewModel: ChoiceFragmentViewModel by viewModel<ChoiceFragmentViewModel>()
+    private var i = 0
+    private val choiceFragmentViewModel: ChoiceFragmentViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_choice, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_choice, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,11 +41,12 @@ class ChoiceFragment : Fragment() {
 
         setUpViewModel()
         setUpObservers()
-        setTextViewVerticalMovementMethod(overview_tv)
         customizeAlphaWhileDataIsNotAvailable()
         setUpAdapter()
+        setTextViewVerticalMovementMethod(overview_tv)
         setUpOnClickListeners()
         setUpOnBackPressedCallback()
+
     }
 
     private fun setUpViewModel() {
@@ -76,7 +76,6 @@ class ChoiceFragment : Fragment() {
         }
     }
 
-
     private fun getPopularMovies() {
         choiceFragmentViewModel.apply {
             getPopularMovies()
@@ -84,7 +83,6 @@ class ChoiceFragment : Fragment() {
             getCastDetails()
         }
     }
-
 
     private fun disappearAnimation(property: View) {
         i++
@@ -101,17 +99,15 @@ class ChoiceFragment : Fragment() {
         }
     }
 
-
     private fun setUpObservers() {
         choiceFragmentViewModel.apply {
             popularMoviesResultsLiveData.observe(viewLifecycleOwner) {
-                it?.let {
                     it.apply {
                         title?.let { title_tv.text = title.trim() }
                         overview?.let { overview_tv.text = overview.trim() }
                         release_date?.let { release_date.take(4).trim() }
                         vote_average?.let {
-                            rating.text.trim().toString()
+                            rating.text = vote_average.toString().trim()
                             ratingBar.rating = (vote_average / 2).toFloat()
                         }
                         id?.let {
@@ -136,8 +132,8 @@ class ChoiceFragment : Fragment() {
                         }
                     }
                     customizeAlphaWhileDataIsLoaded()
-                }
             }
+            this.progressBarVisibility.observe(viewLifecycleOwner) { setProgressBarGone() }
         }
     }
 
@@ -190,7 +186,7 @@ class ChoiceFragment : Fragment() {
         animateAlphaWithHandlerDelay(watch_trailer, 500, 1f, 500)
     }
 
-    fun customizeAlphaWhileShuffleButtonIsPressed() {
+    private fun customizeAlphaWhileShuffleButtonIsPressed() {
         animateAlphaWithHandlerDelay(title_tv, 100, 0f, 0)
         animateAlphaWithHandlerDelay(rating, 100, 0f, 0)
         animateAlphaWithHandlerDelay(overview_tv, 100, 0f, 0)
@@ -230,7 +226,6 @@ class ChoiceFragment : Fragment() {
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
-
 
 }
 

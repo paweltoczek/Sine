@@ -55,15 +55,8 @@ class SignInFragment : Fragment() {
 
     private fun setUpObservers() {
         signInViewModel.apply {
-            usernameInputErrorLiveData.observe(viewLifecycleOwner) {
-                username_input.error = it
-            }
-            invalidUsernameLiveData.observe(viewLifecycleOwner) {
-                username_input.error = it
-            }
-            passwordInputErrorLiveData.observe(viewLifecycleOwner) {
-                password_input.error = it
-            }
+            errorMessageLiveData.observe(viewLifecycleOwner) { username_input.error = it }
+
             messageLiveData.observe(viewLifecycleOwner) {
                 val snack = Snackbar.make(requireView(), it, Snackbar.LENGTH_LONG)
                 snack.show()

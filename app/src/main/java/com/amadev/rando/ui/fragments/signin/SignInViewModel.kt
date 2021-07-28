@@ -1,21 +1,22 @@
 package com.amadev.rando.ui.fragments.signin
 
+import android.content.Context
 import android.util.Patterns
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 
-class SignInViewModel : ViewModel() {
+sealed class Messages {
+    data class ErrorMessages(
+        val emptyField: String = "Field cannot be empty",
+        val invalidEmail: String = "Please enter valid email address",
+    )
+}
+
+class SignInViewModel(private val context: Context) : ViewModel() {
+
+    private val messages = Messages.ErrorMessages()
     private lateinit var auth: FirebaseAuth
-
-    private val usernameInputErrorMutableLiveData = MutableLiveData<String>()
-    val usernameInputErrorLiveData = usernameInputErrorMutableLiveData
-
-    private val passwordInputErrorMutableLiveData = MutableLiveData<String>()
-    val passwordInputErrorLiveData = passwordInputErrorMutableLiveData
-
-    private val invalidUsernameMutableLiveData = MutableLiveData<String>()
-    val invalidUsernameLiveData = invalidUsernameMutableLiveData
 
     private val loginSuccessfulMutableLiveData = MutableLiveData<Boolean>()
     val loginSuccessfulLiveData = loginSuccessfulMutableLiveData
@@ -29,15 +30,20 @@ class SignInViewModel : ViewModel() {
     private val loginAutomaticallyIfPossibleMutableLiveData = MutableLiveData<Boolean>()
     val loginAutomaticallyIfPossibleLiveData = loginAutomaticallyIfPossibleMutableLiveData
 
+    private val errorMessageMutableLiveData = MutableLiveData<String>()
+    val errorMessageLiveData = errorMessageMutableLiveData
+
 
     fun validateInput(username: String, password: String) {
         val username = username.trim()
         val password = password.trim()
         when {
-            username.isEmpty() -> usernameInputErrorMutableLiveData.value = "Field cannot be empty"
-            password.isEmpty() -> passwordInputErrorLiveData.value = "Field cannot be empty"
+            username.isEmpty() || password.isEmpty() ->
+                errorMessageLiveData.value = messages.emptyField
+
             Patterns.EMAIL_ADDRESS.matcher(username).matches()
-                .not() -> invalidUsernameMutableLiveData.value = "Please enter valid email adress"
+                .not() -> errorMessageLiveData.value = messages.invalidEmail
+
             else -> doLoginWithEmailAndPassword(username, password)
         }
     }

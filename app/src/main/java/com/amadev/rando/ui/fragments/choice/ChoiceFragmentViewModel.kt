@@ -1,6 +1,5 @@
 package com.amadev.rando.ui.fragments.choice
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -37,6 +36,7 @@ class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
 
     private val messageMutableLiveData = MutableLiveData<String>()
     val messageLiveData = messageMutableLiveData
+    val progressBarVisibility = MutableLiveData<Boolean>()
 
     private fun getRandomPage(): Int {
         return (1 until 200).random()
@@ -48,9 +48,8 @@ class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
             response?.let {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
-                    responseBody?.let {
-                        videoEndPoint.postValue(responseBody
-                            .results
+                    responseBody?.results?.let {
+                        videoEndPoint.postValue( it
                             .last()
                             .key
                             .toString())
@@ -67,9 +66,8 @@ class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     responseBody?.let {
-                        val castList: ArrayList<CastModelResults> = ArrayList<CastModelResults>()
-                        castList.addAll(it.cast)
-                        Log.e("castlist", castList.toString())
+                        val castList: ArrayList<CastModelResults> = ArrayList()
+                        for (i in responseBody.cast) i.profile_path?.let { castList.add(i) }
                         castListMutableLiveData.postValue(castList)
                     }
                 }
@@ -109,7 +107,6 @@ class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
 
     fun getPopularMovies() {
         viewModelScope.launch(Dispatchers.IO) {
-
             currentPage.postValue(getRandomPage())
             while (pageAlreadyCalled.value == currentPage.value) {
                 currentPage.postValue(getRandomPage())
@@ -128,9 +125,11 @@ class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
                             popularMoviesResultsMutableLiveData.postValue(randomResults)
                         }
                         pageAlreadyCalled.postValue(currentPage.value)
+                        progressBarVisibility.postValue(false)
                     }
                 } else {
                     messageMutableLiveData.postValue("Please check internet connection")
+                    progressBarVisibility.postValue(false)
                 }
             }
         }

@@ -64,7 +64,7 @@
             android:id="@+id/moviegenre1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="30dp"
             android:alpha="0.7"
             android:fontFamily="@font/glacial_indifference_regular"
             android:shadowColor="@color/black"
@@ -72,7 +72,7 @@
             android:textColor="@color/white"
             android:textSize="13sp"
             app:layout_constraintBaseline_toBaselineOf="@+id/releasedate"
-            app:layout_constraintStart_toEndOf="@+id/releasedate" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/moviegenre2"
@@ -180,8 +180,7 @@
             android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="@+id/releasedate"
-            app:layout_constraintEnd_toStartOf="@+id/moviegenre1"
-            app:layout_constraintStart_toEndOf="@+id/releasedate"
+            app:layout_constraintStart_toEndOf="@+id/moviegenre2"
             app:layout_constraintTop_toTopOf="@+id/releasedate" />
 
         <LinearLayout
