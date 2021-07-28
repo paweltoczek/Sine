@@ -39,7 +39,7 @@ class ChoiceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        choiceFragmentViewModel.getPopularMovies()
+
         setUpViewModel()
         setUpObservers()
         setTextViewVerticalMovementMethod(overview_tv)
@@ -52,7 +52,6 @@ class ChoiceFragment : Fragment() {
     private fun setUpViewModel() {
         choiceFragmentViewModel.apply {
             getPopularMovies()
-            getTrailerVideo()
         }
     }
 
@@ -107,44 +106,39 @@ class ChoiceFragment : Fragment() {
         choiceFragmentViewModel.apply {
             popularMoviesResultsLiveData.observe(viewLifecycleOwner) {
                 it?.let {
-                    title_tv.text = it.title?.trim()
-                    overview_tv.text = it.overview?.trim()
-                    releasedate.text = it.release_date?.take(4)?.trim()
-                    rating.text = it.vote_average?.toString()?.trim()
-                    if (it.vote_average != null) {
-                        ratingBar.rating = (it.vote_average / 2).toFloat()
+                    it.apply {
+                        title?.let { title_tv.text = title.trim() }
+                        overview?.let { overview_tv.text = overview.trim() }
+                        release_date?.let { release_date.take(4).trim() }
+                        vote_average?.let {
+                            rating.text.trim().toString()
+                            ratingBar.rating = (vote_average / 2).toFloat()
+                        }
+                        id?.let {
+                            choiceFragmentViewModel.getTrailerVideo()
+                            choiceFragmentViewModel.getCastDetails()
+                        }
+                        poster_path?.let {
+                            bcg_image.loadImageWithGlide(poster_path,
+                                getProgressDrawable(requireContext()))
+                        }
+                        genre_ids?.let { ids ->
+                            if (ids.size > 1) {
+                                moviegenre2.visibility = View.VISIBLE
+                                dotseparator2.visibility = View.VISIBLE
+                                moviegenre1.text = findGenreNameById(ids[0])
+                                moviegenre2.text = findGenreNameById(ids[1])
+                            } else if (ids.isNotEmpty()) {
+                                moviegenre1.text = findGenreNameById(ids[0])
+                                moviegenre2.visibility = View.GONE
+                                dotseparator2.visibility = View.GONE
+                            }
+                        }
                     }
-                    if (it.id != null) {
-                        getTrailerVideo()
-                        getCastDetails()
-                    }
-                    bcg_image.loadImageWithGlide(it.poster_path,
-                        getProgressDrawable(requireContext()))
-
-//                    if (it.genre_ids?.size!! > 1) {
-//
-//                    }
                     customizeAlphaWhileDataIsLoaded()
                 }
             }
-
-
-            movieGenreIdLiveData.observe(viewLifecycleOwner) {
-                if (it.size > 1) {
-                    moviegenre2.visibility = View.VISIBLE
-                    dotseparator2.visibility = View.VISIBLE
-                    moviegenre1.text = findGenreNameById(it[0])
-                    moviegenre2.text = findGenreNameById(it[1])
-                } else if (it.isNotEmpty()) {
-                    moviegenre1.text = findGenreNameById(it[0])
-                    moviegenre2.visibility = View.GONE
-                    dotseparator2.visibility = View.GONE
-                }
-            }
-
         }
-
-
     }
 
 

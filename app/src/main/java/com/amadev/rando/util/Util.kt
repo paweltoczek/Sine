@@ -31,4 +31,5 @@ object Util {
             .load(BuildConfig.TMDB_PICTURE_BASE_URL+uri)
             .into(this)
     }
+
 }

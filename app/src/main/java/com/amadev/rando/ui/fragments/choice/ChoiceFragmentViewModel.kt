@@ -14,16 +14,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class ChoiceFragmentViewModel(val api : ApiClient) : ViewModel() {
+class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
 
     var moviesDetailsList = ArrayList<PopularMoviesResults>()
     var videosDetailsList = ArrayList<VideoDetailsResults>()
-
-    private val movieIdMutableLiveData = MutableLiveData<Int?>()
-    val movieIdLiveData = movieIdMutableLiveData
-
-    private val movieGenreIdMutableLiveData = MutableLiveData<List<Int?>>()
-    val movieGenreIdLiveData = movieGenreIdMutableLiveData
 
     private val castListMutableLiveData = MutableLiveData<List<CastModelResults>>()
     val castListLiveData = castListMutableLiveData
@@ -32,14 +26,11 @@ class ChoiceFragmentViewModel(val api : ApiClient) : ViewModel() {
     val moviesGenreListLiveData = moviesGenreListMutableLiveData
 
     private val genreNameListMutableLiveData = MutableLiveData<List<String>>()
-    val genreNameListLiveData = genreNameListMutableLiveData
-    val genreIdMutableLiveData = MutableLiveData<GenresList>()
 
-    val pageAlreadyCalled = MutableLiveData<Int>()
-    val currentPage = MutableLiveData<Int>()
+    private val pageAlreadyCalled = MutableLiveData<Int>()
+    private val currentPage = MutableLiveData<Int>()
 
     val videoEndPoint = MutableLiveData<String>()
-    val videoEndPoitError = MutableLiveData<String>()
 
     private val popularMoviesResultsMutableLiveData = MutableLiveData<PopularMoviesResults>()
     val popularMoviesResultsLiveData = popularMoviesResultsMutableLiveData
@@ -53,7 +44,7 @@ class ChoiceFragmentViewModel(val api : ApiClient) : ViewModel() {
 
     fun getTrailerVideo() {
         viewModelScope.launch(Dispatchers.IO) {
-            val response = ApiService(api).getTrailerVideo(movieIdMutableLiveData.value)
+            val response = ApiService(api).getTrailerVideo(popularMoviesResultsMutableLiveData.value?.id)
             response?.let {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
@@ -71,7 +62,7 @@ class ChoiceFragmentViewModel(val api : ApiClient) : ViewModel() {
 
     fun getCastDetails() {
         viewModelScope.launch(Dispatchers.IO) {
-            val response = ApiService(api).getCastDetails(movieIdMutableLiveData.value)
+            val response = ApiService(api).getCastDetails(popularMoviesResultsMutableLiveData.value?.id)
             response?.let {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
@@ -135,8 +126,6 @@ class ChoiceFragmentViewModel(val api : ApiClient) : ViewModel() {
                         val randomResults = responseBody.results.random()
                         randomResults.apply {
                             popularMoviesResultsMutableLiveData.postValue(randomResults)
-                            movieGenreIdMutableLiveData.postValue(genre_ids)
-                            Log.e("movieid", movieIdMutableLiveData.value.toString())
                         }
                         pageAlreadyCalled.postValue(currentPage.value)
                     }
