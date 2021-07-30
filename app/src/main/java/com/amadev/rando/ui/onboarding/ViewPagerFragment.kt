@@ -5,22 +5,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-
 import com.amadev.rando.R
+import com.amadev.rando.databinding.FragmentSecondScreenOnboardingBinding
+import com.amadev.rando.databinding.FragmentViewPagerBinding
 
-import kotlinx.android.synthetic.main.fragment_view_pager.*
-import kotlinx.android.synthetic.main.fragment_view_pager.view.*
 
 
 class ViewPagerFragment : Fragment() {
+
+    private var _binding: FragmentViewPagerBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_view_pager, container, false)
-
-        return view
+//        val view = inflater.inflate(R.layout.fragment_view_pager, container, false)
+        _binding = FragmentViewPagerBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,7 +40,7 @@ class ViewPagerFragment : Fragment() {
             lifecycle
         )
 
-        viewPager.adapter = adapter
+        binding.viewPager.adapter = adapter
     }
 
 }

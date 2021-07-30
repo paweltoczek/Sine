@@ -1,11 +1,13 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'kotlin-android-extensions'
     id 'com.google.gms.google-services'
 }
 
+
+
 android {
+
     compileSdkVersion 30
 
     defaultConfig {
@@ -24,6 +26,8 @@ android {
 
     }
 
+
+
     buildTypes {
         release {
             minifyEnabled false
@@ -40,6 +44,10 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
+    }
+
+    buildFeatures {
+        viewBinding true
     }
 }
 

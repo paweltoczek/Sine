@@ -7,7 +7,6 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.amadev.rando.BuildConfig
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import kotlinx.android.synthetic.main.fragment_choice.view.*
 
 object Util {
 

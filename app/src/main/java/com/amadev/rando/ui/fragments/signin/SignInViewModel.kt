@@ -1,21 +1,28 @@
 package com.amadev.rando.ui.fragments.signin
 
-import android.content.Context
 import android.util.Patterns
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 sealed class Messages {
-    data class ErrorMessages(
-        val emptyField: String = "Field cannot be empty",
-        val invalidEmail: String = "Please enter valid email address",
-    )
+    object EmptyField : Messages()
+    object InvalidEmail : Messages()
 }
 
-class SignInViewModel(private val context: Context) : ViewModel() {
+fun getMessage(message: Messages) =
+    when (message) {
+        is Messages.EmptyField -> "Field cannot be empty"
+        is Messages.InvalidEmail -> "Please enter valid email address"
+    }
 
-    private val messages = Messages.ErrorMessages()
+class SignInViewModel : ViewModel() {
+
+    companion object {
+        val emptyField = Messages.EmptyField
+        val invalidEmail = Messages.InvalidEmail
+    }
+
     private lateinit var auth: FirebaseAuth
 
     private val loginSuccessfulMutableLiveData = MutableLiveData<Boolean>()
@@ -39,10 +46,10 @@ class SignInViewModel(private val context: Context) : ViewModel() {
         val password = password.trim()
         when {
             username.isEmpty() || password.isEmpty() ->
-                errorMessageLiveData.value = messages.emptyField
+                errorMessageLiveData.value = getMessage(emptyField)
 
             Patterns.EMAIL_ADDRESS.matcher(username).matches()
-                .not() -> errorMessageLiveData.value = messages.invalidEmail
+                .not() -> errorMessageLiveData.value = getMessage(invalidEmail)
 
             else -> doLoginWithEmailAndPassword(username, password)
         }

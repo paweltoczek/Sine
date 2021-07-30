@@ -9,19 +9,23 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.amadev.rando.R
+import com.amadev.rando.databinding.FragmentSignInBinding
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_sign_in.*
-
 
 class SignInFragment : Fragment() {
+
+    private var _binding: FragmentSignInBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var signInViewModel: SignInViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        return inflater.inflate(R.layout.fragment_sign_in, container, false)
+    ): View {
+//        return inflater.inflate(R.layout.fragment_sign_in, container, false)
+        _binding = FragmentSignInBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,27 +49,27 @@ class SignInFragment : Fragment() {
     }
 
     private fun setUpOnClickListeners() {
-        signin_btn.setOnClickListener {
+        binding.signinBtn.setOnClickListener {
             signInViewModel.validateInput(
-                username_input.text.toString(),
-                password_input.text.toString())
+                binding.usernameInput.text.toString(),
+                binding.passwordInput.text.toString())
         }
     }
 
 
     private fun setUpObservers() {
         signInViewModel.apply {
-            errorMessageLiveData.observe(viewLifecycleOwner) { username_input.error = it }
+            errorMessageLiveData.observe(viewLifecycleOwner) { binding.usernameInput.error = it }
 
             messageLiveData.observe(viewLifecycleOwner) {
                 val snack = Snackbar.make(requireView(), it, Snackbar.LENGTH_LONG)
                 snack.show()
-                username_input.text.clear()
-                password_input.text.clear()
+                binding.usernameInput.text.clear()
+                binding.passwordInput.text.clear()
             }
             setUpProgressbarVisibility.observe(viewLifecycleOwner) {
-                if (it == true) progressbar.visibility = View.VISIBLE
-                else progressbar.visibility = View.GONE
+                if (it == true) binding.progressbar.visibility = View.VISIBLE
+                else binding.progressbar.visibility = View.GONE
             }
             loginSuccessfulLiveData.observe(viewLifecycleOwner) {
                 if (it == true) findNavController().navigate(R.id.action_signInFragment_to_choiceFragment)

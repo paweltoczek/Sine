@@ -13,4 +13,5 @@
     <string name="repeat_password">repeat password</string>
     <string name="password">password</string>
     <string name="sign_up">Sign Up</string>
+    <string name="field_cannot_be_empty">Field cannot be empty</string>
 </resources>
