@@ -5,16 +5,20 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.method.ScrollingMovementMethod
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amadev.rando.YoutubeActivity
 import com.amadev.rando.adapter.CastAdapter
+import com.amadev.rando.adapter.GenreSpinnerAdapter
 import com.amadev.rando.databinding.FragmentChoiceBinding
+import com.amadev.rando.model.GenresList
 import com.amadev.rando.util.Animations.animateAlphaWithHandlerDelay
 import com.amadev.rando.util.Animations.animationTravelYWithAlpha
 import com.amadev.rando.util.Animations.scaleXY
@@ -54,6 +58,7 @@ class ChoiceFragment : Fragment() {
     private fun setUpViewModel() {
         choiceFragmentViewModel.apply {
             getPopularMovies()
+            getGenreList()
         }
     }
 
@@ -107,7 +112,7 @@ class ChoiceFragment : Fragment() {
                     it.apply {
                         title?.let { binding.titleTv.text = title.trim() }
                         overview?.let { binding.overviewTv.text = overview.trim() }
-                        release_date?.let { release_date.take(4).trim() }
+                        release_date?.let { binding.releasedate.text = release_date.take(4).trim().toString() }
                         vote_average?.let {
                             binding.rating.text = vote_average.toString().trim()
                             binding.ratingBar.rating = (vote_average / 2).toFloat()
@@ -136,27 +141,57 @@ class ChoiceFragment : Fragment() {
                     customizeAlphaWhileDataIsLoaded()
             }
             this.progressBarVisibility.observe(viewLifecycleOwner) { setProgressBarGone() }
+
+            moviesGenreListLiveData.observe(viewLifecycleOwner) {
+                setUpGenresSpinnerAdapter(it)
+            }
         }
+
+    }
+
+    private fun setUpGenresSpinnerAdapter(genresList: List<GenresList>) {
+        val spinner = binding.movieGenreSpinner
+        val genreSpinnerAdapter = GenreSpinnerAdapter(requireContext(), genresList)
+        spinner.adapter = genreSpinnerAdapter
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long,
+            ) {
+                val selectedPosition = spinner.selectedItemPosition
+                genresList[selectedPosition].id
+                Log.e("selectedPosition", selectedPosition.toString())
+                Log.e("selectedPositionId", genresList[selectedPosition].id.toString())
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+        }
+
+
+
     }
 
 
-    ////            moviesGenreListLiveData.observe(viewLifecycleOwner) {
-////                val genreSpinnerAdapter = GenreSpinnerAdapter(requireContext(), it)
-////                movie_genre_spinner.adapter = genreSpinnerAdapter
-////                movie_genre_spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-////                    override fun onNothingSelected(parent: AdapterView<*>?) {
-////
-////                    }
-////                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-////                        val selectedItemPos = movie_genre_spinner.selectedItemPosition
-////                            choiceFragmentViewModel.getGenreId(selectedItemPos)
-////                    }
-////                }
-////            }
-//        }
-//    }
+//                moviesGenreListLiveData.observe(viewLifecycleOwner) {
+//                val genreSpinnerAdapter = GenreSpinnerAdapter(requireContext(), it)
+//                movie_genre_spinner.adapter = genreSpinnerAdapter
+//                movie_genre_spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+//                    override fun onNothingSelected(parent: AdapterView<*>?) {
 //
-//
+//                    }
+//                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+//                        val selectedItemPos = movie_genre_spinner.selectedItemPosition
+//                            choiceFragmentViewModel.getGenreId(selectedItemPos)
+//                    }
+//                }
+//            }
+
     private fun animateShuffleButton() {
         scaleXY(binding.shufflebtn, 150, 0.9f)
         Handler(Looper.myLooper()!!).postDelayed({
@@ -214,7 +249,7 @@ class ChoiceFragment : Fragment() {
                 clear()
                 addAll(list)
             }
-            adapter.notifyDataSetChanged()
+//            adapter.notifyDataSetChanged()
             binding.castRecyclerview.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             binding.castRecyclerview.adapter = adapter

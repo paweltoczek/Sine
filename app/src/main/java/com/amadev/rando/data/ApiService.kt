@@ -2,7 +2,7 @@ package com.amadev.rando.data
 
 import com.amadev.rando.BuildConfig
 import com.amadev.rando.model.Cast
-import com.amadev.rando.model.CastModelResults
+import com.amadev.rando.model.Genre
 import com.amadev.rando.model.PopularMoviesModel
 import com.amadev.rando.model.VideoDetailsModel
 import retrofit2.Response
@@ -35,5 +35,13 @@ class ApiService(val api: ApiClient) {
             return it
         }
     }
-}
 
+    fun getGenreList(): Response<Genre>? {
+        val callResponse = api.buildService(ApiInterface::class.java)
+            .getGenreList(BuildConfig.TMDB_API_KEY)
+        callResponse?.execute().let {
+            return it
+        }
+    }
+
+}

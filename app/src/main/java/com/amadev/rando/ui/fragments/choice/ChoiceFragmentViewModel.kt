@@ -1,5 +1,4 @@
 package com.amadev.rando.ui.fragments.choice
-
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,23 +7,17 @@ import com.amadev.rando.data.ApiService
 import com.amadev.rando.model.CastModelResults
 import com.amadev.rando.model.GenresList
 import com.amadev.rando.model.PopularMoviesResults
-import com.amadev.rando.model.VideoDetailsResults
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
 class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
 
-    var moviesDetailsList = ArrayList<PopularMoviesResults>()
-    var videosDetailsList = ArrayList<VideoDetailsResults>()
-
     private val castListMutableLiveData = MutableLiveData<List<CastModelResults>>()
     val castListLiveData = castListMutableLiveData
 
     private val moviesGenreListMutableLiveData = MutableLiveData<List<GenresList>>()
     val moviesGenreListLiveData = moviesGenreListMutableLiveData
-
-    private val genreNameListMutableLiveData = MutableLiveData<List<String>>()
 
     private val pageAlreadyCalled = MutableLiveData<Int>()
     private val currentPage = MutableLiveData<Int>()
@@ -67,43 +60,31 @@ class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
                     val responseBody = response.body()
                     responseBody?.let {
                         val castList: ArrayList<CastModelResults> = ArrayList()
-                        for (i in responseBody.cast) i.profile_path?.let { castList.add(i) }
-                        castListMutableLiveData.postValue(castList)
+                        for (i in responseBody.cast) i.profile_path?.let {
+                            castList.add(i)
+                        }
+                        if (castList.isNotEmpty()) {
+                            castListMutableLiveData.postValue(castList)
+                        }
                     }
                 }
             }
         }
     }
 
-//
-//    // fun getGenreList is not finished yet. Skip code until u see "dick" word
-//    fun getGenresList() {
-//        val callGenresList = request.getGenreList(BuildConfig.TMDB_API_KEY)
-//        callGenresList.enqueue(object : Callback<Genre> {
-//            override fun onResponse(call: Call<Genre>, response: Response<Genre>) {
-//                val genreList: ArrayList<GenresList> = ArrayList()
-//                val genreNameList = ArrayList<String>()
-//                val responseBody = response.body()!!.genres
-//                genreNameList.add(0,"Any")
-//                for (i in responseBody) {
-//                    genreNameList.add(i.name)
-//                    genreNameListMutableLiveData.value = genreNameList
-//                    Log.e("genreList", genreNameList.toString())
-//                }
-//                genreList.addAll(responseBody)
-//                moviesGenreListMutableLiveData.value = response.body()!!.genres
-//                Log.e("movgenid", movieGenreIdMutableLiveData.value.toString())
-//            }
-//            override fun onFailure(call: Call<Genre>, t: Throwable) {
-//            }
-//        })
-//    }
-//
-//    fun getGenreId(selectedPositionNo: Int) {
-//        var sele = moviesGenreListMutableLiveData.value?.get(selectedPositionNo)?.id
-//        Log.e("selectedPos", sele.toString())
-//    }
-
+    fun getGenreList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = ApiService(api).getGenreList()
+            response?.let {
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    responseBody?.let {
+                        moviesGenreListMutableLiveData.postValue(it.genres)
+                    }
+                }
+            }
+        }
+    }
 
     fun getPopularMovies() {
         viewModelScope.launch(Dispatchers.IO) {

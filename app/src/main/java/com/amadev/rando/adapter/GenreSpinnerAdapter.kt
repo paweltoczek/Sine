@@ -4,18 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.BaseAdapter
 import android.widget.TextView
 import com.amadev.rando.R
 import com.amadev.rando.model.GenresList
 
 class GenreSpinnerAdapter(val context: Context, val list: List<GenresList>) : BaseAdapter() {
-    private val layoutInflater: LayoutInflater
-
-    init {
-        layoutInflater = LayoutInflater.from(context)
-    }
+    private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
     override fun getCount(): Int = list.size
 
