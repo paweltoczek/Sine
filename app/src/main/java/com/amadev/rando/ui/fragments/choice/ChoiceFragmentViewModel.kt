@@ -1,4 +1,5 @@
 package com.amadev.rando.ui.fragments.choice
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -41,11 +42,15 @@ class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
             response?.let {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
-                    responseBody?.results?.let {
-                        videoEndPoint.postValue( it
-                            .last()
-                            .key
-                            .toString())
+                    if (responseBody?.results != null) responseBody?.results?.let {
+                        if (it.isNotEmpty()){
+                            videoEndPoint.postValue(it?.let {
+                                it
+                                    .last()
+                                    .key
+                                    .toString()
+                            })
+                        }
                     }
                 }
             }
@@ -60,9 +65,10 @@ class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
                     val responseBody = response.body()
                     responseBody?.let {
                         val castList: ArrayList<CastModelResults> = ArrayList()
-                        for (i in responseBody.cast) i.profile_path?.let {
-                            castList.add(i)
-                        }
+                        for (i in responseBody.cast)
+                            i.profile_path?.let {
+                                castList.add(i)
+                            }
                         if (castList.isNotEmpty()) {
                             castListMutableLiveData.postValue(castList)
                         }
@@ -70,6 +76,31 @@ class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
                 }
             }
         }
+    }
+//
+//    fun getMovieByGenre(selectedGenreId: Int) {
+//        if (popularMoviesResultsMutableLiveData.value != null) {
+//            val currentMovieGenresList = updateListCurrentMovieGenreList()
+//            while (!currentMovieGenresList.contains(selectedGenreId)) {
+//                getPopularMovies()
+//                updateListCurrentMovieGenreList()
+//                val currentMovieGenresList = updateListCurrentMovieGenreList()
+//                if (currentMovieGenresList.contains(selectedGenreId)) {
+//                    break
+//                }
+//                Log.e("currentMovieGenreList", currentMovieGenresList.toString())
+//                Log.e("selectedGenreId", selectedGenreId.toString())
+//            }
+//        }
+//    }
+
+    private fun updateListCurrentMovieGenreList(): ArrayList<Int> {
+        val currentMovieGenresList = ArrayList<Int>()
+        currentMovieGenresList.clear()
+        popularMoviesResultsMutableLiveData.value?.genre_ids!!.iterator().forEach { i ->
+            currentMovieGenresList.add(i)
+        }
+        return currentMovieGenresList
     }
 
     fun getGenreList() {
@@ -87,7 +118,7 @@ class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
     }
 
     fun getPopularMovies() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             currentPage.postValue(getRandomPage())
             while (pageAlreadyCalled.value == currentPage.value) {
                 currentPage.postValue(getRandomPage())

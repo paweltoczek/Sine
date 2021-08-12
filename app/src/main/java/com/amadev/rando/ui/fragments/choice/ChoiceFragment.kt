@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.amadev.rando.R
 import com.amadev.rando.YoutubeActivity
 import com.amadev.rando.adapter.CastAdapter
 import com.amadev.rando.adapter.GenreSpinnerAdapter
@@ -25,6 +26,7 @@ import com.amadev.rando.util.Animations.scaleXY
 import com.amadev.rando.util.Genres.findGenreNameById
 import com.amadev.rando.util.Util.getProgressDrawable
 import com.amadev.rando.util.Util.loadImageWithGlide
+import com.google.android.material.snackbar.Snackbar
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class ChoiceFragment : Fragment() {
@@ -33,11 +35,18 @@ class ChoiceFragment : Fragment() {
     private var i = 0
     private val choiceFragmentViewModel: ChoiceFragmentViewModel by viewModel()
 
+    companion object {
+        var ANIMATION_DURATION_TIME_ms: Long = 0
+        var ALPHA: Float = 0f
+        var HANDLER_DELAY_ms: Long = 0
+        var TARGET_Y: Float = 0f
+        var SCALE: Float = 0f
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-//        return inflater.inflate(R.layout.fragment_choice, container, false)
+    ): View {
         _binding = FragmentChoiceBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -45,7 +54,16 @@ class ChoiceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setUpViewModel()
+
+        Handler(Looper.myLooper()!!).postDelayed({
+            choiceFragmentViewModel.getPopularMovies()
+            choiceFragmentViewModel.apply {
+                Log.e("check", popularMoviesResultsLiveData.value?.title.toString())
+            }
+        },4000)
+
+
+
         setUpObservers()
         customizeAlphaWhileDataIsNotAvailable()
         setUpAdapter()
@@ -65,9 +83,7 @@ class ChoiceFragment : Fragment() {
     private fun setUpOnClickListeners() {
         binding.trailerBtn.setOnClickListener {
             setProgressBarVisible()
-            val intent = Intent(requireContext(), YoutubeActivity::class.java)
-            intent.putExtra("videoId", choiceFragmentViewModel.videoEndPoint.value)
-            startActivity(intent)
+            watchTrailerVideo()
         }
 
         binding.bcgImage.setOnClickListener {
@@ -83,26 +99,26 @@ class ChoiceFragment : Fragment() {
         }
     }
 
+    private fun watchTrailerVideo() {
+        choiceFragmentViewModel.apply {
+            if (videoEndPoint.value != null) {
+                val intent = Intent(requireContext(), YoutubeActivity::class.java)
+                intent.putExtra("videoId", videoEndPoint.value)
+                startActivity(intent)
+            } else {
+                val snack = Snackbar.make(requireView(),
+                    getString(R.string.trailerIsNotAvailable),
+                    Snackbar.LENGTH_LONG)
+                snack.show()
+            }
+        }
+    }
+
     private fun getPopularMovies() {
         choiceFragmentViewModel.apply {
             getPopularMovies()
             getTrailerVideo()
             getCastDetails()
-        }
-    }
-
-    private fun disappearAnimation(property: View) {
-        i++
-        if (i == 1) {
-            animationTravelYWithAlpha(property, 200, -100f, 1f)
-            Handler(Looper.myLooper()!!).postDelayed({
-                animationTravelYWithAlpha(property, 150, 500f, 0f)
-            }, 300)
-        } else {
-            i = 0
-            Handler(Looper.myLooper()!!).postDelayed({
-                animationTravelYWithAlpha(property, 150, 0f, 0.9f)
-            }, 100)
         }
     }
 
@@ -112,7 +128,7 @@ class ChoiceFragment : Fragment() {
                     it.apply {
                         title?.let { binding.titleTv.text = title.trim() }
                         overview?.let { binding.overviewTv.text = overview.trim() }
-                        release_date?.let { binding.releasedate.text = release_date.take(4).trim().toString() }
+                        release_date?.let { binding.releasedate.text = release_date.take(4).trim() }
                         vote_average?.let {
                             binding.rating.text = vote_average.toString().trim()
                             binding.ratingBar.rating = (vote_average / 2).toFloat()
@@ -138,10 +154,9 @@ class ChoiceFragment : Fragment() {
                             }
                         }
                     }
-                    customizeAlphaWhileDataIsLoaded()
+                customizeAlphaWhileDataIsLoaded()
             }
-            this.progressBarVisibility.observe(viewLifecycleOwner) { setProgressBarGone() }
-
+            progressBarVisibility.observe(viewLifecycleOwner) { setProgressBarGone() }
             moviesGenreListLiveData.observe(viewLifecycleOwner) {
                 setUpGenresSpinnerAdapter(it)
             }
@@ -165,73 +180,39 @@ class ChoiceFragment : Fragment() {
                 genresList[selectedPosition].id
                 Log.e("selectedPosition", selectedPosition.toString())
                 Log.e("selectedPositionId", genresList[selectedPosition].id.toString())
+//                choiceFragmentViewModel.getMovieByGenre(genresList[selectedPosition].id)
+//                getMovieByGenre(genresList[selectedPosition].id)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-
             }
-
         }
-
-
-
     }
 
-
-//                moviesGenreListLiveData.observe(viewLifecycleOwner) {
-//                val genreSpinnerAdapter = GenreSpinnerAdapter(requireContext(), it)
-//                movie_genre_spinner.adapter = genreSpinnerAdapter
-//                movie_genre_spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-//                    override fun onNothingSelected(parent: AdapterView<*>?) {
-//
-//                    }
-//                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-//                        val selectedItemPos = movie_genre_spinner.selectedItemPosition
-//                            choiceFragmentViewModel.getGenreId(selectedItemPos)
-//                    }
-//                }
-//            }
-
-    private fun animateShuffleButton() {
-        scaleXY(binding.shufflebtn, 150, 0.9f)
-        Handler(Looper.myLooper()!!).postDelayed({
-            scaleXY(binding.shufflebtn, 100, 1f)
-        }, 200)
+    private fun getMovieByGenre(selectedMovieGenreId: Int) {
+        val currentMovieGenresList = ArrayList<Int>()
+        if (choiceFragmentViewModel.popularMoviesResultsLiveData.value != null) {
+            while (currentMovieGenresList.toArray().contains(selectedMovieGenreId).not()) {
+                choiceFragmentViewModel.getPopularMovies()
+                choiceFragmentViewModel.popularMoviesResultsLiveData.observe(viewLifecycleOwner) {
+                    if (it.genre_ids != null) {
+                        for (i in it.genre_ids.iterator()) {
+                            currentMovieGenresList.add(i)
+                            if (currentMovieGenresList.toArray().contains(selectedMovieGenreId)) {
+                                currentMovieGenresList.clear()
+                                break
+                            }
+                        }
+                    }
+                }
+                Log.e("genIdList", currentMovieGenresList.toString())
+                Log.e("genId", selectedMovieGenreId.toString())
+            }
+        }
     }
 
     private fun setTextViewVerticalMovementMethod(property: TextView) {
         property.movementMethod = ScrollingMovementMethod.getInstance()
-    }
-
-    private fun customizeAlphaWhileDataIsNotAvailable() {
-        binding.titleTv.alpha = 0f
-        binding.rating.alpha = 0f
-        binding.overviewTv.alpha = 0f
-        binding.bcgImage.alpha = 0f
-        binding.ratingBar.alpha = 0f
-        binding.trailerBtn.alpha = 0f
-        binding.watchTrailer.alpha = 0f
-    }
-
-    private fun customizeAlphaWhileDataIsLoaded() {
-        animateAlphaWithHandlerDelay(binding.titleTv, 300, 1f, 100)
-        animateAlphaWithHandlerDelay(binding.rating, 300, 1f, 300)
-        animateAlphaWithHandlerDelay(binding.overviewTv, 300, 1f, 600)
-        animateAlphaWithHandlerDelay(binding.ratingBar, 1000, 1f, 300)
-        animateAlphaWithHandlerDelay(binding.bcgImage, 500, 1f, 500)
-        animateAlphaWithHandlerDelay(binding.trailerBtn, 500, 1f, 500)
-        animateAlphaWithHandlerDelay(binding.watchTrailer, 500, 1f, 500)
-        animateAlphaWithHandlerDelay(binding.releasedate, 500, 1f, 500)
-    }
-
-    private fun customizeAlphaWhileShuffleButtonIsPressed() {
-        animateAlphaWithHandlerDelay(binding.titleTv, 100, 0f, 0)
-        animateAlphaWithHandlerDelay(binding.rating, 100, 0f, 0)
-        animateAlphaWithHandlerDelay(binding.overviewTv, 100, 0f, 0)
-        animateAlphaWithHandlerDelay(binding.ratingBar, 100, 0f, 0)
-        animateAlphaWithHandlerDelay(binding.bcgImage, 100, 0f, 0)
-        animateAlphaWithHandlerDelay(binding.trailerBtn, 100, 0f, 0)
-        animateAlphaWithHandlerDelay(binding.watchTrailer, 100, 0f, 0)
     }
 
     private fun setProgressBarVisible() {
@@ -249,7 +230,6 @@ class ChoiceFragment : Fragment() {
                 clear()
                 addAll(list)
             }
-//            adapter.notifyDataSetChanged()
             binding.castRecyclerview.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             binding.castRecyclerview.adapter = adapter
@@ -265,5 +245,117 @@ class ChoiceFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
+    private fun animateShuffleButton() {
+        scaleXY(binding.shufflebtn,
+            (150L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (0.9f.also { SCALE = it }))
+        Handler(Looper.myLooper()!!).postDelayed({
+            scaleXY(binding.shufflebtn,
+                (100L.also { ANIMATION_DURATION_TIME_ms = it }),
+                (1f.also { ALPHA = it }))
+        }, (200L.also { HANDLER_DELAY_ms = it }))
+    }
+
+    private fun customizeAlphaWhileDataIsNotAvailable() {
+        binding.titleTv.alpha = 0f.also { ALPHA = it }
+        binding.rating.alpha = 0f.also { ALPHA = it }
+        binding.overviewTv.alpha = 0f.also { ALPHA = it }
+        binding.bcgImage.alpha = 0f.also { ALPHA = it }
+        binding.ratingBar.alpha = 0f.also { ALPHA = it }
+        binding.trailerBtn.alpha = 0f.also { ALPHA = it }
+        binding.watchTrailer.alpha = 0f.also { ALPHA = it }
+    }
+
+    private fun customizeAlphaWhileDataIsLoaded() {
+        animateAlphaWithHandlerDelay(binding.titleTv,
+            (300L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (1f.also { ALPHA = it }),
+            (300L.also { HANDLER_DELAY_ms = it }))
+        animateAlphaWithHandlerDelay(binding.rating,
+            (300L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (1f.also { ALPHA = it }),
+            (300L.also { HANDLER_DELAY_ms = it }))
+        animateAlphaWithHandlerDelay(binding.overviewTv,
+            (300L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (1f.also { ALPHA = it }),
+            (300L.also { HANDLER_DELAY_ms = it }))
+        animateAlphaWithHandlerDelay(binding.ratingBar,
+            (300L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (1f.also { ALPHA = it }),
+            (300L.also { HANDLER_DELAY_ms = it }))
+        animateAlphaWithHandlerDelay(binding.bcgImage,
+            (300L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (1f.also { ALPHA = it }),
+            (500L.also { HANDLER_DELAY_ms = it }))
+        animateAlphaWithHandlerDelay(binding.trailerBtn,
+            (300L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (1f.also { ALPHA = it }),
+            (500L.also { HANDLER_DELAY_ms = it }))
+        animateAlphaWithHandlerDelay(binding.watchTrailer,
+            (300L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (1f.also { ALPHA = it }),
+            (500L.also { HANDLER_DELAY_ms = it }))
+        animateAlphaWithHandlerDelay(binding.releasedate,
+            (300L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (1f.also { ALPHA = it }),
+            (500L.also { HANDLER_DELAY_ms = it }))
+    }
+
+    private fun customizeAlphaWhileShuffleButtonIsPressed() {
+        animateAlphaWithHandlerDelay(binding.titleTv,
+            (100L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (0f.also { ALPHA = it }),
+            (0L.also { HANDLER_DELAY_ms = it }))
+        animateAlphaWithHandlerDelay(binding.rating,
+            (100L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (0f.also { ALPHA = it }),
+            (0L.also { HANDLER_DELAY_ms = it }))
+        animateAlphaWithHandlerDelay(binding.overviewTv,
+            (100L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (0f.also { ALPHA = it }),
+            (0L.also { HANDLER_DELAY_ms = it }))
+        animateAlphaWithHandlerDelay(binding.ratingBar,
+            (100L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (0f.also { ALPHA = it }),
+            (0L.also { HANDLER_DELAY_ms = it }))
+        animateAlphaWithHandlerDelay(binding.bcgImage,
+            (100L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (0f.also { ALPHA = it }),
+            (0L.also { HANDLER_DELAY_ms = it }))
+        animateAlphaWithHandlerDelay(binding.trailerBtn,
+            (100L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (0f.also { ALPHA = it }),
+            (0L.also { HANDLER_DELAY_ms = it }))
+        animateAlphaWithHandlerDelay(binding.watchTrailer,
+            (100L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (0f.also { ALPHA = it }),
+            (0L.also { HANDLER_DELAY_ms = it }))
+    }
+
+    private fun disappearAnimation(property: View) {
+        i++
+        if (i == 1) {
+            animationTravelYWithAlpha(
+                property,
+                (200L.also { ANIMATION_DURATION_TIME_ms = it }),
+                ((-100f).also { TARGET_Y = it }),
+                (1f.also { ALPHA = it }))
+            Handler(Looper.myLooper()!!).postDelayed({
+                animationTravelYWithAlpha(
+                    property,
+                    (150L.also { ANIMATION_DURATION_TIME_ms = it }),
+                    (500f.also { TARGET_Y = it }),
+                    (0f.also { ALPHA = it }))
+            }, (300L.also { HANDLER_DELAY_ms = it }))
+        } else {
+            i = 0
+            Handler(Looper.myLooper()!!).postDelayed({
+                animationTravelYWithAlpha(property,
+                    (150L.also { ANIMATION_DURATION_TIME_ms = it }),
+                    (0f.also { TARGET_Y = it }),
+                    (0.9f.also { ALPHA = it }))
+            }, (100L.also { HANDLER_DELAY_ms = it }))
+        }
+    }
 }
 
