@@ -7,7 +7,6 @@ val firebaseModule = module {
     single { provideFirebaseAuth() }
 }
 
-
 fun provideFirebaseAuth(): FirebaseAuth {
     return FirebaseAuth.getInstance()
 }

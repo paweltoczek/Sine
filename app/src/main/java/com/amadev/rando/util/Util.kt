@@ -2,14 +2,13 @@ package com.amadev.rando.util
 
 import android.content.Context
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.amadev.rando.BuildConfig
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
 object Util {
-
+    
     fun getProgressDrawable(context: Context): CircularProgressDrawable {
         return CircularProgressDrawable(context).apply {
             strokeWidth = 10f

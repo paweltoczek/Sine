@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.amadev.rando.databinding.CustomGenreRecyclerviewPatternBinding
-import com.amadev.rando.model.GenresList
 
 class GenresRecyclerViewAdapter(val view: View, var context: Context, var list: ArrayList<String>) :
     RecyclerView.Adapter<GenresRecyclerViewAdapter.ViewHolder>() {

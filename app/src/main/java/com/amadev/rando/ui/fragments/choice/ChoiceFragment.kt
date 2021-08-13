@@ -28,15 +28,15 @@ import com.amadev.rando.util.Genres.findGenreNameById
 import com.amadev.rando.util.Util.getProgressDrawable
 import com.amadev.rando.util.Util.loadImageWithGlide
 import com.google.android.material.snackbar.Snackbar
-import org.koin.android.ext.android.bind
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class ChoiceFragment : Fragment() {
+
     private var _binding: FragmentChoiceBinding? = null
     private val binding get() = _binding!!
-    private var i = 0
     private val choiceFragmentViewModel: ChoiceFragmentViewModel by viewModel()
 
+    private var i = 0
     private var selectedGenreId = 0
 
     companion object {

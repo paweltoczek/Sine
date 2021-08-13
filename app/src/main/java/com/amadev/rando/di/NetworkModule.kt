@@ -1,6 +1,8 @@
-package com.amadev.rando.data
+package com.amadev.rando.di
 
 import com.amadev.rando.BuildConfig
+import com.amadev.rando.data.ApiInterface
+import com.amadev.rando.data.ApiService
 import okhttp3.OkHttpClient
 import org.koin.dsl.module
 import retrofit2.Retrofit

@@ -7,7 +7,7 @@ import com.amadev.rando.model.PopularMoviesModel
 import com.amadev.rando.model.VideoDetailsModel
 import retrofit2.Response
 
-class ApiService(val api: ApiClient) {
+class ApiService(private val api: ApiClient) {
 
 
     fun getPopularMovie(page: Int): Response<PopularMoviesModel> {
@@ -39,7 +39,7 @@ class ApiService(val api: ApiClient) {
     fun getGenreList(): Response<Genre>? {
         val callResponse = api.buildService(ApiInterface::class.java)
             .getGenreList(BuildConfig.TMDB_API_KEY)
-        callResponse?.execute().let {
+        callResponse.execute().let {
             return it
         }
     }

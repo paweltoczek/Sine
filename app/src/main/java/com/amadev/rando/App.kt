@@ -1,8 +1,8 @@
 package com.amadev.rando
 
 import android.app.Application
-import com.amadev.rando.data.networkModule
-import com.amadev.rando.data.viewModelModule
+import com.amadev.rando.di.networkModule
+import com.amadev.rando.di.viewModelModule
 import com.amadev.rando.di.firebaseModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger

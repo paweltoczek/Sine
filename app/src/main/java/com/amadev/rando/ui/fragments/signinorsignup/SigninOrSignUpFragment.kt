@@ -6,23 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.amadev.rando.R
-import com.amadev.rando.databinding.FragmentChoiceBinding
 import com.amadev.rando.databinding.FragmentSigninOrSignUpBinding
 import com.google.android.material.snackbar.Snackbar
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class SigninOrSignUpFragment : Fragment() {
     private var _binding: FragmentSigninOrSignUpBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var signInOrSignUpViewModel: SignInOrSignUpViewModel
+    private val signInOrSignUpViewModel: SignInOrSignUpViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
 //        return inflater.inflate(R.layout.fragment_signin_or_sign_up, container, false)
         _binding = FragmentSigninOrSignUpBinding.inflate(inflater, container, false)
         return binding.root
@@ -30,11 +29,6 @@ class SigninOrSignUpFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        this.let {
-            signInOrSignUpViewModel =
-                ViewModelProviders.of(this).get(SignInOrSignUpViewModel::class.java)
-        }
 
         setUpObservers()
         setUpViewModel()

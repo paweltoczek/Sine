@@ -14,7 +14,6 @@ import kotlinx.coroutines.launch
 
 class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
 
-    val popularMoviesList = ArrayList<PopularMoviesResults>()
     private val castListMutableLiveData = MutableLiveData<List<CastModelResults>>()
     val castListLiveData = castListMutableLiveData
 
@@ -30,10 +29,7 @@ class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
     val popularMoviesResultsLiveData = popularMoviesRandomResultsMutableLiveData
 
     private val messageMutableLiveData = MutableLiveData<String>()
-    val messageLiveData = messageMutableLiveData
     val progressBarVisibility = MutableLiveData<Boolean>()
-
-    val popularMovieByGenre = MutableLiveData<PopularMoviesResults>()
 
     private fun getRandomPage(): Int {
         return (1 until 400).random()
@@ -46,9 +42,9 @@ class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
             response?.let {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
-                    if (responseBody?.results != null) responseBody?.results?.let {
+                    responseBody?.results?.let {
                         if (it.isNotEmpty()) {
-                            videoEndPoint.postValue(it?.let {
+                            videoEndPoint.postValue(it.let {
                                 it
                                     .last()
                                     .key
@@ -71,7 +67,7 @@ class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
                     responseBody?.let {
                         val castList: ArrayList<CastModelResults> = ArrayList()
                         for (i in responseBody.cast)
-                            i.profile_path?.let {
+                            i.profile_path.let {
                                 castList.add(i)
                             }
                         if (castList.isNotEmpty()) {
@@ -113,7 +109,7 @@ class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
             val response = currentPage.value?.let { ApiService(api).getPopularMovie(it) }
             if (response != null) {
                 if (response.isSuccessful) {
-                    val responseBody = response?.body()
+                    val responseBody = response.body()
 
                     responseBody?.let {
                         val randomResults = responseBody.results.random()

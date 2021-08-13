@@ -25,7 +25,7 @@ class CastRecyclerViewAdapter(val view: View, var context: Context, var list: Ar
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder) {
             binding.actorName.text = list[position].name
-            binding.actorImageRecyclerview.loadImageWithGlide(list[position]?.profile_path,
+            binding.actorImageRecyclerview.loadImageWithGlide(list[position].profile_path,
                 getProgressDrawable(context))
         }
     }

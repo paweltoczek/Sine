@@ -6,23 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.amadev.rando.R
-import com.amadev.rando.databinding.FragmentChoiceBinding
 import com.amadev.rando.databinding.FragmentSignUpBinding
 import com.google.android.material.snackbar.Snackbar
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class SignUpFragment : Fragment() {
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var signUpViewModel: SignUpViewModel
+    private val signUpViewModel: SignUpViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
 //        return inflater.inflate(R.layout.fragment_sign_up, container, false)
         _binding = FragmentSignUpBinding.inflate(inflater, container, false)
         return binding.root
@@ -30,10 +29,6 @@ class SignUpFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        this.let {
-            signUpViewModel = ViewModelProviders.of(this).get(SignUpViewModel::class.java)
-        }
 
         setUpProgressBarVisibility()
         setUpObservers()
