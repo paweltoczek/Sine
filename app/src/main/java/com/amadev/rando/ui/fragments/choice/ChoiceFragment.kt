@@ -16,8 +16,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amadev.rando.R
 import com.amadev.rando.YoutubeActivity
-import com.amadev.rando.adapter.CastAdapter
+import com.amadev.rando.adapter.CastRecyclerViewAdapter
 import com.amadev.rando.adapter.GenreSpinnerAdapter
+import com.amadev.rando.adapter.GenresRecyclerViewAdapter
 import com.amadev.rando.databinding.FragmentChoiceBinding
 import com.amadev.rando.model.GenresList
 import com.amadev.rando.util.Animations.animateAlphaWithHandlerDelay
@@ -27,6 +28,7 @@ import com.amadev.rando.util.Genres.findGenreNameById
 import com.amadev.rando.util.Util.getProgressDrawable
 import com.amadev.rando.util.Util.loadImageWithGlide
 import com.google.android.material.snackbar.Snackbar
+import org.koin.android.ext.android.bind
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class ChoiceFragment : Fragment() {
@@ -34,6 +36,8 @@ class ChoiceFragment : Fragment() {
     private val binding get() = _binding!!
     private var i = 0
     private val choiceFragmentViewModel: ChoiceFragmentViewModel by viewModel()
+
+    private var selectedGenreId = 0
 
     companion object {
         var ANIMATION_DURATION_TIME_ms: Long = 0
@@ -54,19 +58,14 @@ class ChoiceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         Handler(Looper.myLooper()!!).postDelayed({
             choiceFragmentViewModel.getPopularMovies()
-            choiceFragmentViewModel.apply {
-                Log.e("check", popularMoviesResultsLiveData.value?.title.toString())
-            }
-        },4000)
+        }, (4000L.also { HANDLER_DELAY_ms = it }))
 
-
-
+        setUpViewModel()
         setUpObservers()
         customizeAlphaWhileDataIsNotAvailable()
-        setUpAdapter()
+        setUpCastRecyclerViewAdapter()
         setTextViewVerticalMovementMethod(binding.overviewTv)
         setUpOnClickListeners()
         setUpOnBackPressedCallback()
@@ -81,21 +80,33 @@ class ChoiceFragment : Fragment() {
     }
 
     private fun setUpOnClickListeners() {
-        binding.trailerBtn.setOnClickListener {
-            setProgressBarVisible()
-            watchTrailerVideo()
-        }
+        binding.apply {
+            trailerBtn.setOnClickListener {
+                setProgressBarVisible()
+                watchTrailerVideo()
+            }
 
-        binding.bcgImage.setOnClickListener {
-            disappearAnimation(binding.detailsLayout)
-        }
+            bcgImage.setOnClickListener {
+                disappearAnimation(binding.detailsLayout)
+            }
 
-        binding.shufflebtn.setOnClickListener {
-            binding.overviewTv.verticalScrollbarPosition = 0
-            customizeAlphaWhileShuffleButtonIsPressed()
-            setProgressBarVisible()
-            animateShuffleButton()
-            getPopularMovies()
+            shufflebtn.setOnClickListener {
+                if (selectedGenreId != 0) {
+                    choiceFragmentViewModel.getMovieByGenre(selectedGenreId)
+                } else {
+                    binding.overviewTv.verticalScrollbarPosition = 0
+                    customizeAlphaWhileShuffleButtonIsPressed()
+                    setProgressBarVisible()
+                    animateShuffleButton()
+                    getPopularMovies()
+                }
+            }
+
+            genreAny.setOnClickListener {
+                genreAny.visibility = View.GONE
+                movieGenreSpinner.visibility = View.VISIBLE
+                movieGenreSpinner.performClick()
+            }
         }
     }
 
@@ -141,34 +152,34 @@ class ChoiceFragment : Fragment() {
                             binding.bcgImage.loadImageWithGlide(poster_path,
                                 getProgressDrawable(requireContext()))
                         }
-                        genre_ids?.let { ids ->
-                            if (ids.size > 1) {
-                                binding.moviegenre2.visibility = View.VISIBLE
-                                binding.dotseparator2.visibility = View.VISIBLE
-                                binding.moviegenre1.text = findGenreNameById(ids[0])
-                                binding.moviegenre2.text = findGenreNameById(ids[1])
-                            } else if (ids.isNotEmpty()) {
-                                binding.moviegenre1.text = findGenreNameById(ids[0])
-                                binding.moviegenre2.visibility = View.GONE
-                                binding.dotseparator2.visibility = View.GONE
+                        genre_ids?.let {
+                            val genresList = ArrayList<String>()
+                            genre_ids.forEach { i ->
+                                val genreName = findGenreNameById(i)
+                                genresList.add(genreName)
                             }
+                            setUpGenreRecyclerViewAdapter(genresList)
                         }
                     }
                 customizeAlphaWhileDataIsLoaded()
             }
-            progressBarVisibility.observe(viewLifecycleOwner) { setProgressBarGone() }
+            progressBarVisibility.observe(viewLifecycleOwner) {
+                if (it == true) {
+                    setProgressBarVisible()
+                } else {
+                    setProgressBarGone()
+                }
+            }
             moviesGenreListLiveData.observe(viewLifecycleOwner) {
                 setUpGenresSpinnerAdapter(it)
             }
         }
-
     }
 
     private fun setUpGenresSpinnerAdapter(genresList: List<GenresList>) {
         val spinner = binding.movieGenreSpinner
         val genreSpinnerAdapter = GenreSpinnerAdapter(requireContext(), genresList)
         spinner.adapter = genreSpinnerAdapter
-
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -180,33 +191,11 @@ class ChoiceFragment : Fragment() {
                 genresList[selectedPosition].id
                 Log.e("selectedPosition", selectedPosition.toString())
                 Log.e("selectedPositionId", genresList[selectedPosition].id.toString())
+                selectedGenreId = genresList[selectedPosition].id
 //                choiceFragmentViewModel.getMovieByGenre(genresList[selectedPosition].id)
-//                getMovieByGenre(genresList[selectedPosition].id)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-        }
-    }
-
-    private fun getMovieByGenre(selectedMovieGenreId: Int) {
-        val currentMovieGenresList = ArrayList<Int>()
-        if (choiceFragmentViewModel.popularMoviesResultsLiveData.value != null) {
-            while (currentMovieGenresList.toArray().contains(selectedMovieGenreId).not()) {
-                choiceFragmentViewModel.getPopularMovies()
-                choiceFragmentViewModel.popularMoviesResultsLiveData.observe(viewLifecycleOwner) {
-                    if (it.genre_ids != null) {
-                        for (i in it.genre_ids.iterator()) {
-                            currentMovieGenresList.add(i)
-                            if (currentMovieGenresList.toArray().contains(selectedMovieGenreId)) {
-                                currentMovieGenresList.clear()
-                                break
-                            }
-                        }
-                    }
-                }
-                Log.e("genIdList", currentMovieGenresList.toString())
-                Log.e("genId", selectedMovieGenreId.toString())
             }
         }
     }
@@ -223,8 +212,8 @@ class ChoiceFragment : Fragment() {
         binding.progressBar.visibility = View.GONE
     }
 
-    private fun setUpAdapter() {
-        val adapter = CastAdapter(requireView(), requireContext(), arrayListOf())
+    private fun setUpCastRecyclerViewAdapter() {
+        val adapter = CastRecyclerViewAdapter(requireView(), requireContext(), arrayListOf())
         choiceFragmentViewModel.castListLiveData.observe(viewLifecycleOwner) { list ->
             adapter.list.apply {
                 clear()
@@ -234,6 +223,18 @@ class ChoiceFragment : Fragment() {
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             binding.castRecyclerview.adapter = adapter
         }
+    }
+
+    private fun setUpGenreRecyclerViewAdapter(genresList: ArrayList<String>) {
+        val adapter = GenresRecyclerViewAdapter(requireView(), requireContext(), arrayListOf())
+        adapter.list = genresList
+
+        binding.apply {
+            genreRecyclerview.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            genreRecyclerview.adapter = adapter
+        }
+
     }
 
     private fun setUpOnBackPressedCallback() {

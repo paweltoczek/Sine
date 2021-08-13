@@ -15,4 +15,6 @@
     <string name="sign_up">Sign Up</string>
     <string name="field_cannot_be_empty">Field cannot be empty</string>
     <string name="trailerIsNotAvailable">Sorry, trailer video is not available</string>
+    <string name="Any">Any</string>
+    <string name="MovieGenre">Movie genre</string>
 </resources>

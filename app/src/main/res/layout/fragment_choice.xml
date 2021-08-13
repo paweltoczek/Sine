@@ -62,35 +62,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title_tv" />
 
-        <TextView
-            android:id="@+id/moviegenre1"
+        <LinearLayout
+            android:id="@+id/dotseparator1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:alpha="0.7"
-            android:fontFamily="@font/glacial_indifference_regular"
-            android:shadowColor="@color/black"
-            android:shadowRadius="1"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:text="genre1"
-            app:layout_constraintBaseline_toBaselineOf="@+id/releasedate"
-            app:layout_constraintStart_toEndOf="@id/dotseparator1" />
-
-        <TextView
-            android:id="@+id/moviegenre2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:alpha="0.7"
-            android:fontFamily="@font/glacial_indifference_regular"
-            android:shadowColor="@color/black"
-            android:shadowRadius="1"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            android:text="asd"
-            app:layout_constraintBaseline_toBaselineOf="@+id/moviegenre1"
-            app:layout_constraintStart_toEndOf="@+id/dotseparator2" />
+            android:background="@drawable/ic_baseline_circle_24"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@+id/releasedate"
+            app:layout_constraintStart_toEndOf="@+id/releasedate"
+            app:layout_constraintTop_toTopOf="@+id/releasedate" />
 
         <TextView
             android:id="@+id/overview_tv"
@@ -161,6 +143,16 @@
             app:layout_constraintTop_toTopOf="@+id/rating" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/genre_recyclerview"
+            android:layout_width="300dp"
+            android:layout_marginEnd="30dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/releasedate"
+            app:layout_constraintStart_toEndOf="@+id/dotseparator1"
+            app:layout_constraintTop_toTopOf="@+id/releasedate"
+             />
+
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/cast_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="90dp"
@@ -170,35 +162,8 @@
             android:layout_marginBottom="20dp"
             app:layout_constraintBottom_toTopOf="@+id/shufflebtn"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/overview_tv" />
-
-        <LinearLayout
-            android:id="@+id/dotseparator1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:background="@drawable/ic_baseline_circle_24"
-            android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="@+id/releasedate"
-            app:layout_constraintStart_toEndOf="@+id/releasedate"
-            app:layout_constraintTop_toTopOf="@+id/releasedate" />
-
-        <LinearLayout
-            android:id="@+id/dotseparator2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_marginStart="10dp"
-            android:background="@drawable/ic_baseline_circle_24"
-            android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="@+id/releasedate"
-            app:layout_constraintEnd_toStartOf="@+id/moviegenre2"
-            app:layout_constraintStart_toEndOf="@+id/moviegenre1"
-            app:layout_constraintTop_toTopOf="@+id/releasedate" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -227,11 +192,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/details_layout" />
 
+    <TextView
+        android:id="@+id/genreAny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/glacial_indifference_regular"
+        android:textColor="@color/black"
+        android:shadowColor="@color/white"
+        android:shadowRadius="5"
+        android:text="@string/MovieGenre"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Spinner
         android:id="@+id/movie_genre_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/bcg_image" />
+        app:layout_constraintTop_toTopOf="@+id/bcg_image"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
