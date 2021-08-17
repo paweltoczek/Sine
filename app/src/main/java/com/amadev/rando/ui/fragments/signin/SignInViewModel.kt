@@ -1,29 +1,27 @@
 package com.amadev.rando.ui.fragments.signin
 
+import android.content.Context
 import android.util.Patterns
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.amadev.rando.R
 import com.google.firebase.auth.FirebaseAuth
 
 sealed class Messages {
     object EmptyField : Messages()
     object InvalidEmail : Messages()
+    object VerifyEmailSent : Messages()
+    object LoginFailed : Messages()
 }
 
-fun getMessage(message: Messages) =
-    when (message) {
-        is Messages.EmptyField -> "Field cannot be empty"
-        is Messages.InvalidEmail -> "Please enter valid email address"
-    }
-
-class SignInViewModel : ViewModel() {
+class SignInViewModel(private val context: Context, private var auth: FirebaseAuth) : ViewModel() {
 
     companion object {
         val emptyField = Messages.EmptyField
         val invalidEmail = Messages.InvalidEmail
+        val verifyEmailSent = Messages.VerifyEmailSent
+        val loginFailed = Messages.LoginFailed
     }
-
-    private lateinit var auth: FirebaseAuth
 
     private val loginSuccessfulMutableLiveData = MutableLiveData<Boolean>()
     val loginSuccessfulLiveData = loginSuccessfulMutableLiveData
@@ -40,32 +38,29 @@ class SignInViewModel : ViewModel() {
     private val errorMessageMutableLiveData = MutableLiveData<String>()
     val errorMessageLiveData = errorMessageMutableLiveData
 
-
     fun validateInput(username: String, password: String) {
-        val username = username.trim()
-        val password = password.trim()
+        username.trim()
+        password.trim()
         when {
             username.isEmpty() || password.isEmpty() ->
                 errorMessageLiveData.value = getMessage(emptyField)
-
             Patterns.EMAIL_ADDRESS.matcher(username).matches()
                 .not() -> errorMessageLiveData.value = getMessage(invalidEmail)
-
             else -> doLoginWithEmailAndPassword(username, password)
         }
     }
 
     private fun doLoginWithEmailAndPassword(username: String, password: String) {
         auth = FirebaseAuth.getInstance()
-        val username = username.trim()
-        val password = password.trim()
+        username.trim()
+        password.trim()
         setUpProgressbarVisibilityMutableLiveData.value = true
         auth.signInWithEmailAndPassword(username, password)
             .addOnSuccessListener {
                 if (auth.currentUser != null) {
                     if (auth.currentUser!!.isEmailVerified.not()) {
                         loginSuccessfulMutableLiveData.value = false
-                        messageMutableLiveData.value = "Please verify email sent"
+                        messageMutableLiveData.value = getMessage(verifyEmailSent)
                         setUpProgressbarVisibilityMutableLiveData.value = false
                     } else {
                         setUpProgressbarVisibilityMutableLiveData.value = false
@@ -74,7 +69,7 @@ class SignInViewModel : ViewModel() {
                 }
             }
             .addOnFailureListener {
-                messageMutableLiveData.value = "Failed to log in"
+                messageMutableLiveData.value = getMessage(loginFailed)
                 setUpProgressbarVisibilityMutableLiveData.value = false
             }
     }
@@ -86,4 +81,12 @@ class SignInViewModel : ViewModel() {
             loginSuccessfulMutableLiveData.value = true
         }
     }
+
+    private fun getMessage(message: Messages) =
+        when (message) {
+            is Messages.EmptyField -> context.getString(R.string.field_cannot_be_empty)
+            is Messages.InvalidEmail -> context.getString(R.string.pleaseEnterValidEmailAdress)
+            is Messages.VerifyEmailSent -> context.getString(R.string.pleaseVerifyEmailSent)
+            is Messages.LoginFailed -> context.getString(R.string.failedToLogIn)
+        }
 }

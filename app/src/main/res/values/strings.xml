@@ -17,4 +17,10 @@
     <string name="trailerIsNotAvailable">Sorry, trailer video is not available</string>
     <string name="Any">Any</string>
     <string name="MovieGenre">Movie genre</string>
+    <string name="pleaseEnterValidEmailAdress">Please enter valid email addres</string>
+    <string name="pleaseVerifyEmailSent">Please verify email sent</string>
+    <string name="failedToLogIn">Failed to log in</string>
+    <string name="verificationEmailSent">Verification email sent</string>
+    <string name="passwordsAreNotSame">Passwords are not the same</string>
+    <string name="userCreatedSuccessfully">User created succesfully</string>
 </resources>

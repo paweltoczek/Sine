@@ -1,6 +1,7 @@
 package com.amadev.rando.di
 
 import com.amadev.rando.BuildConfig
+import com.amadev.rando.data.ApiClient
 import com.amadev.rando.data.ApiInterface
 import com.amadev.rando.data.ApiService
 import okhttp3.OkHttpClient
@@ -13,6 +14,8 @@ val networkModule = module {
     single { provideTmdbApi(get()) }
     single { ApiService(get()) }
 }
+
+fun provideApiClient(): ApiClient = ApiClient
 
 fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder().baseUrl(BuildConfig.TMDB_BASE_URL).client(okHttpClient)

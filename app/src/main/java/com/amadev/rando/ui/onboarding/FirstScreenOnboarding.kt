@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.amadev.rando.R
 import com.amadev.rando.databinding.FragmentFirstScreenOnboardingBinding
-import com.amadev.rando.databinding.FragmentSignUpBinding
 import com.amadev.rando.util.Animations.animateAlphaWithHandlerDelay
 
 class FirstScreenOnboarding : Fragment() {
@@ -18,11 +17,9 @@ class FirstScreenOnboarding : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-//        val view = inflater.inflate(R.layout.fragment_first_screen_onboarding, container, false)
+    ): View {
         _binding = FragmentFirstScreenOnboardingBinding.inflate(inflater, container, false)
         return binding.root
-        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -30,8 +27,6 @@ class FirstScreenOnboarding : Fragment() {
 
         animateAlphaWithHandlerDelay(binding.howlongdoes,1000,1.0f,700)
         animateAlphaWithHandlerDelay(binding.next,1000,1.0f,1500)
-
-
 
         val viewPager = activity?.findViewById<ViewPager2>(R.id.viewPager)
         binding.next.setOnClickListener {
