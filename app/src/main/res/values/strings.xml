@@ -23,4 +23,12 @@
     <string name="verificationEmailSent">Verification email sent</string>
     <string name="passwordsAreNotSame">Passwords are not the same</string>
     <string name="userCreatedSuccessfully">User created succesfully</string>
+    <string name="emailAlreadyExists">Email already exists</string>
+    <string name="passwordIsToWeak">Password is to weak</string>
+    <string name="forgot_password">forgot password?</string>
+    <string name="forgotpassword">Forgot password?</string>
+    <string name="email_address">Email address</string>
+    <string name="sendEmail">Send email</string>
+    <string name="emailSent">Email sent</string>
+    <string name="failedToSendAnEmail">Failed to send an email</string>
 </resources>

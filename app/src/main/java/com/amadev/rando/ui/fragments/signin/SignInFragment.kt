@@ -12,12 +12,12 @@ import com.amadev.rando.databinding.FragmentSignInBinding
 import com.google.android.material.snackbar.Snackbar
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class SignInFragment : Fragment() {
+class SignInFragment() : Fragment() {
 
     private var _binding: FragmentSignInBinding? = null
     private val binding get() = _binding!!
 
-    private val signInViewModel : SignInViewModel by viewModel()
+    private val signInViewModel: SignInViewModel by viewModel()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -43,13 +43,23 @@ class SignInFragment : Fragment() {
     }
 
     private fun setUpOnClickListeners() {
-        binding.signinBtn.setOnClickListener {
-            signInViewModel.validateInput(
-                binding.usernameInput.text.toString(),
-                binding.passwordInput.text.toString())
+        binding.apply {
+            signinBtn.setOnClickListener {
+                signInViewModel.validateInput(
+                    binding.usernameInput.text.toString(),
+                    binding.passwordInput.text.toString()
+                )
+            }
+            forgotPassword.setOnClickListener {
+                provideForgotPasswordDialog()
+            }
         }
     }
 
+    private fun provideForgotPasswordDialog() {
+        val dialog = ForgotPasswordDialog()
+        dialog.show(childFragmentManager, null)
+    }
 
     private fun setUpObservers() {
         signInViewModel.apply {

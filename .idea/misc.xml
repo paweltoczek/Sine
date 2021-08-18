@@ -6,10 +6,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/pawel/AndroidStudioProjects/Rando/app/src/main/res/drawable/background_round_corners.xml" value="0.39427083333333335" />
+        <entry key="..\:/Users/pawel/AndroidStudioProjects/Rando/app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.39427083333333335" />
         <entry key="..\:/Users/pawel/AndroidStudioProjects/Rando/app/src/main/res/layout/custom_cast_recyclerview_pattern.xml" value="0.378125" />
         <entry key="..\:/Users/pawel/AndroidStudioProjects/Rando/app/src/main/res/layout/custom_genre_recyclerview_pattern.xml" value="0.378125" />
         <entry key="..\:/Users/pawel/AndroidStudioProjects/Rando/app/src/main/res/layout/custom_recyclerview_pattern.xml" value="0.378125" />
+        <entry key="..\:/Users/pawel/AndroidStudioProjects/Rando/app/src/main/res/layout/forgot_password_dialog.xml" value="0.378125" />
         <entry key="..\:/Users/pawel/AndroidStudioProjects/Rando/app/src/main/res/layout/fragment_choice.xml" value="0.5645412130637636" />
+        <entry key="..\:/Users/pawel/AndroidStudioProjects/Rando/app/src/main/res/layout/fragment_sign_in.xml" value="0.378125" />
         <entry key="..\:/Users/pawel/AndroidStudioProjects/Rando/app/src/main/res/layout/genres_custom_spinner_item.xml" value="0.378125" />
       </map>
     </option>

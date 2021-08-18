@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.amadev.rando.R
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 
 sealed class Messages {
     object EmptyField : Messages()
@@ -14,6 +16,8 @@ sealed class Messages {
     object SignInFailed : Messages()
     object PasswordsNotSame : Messages()
     object UserCreated : Messages()
+    object EmailAlreadyExist : Messages()
+    object PasswordToWeak : Messages()
 }
 
 class SignUpViewModel(private val context: Context, private val auth: FirebaseAuth) : ViewModel() {
@@ -25,25 +29,12 @@ class SignUpViewModel(private val context: Context, private val auth: FirebaseAu
         val signInFailed = Messages.SignInFailed
         val passwordNotSame = Messages.PasswordsNotSame
         val userCreated = Messages.UserCreated
+        val emailAlreadyExists = Messages.EmailAlreadyExist
+        val passwordToWeak = Messages.PasswordToWeak
     }
 
-    private val usernameInputErrorMutableLiveData = MutableLiveData<String>()
-    val usernameInputErrorLiveData = usernameInputErrorMutableLiveData
-
-    private val passwordInputErrorMutableLiveData = MutableLiveData<String>()
-    val passwordInputErrorLiveData = passwordInputErrorMutableLiveData
-
-    private val emptyRepeatPasswordInputMutableLiveData = MutableLiveData<String>()
-    val emptyRepeatPasswordInputLiveData = emptyRepeatPasswordInputMutableLiveData
-
-    private val invalidUsernameMutableLiveData = MutableLiveData<String>()
-    val invalidUsernameLiveData = invalidUsernameMutableLiveData
-
-    private val passwordsAreNotTheSameMutableLiveData = MutableLiveData<String>()
-    val passwordsAreNotTheSameLiveData = passwordsAreNotTheSameMutableLiveData
-
-    private val toastTextMutableLiveData = MutableLiveData<String>()
-    val toastTextLiveData = toastTextMutableLiveData
+    private val popUpTextMutableLiveData = MutableLiveData<String>()
+    val popUpTextLiveData = popUpTextMutableLiveData
 
     private val progressBarVisibleMutableLiveData = MutableLiveData<Boolean>()
     val progressBarVisibleLiveData = progressBarVisibleMutableLiveData
@@ -58,13 +49,13 @@ class SignUpViewModel(private val context: Context, private val auth: FirebaseAu
         repeatPassword.trim()
 
         when {
-            username.isEmpty() -> usernameInputErrorMutableLiveData.value = getMessage(emptyField)
-            password.isEmpty() -> passwordInputErrorLiveData.value = getMessage(emptyField)
-            repeatPassword.isEmpty() -> emptyRepeatPasswordInputLiveData.value =
+            username.isEmpty() -> popUpTextMutableLiveData.value = getMessage(emptyField)
+            password.isEmpty() -> popUpTextMutableLiveData.value = getMessage(emptyField)
+            repeatPassword.isEmpty() -> popUpTextMutableLiveData.value =
                 getMessage(emptyField)
             Patterns.EMAIL_ADDRESS.matcher(username).matches()
-                .not() -> invalidUsernameMutableLiveData.value = getMessage(invalidEmail)
-            password != repeatPassword -> passwordsAreNotTheSameMutableLiveData.value =
+                .not() -> popUpTextMutableLiveData.value = getMessage(invalidEmail)
+            password != repeatPassword -> popUpTextMutableLiveData.value =
                 getMessage(passwordNotSame)
             else -> createUserWithEmailAndPassword(username, password)
         }
@@ -76,19 +67,20 @@ class SignUpViewModel(private val context: Context, private val auth: FirebaseAu
             if (it.isSuccessful) {
                 sendVerificationEmail()
                 progressBarVisibleMutableLiveData.value = false
-                toastTextMutableLiveData.value = getMessage(userCreated)
                 accountSuccessfullyCreatedMutableLiveData.value = true
+                popUpTextMutableLiveData.value = getMessage(verifyEmailSent)
+
             } else if (it.isSuccessful.not()) {
-                /*try {
+                try {
                     throw it.exception!!
                 } catch (e: FirebaseAuthWeakPasswordException) {
-                    passwordInputErrorMutableLiveData.value = "Password is too weak"
+                    popUpTextMutableLiveData.value = getMessage(passwordToWeak)
                 } catch (e: FirebaseAuthUserCollisionException) {
-                    usernameInputErrorMutableLiveData.value = "Email already exists"
+                    popUpTextMutableLiveData.value = getMessage(emailAlreadyExists)
                 } catch (e: Exception) {
-                    toastTextMutableLiveData.value = "Failed to sign up"
+                    popUpTextMutableLiveData.value = getMessage(signInFailed)
                 }
-                progressBarVisibleMutableLiveData.value = false*/
+                progressBarVisibleMutableLiveData.value = false
             }
         }
     }
@@ -106,5 +98,7 @@ class SignUpViewModel(private val context: Context, private val auth: FirebaseAu
             is Messages.SignInFailed -> context.getString(R.string.failedToLogIn)
             is Messages.PasswordsNotSame -> context.getString(R.string.passwordsAreNotSame)
             is Messages.UserCreated -> context.getString(R.string.userCreatedSuccessfully)
+            is Messages.EmailAlreadyExist -> context.getString(R.string.emailAlreadyExists)
+            is Messages.PasswordToWeak -> context.getString(R.string.passwordIsToWeak)
         }
 }

@@ -75,6 +75,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/username_input" />
 
+        <TextView
+            android:id="@+id/forgotPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/glacial_indifference_regular"
+            android:text="@string/forgot_password"
+            android:textColor="@color/white"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/password_input"
+            app:layout_constraintTop_toBottomOf="@+id/password_input" />
+
         <Button
             android:id="@+id/signin_btn"
             android:layout_width="wrap_content"

@@ -19,6 +19,6 @@
     <color name="yellow_rating">#FFBD59</color>
     <color name="transparent_black">#90000000</color>
 
-
     <color name="shadow">#ababab</color>
+    <color name="transparent">#00000000</color>
 </resources>

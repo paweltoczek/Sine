@@ -1,11 +1,14 @@
 package com.amadev.rando.util
 
 import android.content.Context
+import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.amadev.rando.BuildConfig
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.snackbar.Snackbar
 
 object Util {
     
@@ -26,8 +29,19 @@ object Util {
             .placeholder(circularProgressDrawable)
         Glide.with(context)
             .setDefaultRequestOptions(options)
-            .load(BuildConfig.TMDB_PICTURE_BASE_URL+uri)
+            .load(BuildConfig.TMDB_PICTURE_BASE_URL + uri)
             .into(this)
     }
 
+    fun showToast(context: Context, text: String) {
+        Toast.makeText(context, text, Toast.LENGTH_LONG).apply {
+            show()
+        }
+    }
+
+    fun showSnackBar(view : View, text : String) {
+        Snackbar.make(view, text, Snackbar.LENGTH_LONG).apply {
+            show()
+        }
+    }
 }

@@ -87,7 +87,6 @@ class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
                     val responseBody = response.body()
                     val genresList = ArrayList<GenresList>()
                     responseBody?.let {
-//                        genresList.add(0, "Any")
                         genresList.addAll(it.genres)
                         moviesGenreListMutableLiveData.postValue(genresList)
                     }
@@ -156,7 +155,6 @@ class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
                             }
                         }
                     }
-                    Log.e("currentPage", currentPage.value.toString())
                     pageAlreadyCalled.postValue(currentPage.value)
                 }
             } else {
