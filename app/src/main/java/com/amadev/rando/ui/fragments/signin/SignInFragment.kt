@@ -12,7 +12,7 @@ import com.amadev.rando.databinding.FragmentSignInBinding
 import com.google.android.material.snackbar.Snackbar
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class SignInFragment() : Fragment() {
+class SignInFragment : Fragment() {
 
     private var _binding: FragmentSignInBinding? = null
     private val binding get() = _binding!!
