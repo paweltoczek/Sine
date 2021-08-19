@@ -1,5 +1,6 @@
 package com.amadev.rando.di
 
+import com.amadev.rando.ui.dialogs.forgotPassword.ForgotPasswordDialogViewModel
 import com.amadev.rando.ui.fragments.choice.ChoiceFragmentViewModel
 import com.amadev.rando.ui.fragments.signin.SignInViewModel
 import com.amadev.rando.ui.fragments.signinorsignup.SignInOrSignUpViewModel
@@ -12,6 +13,7 @@ val viewModelModule = module {
     viewModel { SignUpViewModel(get(), get()) }
     viewModel { SignInViewModel(get(), get()) }
     viewModel { SignInOrSignUpViewModel() }
+    viewModel { ForgotPasswordDialogViewModel(get(), get()) }
 }
 
 

@@ -63,8 +63,6 @@ class SignUpFragment : Fragment() {
         signUpViewModel.apply {
             popUpTextLiveData.observe(viewLifecycleOwner) {
                 showToast(requireContext(), it)
-                binding.usernameInput.text.clear()
-                binding.passwordInput.text.clear()
             }
             accountSuccessfullyCreatedLiveData.observe(viewLifecycleOwner) {
                 findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)

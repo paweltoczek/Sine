@@ -95,7 +95,7 @@ class SignUpViewModel(private val context: Context, private val auth: FirebaseAu
             is Messages.EmptyField -> context.getString(R.string.field_cannot_be_empty)
             is Messages.InvalidEmail -> context.getString(R.string.pleaseEnterValidEmailAdress)
             is Messages.VerifyEmailSent -> context.getString(R.string.verificationEmailSent)
-            is Messages.SignInFailed -> context.getString(R.string.failedToLogIn)
+            is Messages.SignInFailed -> context.getString(R.string.failedToSignUp)
             is Messages.PasswordsNotSame -> context.getString(R.string.passwordsAreNotSame)
             is Messages.UserCreated -> context.getString(R.string.userCreatedSuccessfully)
             is Messages.EmailAlreadyExist -> context.getString(R.string.emailAlreadyExists)

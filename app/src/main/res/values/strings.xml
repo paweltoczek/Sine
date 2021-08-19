@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Rando</string>
+    <string name="app_name">Sine</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="api_key">611dca8cf117ec0c95b0da6ed0fbe87a</string>
@@ -31,4 +31,5 @@
     <string name="sendEmail">Send email</string>
     <string name="emailSent">Email sent</string>
     <string name="failedToSendAnEmail">Failed to send an email</string>
+    <string name="failedToSignUp">Failed to sign up</string>
 </resources>
