@@ -4,7 +4,7 @@
 
         <item name="android:windowFullscreen">true</item>
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/pink_lavnder</item>
+        <item name="colorPrimary">@color/yellow_rating</item>
         <item name="colorPrimaryVariant">@color/opera_mauve</item>
         <item name="colorOnPrimary">@color/lavender_blue</item>
         <!-- Secondary brand color. -->

@@ -45,7 +45,6 @@ class ForgotPasswordDialog() : DialogFragment() {
         }
     }
 
-
     private fun setUpObservers() {
         forgotPasswordDialogViewModel.apply {
 

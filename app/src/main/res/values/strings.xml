@@ -32,4 +32,7 @@
     <string name="emailSent">Email sent</string>
     <string name="failedToSendAnEmail">Failed to send an email</string>
     <string name="failedToSignUp">Failed to sign up</string>
+    <string name="character">Character</string>
+    <string name="space">" "</string>
+    <string name="shuffle">Shuffle</string>
 </resources>

@@ -31,6 +31,13 @@ object Animations {
         }
     }
 
+    fun rotateAnimation(view : View, rotationDegree : Float, animationTime : Long) {
+        view.animate().apply {
+            duration = animationTime
+            rotation(rotationDegree)
+        }
+    }
+
 
 
 
