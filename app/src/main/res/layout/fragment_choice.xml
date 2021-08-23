@@ -56,9 +56,9 @@
             android:layout_marginEnd="10dp"
             android:fontFamily="@font/glacial_indifference_regular"
             android:gravity="center"
+            android:text="2015"
             android:textColor="@color/white"
             android:textSize="14sp"
-            android:text="2015"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title_tv" />
 
@@ -95,15 +95,19 @@
 
         <Button
             android:id="@+id/shufflebtn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="15dp"
             android:backgroundTint="@color/yellow_rating"
-            android:text="@string/next"
+            android:fontFamily="@font/glacial_indifference_regular"
+            android:text="@string/shuffle"
             android:textColor="@color/black"
+            app:cornerRadius="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/rating"
@@ -145,12 +149,11 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/genre_recyclerview"
             android:layout_width="300dp"
+            android:layout_height="20dp"
             android:layout_marginEnd="30dp"
-            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@+id/releasedate"
             app:layout_constraintStart_toEndOf="@+id/dotseparator1"
-            app:layout_constraintTop_toTopOf="@+id/releasedate"
-             />
+            app:layout_constraintTop_toTopOf="@+id/releasedate" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/cast_recyclerview"
@@ -166,6 +169,17 @@
             app:layout_constraintTop_toBottomOf="@+id/overview_tv" />
 
 
+        <Button
+            android:id="@+id/hideMovieDetailsBtn"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/ic_baseline_arrow_drop_down_24"
+            android:backgroundTint="#FFFFFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -174,6 +188,7 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -184,6 +199,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
+        android:layout_marginBottom="358dp"
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_baseline_play_circle_filled_24"

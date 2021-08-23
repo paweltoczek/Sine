@@ -1,7 +1,6 @@
 package com.amadev.rando.ui.dialogs.forgotPassword
 
 import android.content.Context
-import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -51,7 +50,6 @@ class ForgotPasswordDialogViewModel(val context: Context, private val auth: Fire
                 dialogDismissMutableLiveData.value = true
             }
             .addOnFailureListener {
-                Log.e("failed", it.toString())
                 popUpMessageMutableLiveData.value = getMessage(emailSentFailed)
                 dialogDismissMutableLiveData.value = false
             }
