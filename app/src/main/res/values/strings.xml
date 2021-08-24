@@ -35,4 +35,7 @@
     <string name="character">Character</string>
     <string name="space">" "</string>
     <string name="shuffle">Shuffle</string>
+    <string name="logout">Logout</string>
+    <string name="yes">Yes</string>
+    <string name="youLoggedOut">You logged out</string>
 </resources>
