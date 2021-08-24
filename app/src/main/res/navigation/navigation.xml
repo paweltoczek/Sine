@@ -48,8 +48,8 @@
                 android:defaultValue="0"/>
         </action>
         <action
-            android:id="@+id/action_choiceFragment_to_castDetailsFragment"
-            app:destination="@id/castDetailsFragment" />
+            android:id="@+id/action_choiceFragment_to_welcomeScreen"
+            app:destination="@id/welcomeScreen" />
     </fragment>
     <activity
         android:id="@+id/youtubeActivity"
@@ -94,15 +94,6 @@
         <action
             android:id="@+id/action_signUpFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/castDetailsFragment"
-        android:name="com.amadev.rando.ui.fragments.CastDetailsFragment"
-        android:label="fragment_cast_details"
-        tools:layout="@layout/fragment_cast_details" >
-        <action
-            android:id="@+id/action_castDetailsFragment_to_choiceFragment"
-            app:destination="@id/choiceFragment" />
     </fragment>
 
 </navigation>

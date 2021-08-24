@@ -21,6 +21,7 @@ import com.amadev.rando.adapter.GenresRecyclerViewAdapter
 import com.amadev.rando.databinding.FragmentChoiceBinding
 import com.amadev.rando.model.CastModelResults
 import com.amadev.rando.model.GenresList
+import com.amadev.rando.ui.dialogs.logout.LogoutDialog
 import com.amadev.rando.util.Animations.animateAlphaWithHandlerDelay
 import com.amadev.rando.util.Animations.animationTravelYWithAlpha
 import com.amadev.rando.util.Animations.rotateAnimation
@@ -28,6 +29,7 @@ import com.amadev.rando.util.Animations.scaleXY
 import com.amadev.rando.util.Genres.findGenreNameById
 import com.amadev.rando.util.Util.getProgressDrawable
 import com.amadev.rando.util.Util.loadImageWithGlide
+import com.amadev.rando.util.Util.showSnackBar
 import com.google.android.material.snackbar.Snackbar
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -46,6 +48,7 @@ class ChoiceFragment : Fragment() {
         var TARGET_Y: Float = 0f
         var SCALE: Float = 0f
         var ROTATION_DEGREE = 0f
+        var ANYGENRE = 0
     }
 
     override fun onCreateView(
@@ -92,10 +95,9 @@ class ChoiceFragment : Fragment() {
             }
 
             shufflebtn.setOnClickListener {
-                if (selectedGenreId != 0) {
+                if (selectedGenreId != ANYGENRE) {
                     choiceFragmentViewModel.getMovieByGenre(selectedGenreId)
                 } else {
-                    binding.overviewTv.verticalScrollbarPosition = 0
                     customizeAlphaWhileShuffleButtonIsPressed()
                     setProgressBarVisible()
                     animateShuffleButton()
@@ -108,9 +110,17 @@ class ChoiceFragment : Fragment() {
                 movieGenreSpinner.visibility = View.VISIBLE
                 movieGenreSpinner.performClick()
             }
+
+            logOutBtn.setOnClickListener {
+                provideLogOutDialog()
+            }
         }
     }
 
+    private fun provideLogOutDialog() {
+        val logoutDialog = LogoutDialog()
+        logoutDialog.show(childFragmentManager, null)
+    }
 
     private fun watchTrailerVideo() {
         choiceFragmentViewModel.apply {
@@ -119,10 +129,7 @@ class ChoiceFragment : Fragment() {
                 intent.putExtra("videoId", videoEndPoint.value)
                 startActivity(intent)
             } else {
-                val snack = Snackbar.make(requireView(),
-                    getString(R.string.trailerIsNotAvailable),
-                    Snackbar.LENGTH_LONG)
-                snack.show()
+                showSnackBar(requireView(), getString(R.string.trailerIsNotAvailable))
             }
         }
     }
