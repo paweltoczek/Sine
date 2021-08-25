@@ -40,4 +40,6 @@
     <string name="youLoggedOut">You logged out</string>
     <string name="readMore">read more...</string>
     <string name="overview">Overview</string>
+    <string name="failedAddingToFavorites">Failed adding to favorites</string>
+    <string name="addedToFavorites">Movie added to favorites</string>
 </resources>

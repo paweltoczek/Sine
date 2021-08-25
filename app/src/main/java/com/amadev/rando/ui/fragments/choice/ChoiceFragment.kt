@@ -114,7 +114,17 @@ class ChoiceFragment : Fragment() {
             logOutBtn.setOnClickListener {
                 provideLogOutDialog()
             }
+
+            addToFavorite.setOnClickListener {
+                addToFavoriteMovies()
+            }
         }
+
+
+    }
+
+    private fun addToFavoriteMovies() {
+        choiceFragmentViewModel.addCurrentMovieToFavoriteMovies()
     }
 
     private fun setUpOverviewTextView(text: String) {

@@ -1,18 +1,38 @@
 package com.amadev.rando.ui.fragments.choice
-import android.util.Log
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.amadev.rando.R
 import com.amadev.rando.data.ApiClient
 import com.amadev.rando.data.ApiService
 import com.amadev.rando.model.CastModelResults
 import com.amadev.rando.model.GenresList
 import com.amadev.rando.model.PopularMoviesResults
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+sealed class Messages {
+    object FailedAddingToFavorites : Messages()
+    object AddedToFavorites : Messages()
+}
 
-class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
+class ChoiceFragmentViewModel(
+    private val context: Context,
+    private val api: ApiClient,
+    private val firebaseAuth: FirebaseAuth,
+    private val firebaseDatabase: FirebaseDatabase
+) : ViewModel() {
+
+    companion object {
+        val FAVORITE_MOVIES = "Favorite movies"
+        var failedAddingToFavorites = Messages.FailedAddingToFavorites
+        var addedToFavorites = Messages.AddedToFavorites
+    }
+
+    private val username = provideFirebaseUsername()
 
     private val castListMutableLiveData = MutableLiveData<List<CastModelResults>>()
     val castListLiveData = castListMutableLiveData
@@ -28,12 +48,18 @@ class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
     private val popularMoviesRandomResultsMutableLiveData = MutableLiveData<PopularMoviesResults>()
     val popularMoviesResultsLiveData = popularMoviesRandomResultsMutableLiveData
 
-    private val messageMutableLiveData = MutableLiveData<String>()
+    private val popUpMessageMutableLiveData = MutableLiveData<String>()
     val progressBarVisibility = MutableLiveData<Boolean>()
 
     private fun getRandomPage(): Int {
         return (1 until 400).random()
     }
+
+    private fun getMessage(messages: Messages) =
+        when (messages) {
+            is Messages.FailedAddingToFavorites -> context.getString(R.string.failedAddingToFavorites)
+            is Messages.AddedToFavorites -> context.getString(R.string.addedToFavorites)
+        }
 
     fun getTrailerVideo() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -119,7 +145,7 @@ class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
                         progressBarVisibility.postValue(false)
                     }
                 } else {
-                    messageMutableLiveData.postValue("Please check internet connection")
+                    popUpMessageMutableLiveData.postValue("Please check internet connection")
                     progressBarVisibility.postValue(false)
                 }
             }
@@ -158,11 +184,46 @@ class ChoiceFragmentViewModel(private val api : ApiClient) : ViewModel() {
                     pageAlreadyCalled.postValue(currentPage.value)
                 }
             } else {
-                messageMutableLiveData.postValue("Please check internet connection")
+                popUpMessageMutableLiveData.postValue("Please check internet connection")
                 progressBarVisibility.postValue(false)
             }
         }
     }
+
+    fun addCurrentMovieToFavoriteMovies() {
+
+        val firebaseReference =
+            firebaseDatabase.getReference("Users")
+                .child(replaceFirebaseForbiddenChars(username))
+                .child(FAVORITE_MOVIES)
+
+        firebaseReference
+            .push()
+            .setValue(popularMoviesRandomResultsMutableLiveData)
+            .addOnSuccessListener {
+                popUpMessageMutableLiveData.value = getMessage(addedToFavorites)
+            }
+            .addOnFailureListener {
+                popUpMessageMutableLiveData.value = getMessage(failedAddingToFavorites)
+
+            }
+    }
+
+    private fun provideFirebaseUsername(): String {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        lateinit var username: String
+        currentUser?.let {
+            for (profiler in it.providerData) {
+                username = profiler.email.toString()
+            }
+        }
+        return username
+    }
+
+    private fun replaceFirebaseForbiddenChars(string: String) =
+        string
+            .replace("@", "_AT_")
+            .replace(".", "_DOT_")
 
 }
 

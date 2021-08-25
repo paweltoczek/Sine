@@ -11,7 +11,14 @@ import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    viewModel { ChoiceFragmentViewModel(provideApiClient()) }
+    viewModel {
+        ChoiceFragmentViewModel(
+            get(),
+            provideApiClient(),
+            provideFirebaseAuth(),
+            provideFirebaseDatabase()
+        )
+    }
     viewModel { SignUpViewModel(get(), get()) }
     viewModel { SignInViewModel(get(), get()) }
     viewModel { SignInOrSignUpViewModel() }
