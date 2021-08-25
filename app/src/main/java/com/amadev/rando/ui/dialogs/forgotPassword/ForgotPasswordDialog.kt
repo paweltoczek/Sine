@@ -66,4 +66,5 @@ class ForgotPasswordDialog : DialogFragment() {
         forgotPasswordDialogViewModel.validateInput(username.text.toString())
     }
 
+
 }

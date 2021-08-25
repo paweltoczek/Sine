@@ -38,4 +38,6 @@
     <string name="logout">Logout</string>
     <string name="yes">Yes</string>
     <string name="youLoggedOut">You logged out</string>
+    <string name="readMore">read more...</string>
+    <string name="overview">Overview</string>
 </resources>

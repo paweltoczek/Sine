@@ -4,12 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,6 +20,7 @@ import com.amadev.rando.databinding.FragmentChoiceBinding
 import com.amadev.rando.model.CastModelResults
 import com.amadev.rando.model.GenresList
 import com.amadev.rando.ui.dialogs.logout.LogoutDialog
+import com.amadev.rando.ui.dialogs.overviewDialog.OverviewDialog
 import com.amadev.rando.util.Animations.animateAlphaWithHandlerDelay
 import com.amadev.rando.util.Animations.animationTravelYWithAlpha
 import com.amadev.rando.util.Animations.rotateAnimation
@@ -30,7 +29,6 @@ import com.amadev.rando.util.Genres.findGenreNameById
 import com.amadev.rando.util.Util.getProgressDrawable
 import com.amadev.rando.util.Util.loadImageWithGlide
 import com.amadev.rando.util.Util.showSnackBar
-import com.google.android.material.snackbar.Snackbar
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class ChoiceFragment : Fragment() {
@@ -49,6 +47,8 @@ class ChoiceFragment : Fragment() {
         var SCALE: Float = 0f
         var ROTATION_DEGREE = 0f
         var ANYGENRE = 0
+        var SHUFFLE_BTN_PRESSED = 0
+        const val MAX_OVERVIEW_TEXT_LENGTH = 190
     }
 
     override fun onCreateView(
@@ -70,7 +70,6 @@ class ChoiceFragment : Fragment() {
         setUpViewModel()
         setUpObservers()
         customizeAlphaWhileDataIsNotAvailable()
-        setTextViewVerticalMovementMethod(binding.overviewTv)
         setUpOnClickListeners()
         setUpOnBackPressedCallback()
 
@@ -95,6 +94,7 @@ class ChoiceFragment : Fragment() {
             }
 
             shufflebtn.setOnClickListener {
+                SHUFFLE_BTN_PRESSED + 1
                 if (selectedGenreId != ANYGENRE) {
                     choiceFragmentViewModel.getMovieByGenre(selectedGenreId)
                 } else {
@@ -115,6 +115,36 @@ class ChoiceFragment : Fragment() {
                 provideLogOutDialog()
             }
         }
+    }
+
+    private fun setUpOverviewTextView(text: String) {
+        val textLength = text.length
+        binding.apply {
+            when {
+                textLength >= MAX_OVERVIEW_TEXT_LENGTH -> {
+                    overviewTv.text = text
+                        .take(
+                            MAX_OVERVIEW_TEXT_LENGTH - getString(R.string.readMore)
+                                .length
+                        )
+
+                    readMore.visibility = View.VISIBLE
+                    readMore.setOnClickListener {
+                        provideOverviewDialog(text)
+                    }
+                }
+                else -> {
+                    overviewTv.text = text
+                    readMore.visibility = View.GONE
+                }
+            }
+        }
+    }
+
+
+    private fun provideOverviewDialog(overviewText: String) {
+        val dialog = OverviewDialog(overviewText)
+        dialog.show(childFragmentManager, null)
     }
 
     private fun provideLogOutDialog() {
@@ -146,38 +176,37 @@ class ChoiceFragment : Fragment() {
         choiceFragmentViewModel.apply {
             popularMoviesResultsLiveData.observe(viewLifecycleOwner) {
                     it.apply {
+
                         title?.let { binding.titleTv.text = title.trim() }
-                        overview?.let { binding.overviewTv.text = overview.trim() }
+                        overview?.let { setUpOverviewTextView(it) }
                         release_date?.let { binding.releasedate.text = release_date.take(4).trim() }
                         vote_average?.let {
                             binding.rating.text = vote_average.toString().trim()
                             binding.ratingBar.rating = (vote_average / 2).toFloat()
                         }
+
                         id?.let {
                             choiceFragmentViewModel.getTrailerVideo()
                             choiceFragmentViewModel.getCastDetails()
                         }
+
                         poster_path?.let {
-                            binding.bcgImage.loadImageWithGlide(poster_path,
-                                getProgressDrawable(requireContext()))
+                            binding.bcgImage.loadImageWithGlide(
+                                poster_path,
+                                getProgressDrawable(requireContext())
+                            )
                         }
-                        genre_ids?.let {
-                            val genresList = ArrayList<String>()
-                            genre_ids.forEach { i ->
-                                val genreName = findGenreNameById(i)
-                                genresList.add(genreName)
-                            }
-                            setUpGenreRecyclerViewAdapter(genresList)
+
+                        genre_ids?.let { genreIdList ->
+                            val genresArrayList = setUpGenreList(genreIdList)
+                            setUpGenreRecyclerViewAdapter(genresArrayList)
                         }
                     }
                 customizeAlphaWhileDataIsLoaded()
             }
+
             progressBarVisibility.observe(viewLifecycleOwner) {
-                if (it == true) {
-                    setProgressBarVisible()
-                } else {
-                    setProgressBarGone()
-                }
+                setUpProgressBar(it)
             }
             moviesGenreListLiveData.observe(viewLifecycleOwner) {
                 setUpGenresSpinnerAdapter(it)
@@ -188,11 +217,28 @@ class ChoiceFragment : Fragment() {
         }
     }
 
+    private fun setUpGenreList(genresIdList: List<Int>): ArrayList<String> {
+        val genreIdArrayList = ArrayList<String>()
+        genresIdList.forEach { i ->
+            val genreName = findGenreNameById(i)
+            genreIdArrayList.add(genreName)
+        }
+        return genreIdArrayList
+    }
+
+    private fun setUpProgressBar(visibility: Boolean) {
+        if (visibility) {
+            setProgressBarVisible()
+        } else {
+            setProgressBarGone()
+        }
+    }
+
     private fun setUpGenresSpinnerAdapter(genresList: List<GenresList>) {
         val spinner = binding.movieGenreSpinner
         val genreSpinnerAdapter = GenreSpinnerAdapter(requireContext(), genresList)
         spinner.adapter = genreSpinnerAdapter
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
@@ -207,10 +253,6 @@ class ChoiceFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
         }
-    }
-
-    private fun setTextViewVerticalMovementMethod(property: TextView) {
-        property.movementMethod = ScrollingMovementMethod.getInstance()
     }
 
     private fun setProgressBarVisible() {
@@ -276,6 +318,8 @@ class ChoiceFragment : Fragment() {
         binding.ratingBar.alpha = ALPHA
         binding.trailerBtn.alpha = ALPHA
         binding.watchTrailer.alpha = ALPHA
+        binding.releasedate.alpha = ALPHA
+        binding.castRecyclerview.alpha = ALPHA
     }
 
     private fun customizeAlphaWhileDataIsLoaded() {
@@ -311,6 +355,18 @@ class ChoiceFragment : Fragment() {
             (300L.also { ANIMATION_DURATION_TIME_ms = it }),
             (1f.also { ALPHA = it }),
             (500L.also { HANDLER_DELAY_ms = it }))
+        animateAlphaWithHandlerDelay(binding.readMore,
+            (300L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (1f.also { ALPHA = it }),
+            (500L.also { HANDLER_DELAY_ms = it }))
+        animateAlphaWithHandlerDelay(binding.castRecyclerview,
+            (300L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (1f.also { ALPHA = it }),
+            (500L.also { HANDLER_DELAY_ms = it }))
+        animateAlphaWithHandlerDelay(binding.genreRecyclerview,
+            (300L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (1f.also { ALPHA = it }),
+            (500L.also { HANDLER_DELAY_ms = it }))
     }
 
     private fun customizeAlphaWhileShuffleButtonIsPressed() {
@@ -340,6 +396,22 @@ class ChoiceFragment : Fragment() {
             (0L.also { HANDLER_DELAY_ms = it }))
         animateAlphaWithHandlerDelay(binding.watchTrailer,
             (100L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (0f.also { ALPHA = it }),
+            (0L.also { HANDLER_DELAY_ms = it }))
+        animateAlphaWithHandlerDelay(binding.readMore,
+            (300L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (1f.also { ALPHA = it }),
+            (0L.also { HANDLER_DELAY_ms = it }))
+        animateAlphaWithHandlerDelay(binding.releasedate,
+            (300L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (0f.also { ALPHA = it }),
+            (0L.also { HANDLER_DELAY_ms = it }))
+        animateAlphaWithHandlerDelay(binding.castRecyclerview,
+            (300L.also { ANIMATION_DURATION_TIME_ms = it }),
+            (0f.also { ALPHA = it }),
+            (0L.also { HANDLER_DELAY_ms = it }))
+        animateAlphaWithHandlerDelay(binding.genreRecyclerview,
+            (300L.also { ANIMATION_DURATION_TIME_ms = it }),
             (0f.also { ALPHA = it }),
             (0L.also { HANDLER_DELAY_ms = it }))
     }
