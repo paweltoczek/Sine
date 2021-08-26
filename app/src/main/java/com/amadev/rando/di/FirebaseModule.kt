@@ -15,17 +15,18 @@ fun provideFirebaseAuth(): FirebaseAuth {
 fun provideFirebaseDatabase() : FirebaseDatabase {
     return FirebaseDatabase.getInstance()
 }
-//
-//fun provideFirebaseUsername(): String {
-//    val currentUser = FirebaseAuth.getInstance().currentUser
-//    var username : String = ""
-//    currentUser?.let {
-//        for (profile in it.providerData) {
-//            username = profile.email.toString()
-//        }
-//    }
-//    return username
-//}
+
+fun provideFirebaseUsername(): String {
+    val currentUser = FirebaseAuth.getInstance().currentUser
+    lateinit var username: String
+    currentUser?.let {
+        for (profiler in it.providerData) {
+            username = profiler.email.toString()
+        }
+    }
+    return username
+}
+
 
 
 

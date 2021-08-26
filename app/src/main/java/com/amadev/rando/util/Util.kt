@@ -44,4 +44,9 @@ object Util {
             show()
         }
     }
+
+    fun replaceFirebaseForbiddenChars(string: String) =
+        string
+            .replace("@", "_AT_")
+            .replace(".", "_DOT_")
 }

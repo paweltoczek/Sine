@@ -50,6 +50,9 @@
         <action
             android:id="@+id/action_choiceFragment_to_welcomeScreen"
             app:destination="@id/welcomeScreen" />
+        <action
+            android:id="@+id/action_choiceFragment_to_favoritesFragment"
+            app:destination="@id/favoritesFragment" />
     </fragment>
     <activity
         android:id="@+id/youtubeActivity"
@@ -95,5 +98,10 @@
             android:id="@+id/action_signUpFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.amadev.rando.ui.fragments.favorites.FavoritesFragment"
+        android:label="fragment_favorites"
+        tools:layout="@layout/fragment_favorites" />
 
 </navigation>

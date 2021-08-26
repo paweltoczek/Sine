@@ -9,6 +9,7 @@ import com.amadev.rando.data.ApiService
 import com.amadev.rando.model.CastModelResults
 import com.amadev.rando.model.GenresList
 import com.amadev.rando.model.PopularMoviesResults
+import com.amadev.rando.util.Util.replaceFirebaseForbiddenChars
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.Dispatchers
@@ -23,16 +24,17 @@ class ChoiceFragmentViewModel(
     private val context: Context,
     private val api: ApiClient,
     private val firebaseAuth: FirebaseAuth,
-    private val firebaseDatabase: FirebaseDatabase
+    private val firebaseDatabase: FirebaseDatabase,
+    private val firebaseUsername: String
 ) : ViewModel() {
 
     companion object {
-        val FAVORITE_MOVIES = "Favorite movies"
+        const val FAVORITE_MOVIES = "Favorite movies"
         var failedAddingToFavorites = Messages.FailedAddingToFavorites
         var addedToFavorites = Messages.AddedToFavorites
     }
 
-    private val username = provideFirebaseUsername()
+    private val username = firebaseUsername
 
     private val castListMutableLiveData = MutableLiveData<List<CastModelResults>>()
     val castListLiveData = castListMutableLiveData
@@ -191,7 +193,6 @@ class ChoiceFragmentViewModel(
     }
 
     fun addCurrentMovieToFavoriteMovies() {
-
         val firebaseReference =
             firebaseDatabase.getReference("Users")
                 .child(replaceFirebaseForbiddenChars(username))
@@ -199,7 +200,7 @@ class ChoiceFragmentViewModel(
 
         firebaseReference
             .push()
-            .setValue(popularMoviesRandomResultsMutableLiveData)
+            .setValue(popularMoviesRandomResultsMutableLiveData.value)
             .addOnSuccessListener {
                 popUpMessageMutableLiveData.value = getMessage(addedToFavorites)
             }
@@ -208,22 +209,6 @@ class ChoiceFragmentViewModel(
 
             }
     }
-
-    private fun provideFirebaseUsername(): String {
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        lateinit var username: String
-        currentUser?.let {
-            for (profiler in it.providerData) {
-                username = profiler.email.toString()
-            }
-        }
-        return username
-    }
-
-    private fun replaceFirebaseForbiddenChars(string: String) =
-        string
-            .replace("@", "_AT_")
-            .replace(".", "_DOT_")
 
 }
 

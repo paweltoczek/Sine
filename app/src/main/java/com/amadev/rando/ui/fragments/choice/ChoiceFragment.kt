@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amadev.rando.R
 import com.amadev.rando.YoutubeActivity
@@ -117,6 +118,11 @@ class ChoiceFragment : Fragment() {
 
             addToFavorite.setOnClickListener {
                 addToFavoriteMovies()
+            }
+
+            addToFavorite.setOnLongClickListener {
+                findNavController().navigate(R.id.action_choiceFragment_to_favoritesFragment)
+                true
             }
         }
 
