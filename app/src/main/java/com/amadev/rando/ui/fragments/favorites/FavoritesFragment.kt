@@ -8,7 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amadev.rando.adapter.FavoriteMoviesRecyclerViewAdapter
 import com.amadev.rando.databinding.FragmentFavoritesBinding
-import com.amadev.rando.model.PopularMoviesResults
+import com.amadev.rando.model.MovieDetailsResults
+import com.amadev.rando.util.Util.showSnackBar
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class FavoritesFragment : Fragment() {
@@ -31,6 +32,7 @@ class FavoritesFragment : Fragment() {
 
         getFavoriteMovies()
         setUpObservers()
+
     }
 
     private fun getFavoriteMovies() {
@@ -43,21 +45,32 @@ class FavoritesFragment : Fragment() {
                 if (favoriteMoviesList != null) {
                     setUpFavoriteMoviesAdapter(favoriteMoviesList)
                 }
+            }
 
+            popUpMessageLiveData.observe(viewLifecycleOwner) {
+                showSnackBar(requireView(), it)
+            }
+
+            progressBarLiveData.observe(viewLifecycleOwner) {
+                when (it) {
+                    false -> {
+                        binding.progressBar.visibility = View.GONE
+                    }
+                }
             }
         }
     }
 
-    private fun setUpFavoriteMoviesAdapter(favoriteMoviesList: ArrayList<PopularMoviesResults>) {
+    private fun setUpFavoriteMoviesAdapter(favoriteMoviesList: ArrayList<MovieDetailsResults>) {
+        val reversedFavoriteMoviesList = favoriteMoviesList.reversed() as ArrayList<MovieDetailsResults>
+
         val adapter =
             FavoriteMoviesRecyclerViewAdapter(
                 requireView(),
                 requireContext(),
                 arrayListOf()
             )
-
-        adapter.list = favoriteMoviesList
-
+        adapter.list = reversedFavoriteMoviesList
         binding.apply {
             favoriteMoviesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
             favoriteMoviesRecyclerView.adapter = adapter

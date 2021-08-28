@@ -5,7 +5,8 @@ import com.google.firebase.database.FirebaseDatabase
 import org.koin.dsl.module
 
 val firebaseModule = module {
-    single { provideFirebaseAuth() }
+    factory { provideFirebaseAuth() }
+    factory { provideFirebaseDatabase() }
 }
 
 fun provideFirebaseAuth(): FirebaseAuth {
@@ -15,19 +16,3 @@ fun provideFirebaseAuth(): FirebaseAuth {
 fun provideFirebaseDatabase() : FirebaseDatabase {
     return FirebaseDatabase.getInstance()
 }
-
-fun provideFirebaseUsername(): String {
-    val currentUser = FirebaseAuth.getInstance().currentUser
-    lateinit var username: String
-    currentUser?.let {
-        for (profiler in it.providerData) {
-            username = profiler.email.toString()
-        }
-    }
-    return username
-}
-
-
-
-
-

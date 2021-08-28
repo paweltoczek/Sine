@@ -8,7 +8,7 @@ import com.amadev.rando.data.ApiClient
 import com.amadev.rando.data.ApiService
 import com.amadev.rando.model.CastModelResults
 import com.amadev.rando.model.GenresList
-import com.amadev.rando.model.PopularMoviesResults
+import com.amadev.rando.model.MovieDetailsResults
 import com.amadev.rando.util.Util.replaceFirebaseForbiddenChars
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -24,8 +24,7 @@ class ChoiceFragmentViewModel(
     private val context: Context,
     private val api: ApiClient,
     private val firebaseAuth: FirebaseAuth,
-    private val firebaseDatabase: FirebaseDatabase,
-    private val firebaseUsername: String
+    private val firebaseDatabase: FirebaseDatabase
 ) : ViewModel() {
 
     companion object {
@@ -34,7 +33,7 @@ class ChoiceFragmentViewModel(
         var addedToFavorites = Messages.AddedToFavorites
     }
 
-    private val username = firebaseUsername
+    private val username = provideFirebaseUsername()
 
     private val castListMutableLiveData = MutableLiveData<List<CastModelResults>>()
     val castListLiveData = castListMutableLiveData
@@ -47,7 +46,7 @@ class ChoiceFragmentViewModel(
 
     val videoEndPoint = MutableLiveData<String>()
 
-    private val popularMoviesRandomResultsMutableLiveData = MutableLiveData<PopularMoviesResults>()
+    private val popularMoviesRandomResultsMutableLiveData = MutableLiveData<MovieDetailsResults>()
     val popularMoviesResultsLiveData = popularMoviesRandomResultsMutableLiveData
 
     private val popUpMessageMutableLiveData = MutableLiveData<String>()
@@ -210,10 +209,19 @@ class ChoiceFragmentViewModel(
             }
     }
 
+    private fun provideFirebaseUsername(): String {
+        val currentUser = firebaseAuth.currentUser
+        when {
+            currentUser != null -> {
+                currentUser.let {
+                    lateinit var username: String
+                    for (profiler in it.providerData) {
+                        username = profiler.email.toString()
+                    }
+                }
+            }
+        }
+        return username
+    }
+
 }
-
-
-
-
-
-

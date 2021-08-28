@@ -3,14 +3,25 @@ package com.amadev.rando.data
 import com.amadev.rando.BuildConfig
 import com.amadev.rando.model.Cast
 import com.amadev.rando.model.Genre
-import com.amadev.rando.model.PopularMoviesModel
+import com.amadev.rando.model.MovieDetailsModel
 import com.amadev.rando.model.VideoDetailsModel
 import retrofit2.Response
 
 class ApiService(private val api: ApiClient) {
 
+    fun getUpcomingMovie(page: Int): Response<MovieDetailsModel> {
+        val callResponse = api.buildService(ApiInterface::class.java)
+            .getUpcomingdMoviesByPage(BuildConfig.TMDB_API_KEY, page)
+        return callResponse.execute()
+    }
 
-    fun getPopularMovie(page: Int): Response<PopularMoviesModel> {
+    fun getTopRatedMovie(page: Int): Response<MovieDetailsModel> {
+        val callResponse = api.buildService(ApiInterface::class.java)
+            .getTopRatedMoviesByPage(BuildConfig.TMDB_API_KEY, page)
+        return callResponse.execute()
+    }
+
+    fun getPopularMovie(page: Int): Response<MovieDetailsModel> {
         val callResponse = api.buildService(ApiInterface::class.java)
             .getPopularMoviesByPage(BuildConfig.TMDB_API_KEY, page)
         return callResponse.execute()

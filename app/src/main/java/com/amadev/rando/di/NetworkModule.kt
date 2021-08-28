@@ -13,6 +13,7 @@ val networkModule = module {
     single { provideRetrofit(get()) }
     single { provideTmdbApi(get()) }
     single { ApiService(get()) }
+    single { provideApiClient() }
 }
 
 fun provideApiClient(): ApiClient = ApiClient

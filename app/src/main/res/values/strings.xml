@@ -42,4 +42,12 @@
     <string name="overview">Overview</string>
     <string name="failedAddingToFavorites">Failed adding to favorites</string>
     <string name="addedToFavorites">Movie added to favorites</string>
+    <string name="failedToLoadMovies">Failed to load favorite movies</string>
+    <string name="failedToLoadFavoriteMovies">Failed to load favorite movies</string>
+    <string name="topRated">Top rated</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="mostPopular">Most popular</string>
+    <string name="popular">Popular</string>
+    <string name="Home">Home</string>
+    <string name="playTrailer">Play trailer</string>
 </resources>

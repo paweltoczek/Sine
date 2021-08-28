@@ -60,7 +60,7 @@ class SigninOrSignUpFragment : Fragment() {
 
     private fun setUpOnClickListeners() {
         binding.skipBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_signinOrSignUpFragment_to_choiceFragment)
+            findNavController().navigate(R.id.action_signinOrSignUpFragment_to_mainFragment)
         }
 
         binding.signinBtn.setOnClickListener {

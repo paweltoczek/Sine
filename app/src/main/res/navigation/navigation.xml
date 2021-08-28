@@ -73,6 +73,9 @@
         <action
             android:id="@+id/action_signinOrSignUpFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_signinOrSignUpFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
@@ -103,5 +106,14 @@
         android:name="com.amadev.rando.ui.fragments.favorites.FavoritesFragment"
         android:label="fragment_favorites"
         tools:layout="@layout/fragment_favorites" />
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.amadev.rando.ui.fragments.mainFragment.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_youtubeActivity"
+            app:destination="@id/youtubeActivity" />
+    </fragment>
 
 </navigation>
