@@ -114,6 +114,14 @@
         <action
             android:id="@+id/action_mainFragment_to_youtubeActivity"
             app:destination="@id/youtubeActivity" />
+        <action
+            android:id="@+id/action_mainFragment_to_movieDetailsDialog"
+            app:destination="@id/movieDetailsDialog"
+            app:enterAnim="@anim/scale_up_animation" />
     </fragment>
+    <dialog
+        android:id="@+id/movieDetailsDialog"
+        android:name="com.amadev.rando.ui.dialogs.movieDetails.MovieDetailsDialog"
+        android:label="MovieDetailsDialog" />
 
 </navigation>

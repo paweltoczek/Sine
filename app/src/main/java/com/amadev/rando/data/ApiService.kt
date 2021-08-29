@@ -9,9 +9,15 @@ import retrofit2.Response
 
 class ApiService(private val api: ApiClient) {
 
+    fun searchForMovies(query : String): Response<MovieDetailsModel> {
+        val callResponse = api.buildService(ApiInterface::class.java)
+            .searchForMovies(BuildConfig.TMDB_API_KEY, query)
+        return callResponse.execute()
+    }
+
     fun getUpcomingMovie(page: Int): Response<MovieDetailsModel> {
         val callResponse = api.buildService(ApiInterface::class.java)
-            .getUpcomingdMoviesByPage(BuildConfig.TMDB_API_KEY, page)
+            .getUpcomingMoviesByPage(BuildConfig.TMDB_API_KEY, page)
         return callResponse.execute()
     }
 

@@ -43,11 +43,16 @@ class MovieDetailsDialog(private val results: MovieDetailsResults) : DialogFragm
         setUpTextViews()
         setUpRatingBar()
         setUpGenreList()
+        setUpWindowAnimation()
         setUpGenresRecyclerView()
         setUpWindowBackground()
         setUpMoviePosterImage()
         setUpOnClickListeners()
         setUpObservers()
+    }
+
+    private fun setUpWindowAnimation() {
+        dialog?.window?.attributes?.windowAnimations = R.style.DialogScaleAnimation
     }
 
     private fun setUpViewModel() {

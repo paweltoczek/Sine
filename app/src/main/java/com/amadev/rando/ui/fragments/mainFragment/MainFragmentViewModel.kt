@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
 
 class MainFragmentViewModel(
     private val apiClient: ApiClient,
@@ -30,8 +31,34 @@ class MainFragmentViewModel(
         MutableLiveData<ArrayList<MovieDetailsResults>>()
     val popularMoviesResultsLiveData = popularMoviesResultsMutableLiveData
 
+    private val searchedMoviesMutableLiveData =
+        MutableLiveData<ArrayList<MovieDetailsResults>>()
+    val searchedMoviesLiveData = searchedMoviesMutableLiveData
+
     private val popUpMessageMutableLiveData = MutableLiveData<String>()
     private val currentPage = MutableLiveData<Int>()
+
+    fun getSearchedMovies(query: String) {
+        val queryEncoded = encodeUrlString(query)
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = ApiService(apiClient).searchForMovies(queryEncoded)
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    val results = it.results as ArrayList<MovieDetailsResults>
+                    searchedMoviesMutableLiveData.postValue(results)
+                    Log.e("searched", query)
+                    Log.e("results", results.toString())
+                }
+            } else if (response.isSuccessful.not()) {
+                Log.e("failed", "failed")
+            }
+        }
+    }
+
+    private fun encodeUrlString(string: String): String {
+        return URLEncoder.encode(string, "utf-8")
+    }
 
     fun getUpcomingMovies() {
         viewModelScope.launch(Dispatchers.IO) {

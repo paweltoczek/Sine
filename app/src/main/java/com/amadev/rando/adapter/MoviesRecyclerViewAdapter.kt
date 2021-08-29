@@ -1,15 +1,14 @@
 package com.amadev.rando.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.amadev.rando.databinding.CustomMoviesRecyclerviewPatternBinding
 import com.amadev.rando.model.MovieDetailsResults
-import com.amadev.rando.ui.dialogs.castDetails.CastDetailsDialog
 import com.amadev.rando.ui.dialogs.movieDetails.MovieDetailsDialog
 import com.amadev.rando.util.Util.getProgressDrawable
 import com.amadev.rando.util.Util.loadImageWithGlide
@@ -20,6 +19,7 @@ class MoviesRecyclerViewAdapter(
     var list: ArrayList<MovieDetailsResults>
 ) : RecyclerView.Adapter<MoviesRecyclerViewAdapter.ViewHolder>() {
 
+    lateinit var navController: NavController
     val activity = context as FragmentActivity
     private val fragmentManager = activity.supportFragmentManager
 
