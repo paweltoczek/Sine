@@ -121,10 +121,23 @@
             android:id="@+id/action_mainFragment_to_movieDetailsDialog"
             app:destination="@id/movieDetailsDialog"
             app:enterAnim="@anim/scale_up_animation" />
+        <action
+            android:id="@+id/action_mainFragment_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragment" />
+        <argument android:name="results" />
     </fragment>
     <dialog
         android:id="@+id/movieDetailsDialog"
         android:name="com.amadev.rando.ui.dialogs.movieDetails.MovieDetailsDialog"
         android:label="MovieDetailsDialog" />
+    <fragment
+        android:id="@+id/movieDetailsFragment"
+        android:name="com.amadev.rando.ui.fragments.movieDetails.MovieDetailsFragment"
+        android:label="movie_details_fragment"
+        tools:layout="@layout/movie_details_fragment" >
+        <action
+            android:id="@+id/action_movieDetailsFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
 
 </navigation>

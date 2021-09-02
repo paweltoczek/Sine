@@ -1,16 +1,16 @@
 package com.amadev.rando.adapter
 
 import android.content.Context
-import android.renderscript.ScriptGroup
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
-import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
+import com.amadev.rando.R
 import com.amadev.rando.databinding.CustomMoviesRecyclerviewPatternBinding
 import com.amadev.rando.model.MovieDetailsResults
-import com.amadev.rando.ui.dialogs.movieDetails.MovieDetailsDialog
 import com.amadev.rando.util.Util.getProgressDrawable
 import com.amadev.rando.util.Util.loadImageWithGlide
 
@@ -20,9 +20,7 @@ class MoviesRecyclerViewAdapter(
     var list: ArrayList<MovieDetailsResults>
 ) : RecyclerView.Adapter<MoviesRecyclerViewAdapter.ViewHolder>() {
 
-    lateinit var navController: NavController
     val activity = context as FragmentActivity
-    private val fragmentManager = activity.supportFragmentManager
 
     class ViewHolder(val binding: CustomMoviesRecyclerviewPatternBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -45,11 +43,15 @@ class MoviesRecyclerViewAdapter(
                 )
             }
         }
-
         holder.itemView.setOnClickListener {
-            val fragmentDialog = MovieDetailsDialog(list[position])
-            fragmentDialog.show(fragmentManager, "fragment_alert")
+            val bundle = Bundle()
+            bundle.putSerializable("movieDetails", list)
+            bundle.putSerializable("position", position)
 
+            Navigation.createNavigateOnClickListener(
+                R.id.action_mainFragment_to_movieDetailsFragment,
+                bundle
+            ).onClick(holder.itemView)
         }
     }
     override fun getItemCount(): Int {

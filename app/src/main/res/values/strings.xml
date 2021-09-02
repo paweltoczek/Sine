@@ -56,4 +56,8 @@
     <string name="nowPlaying">Now playing</string>
     <string name="search">search</string>
     <string name="searchMovies">search movies</string>
+    <string name="favorites">favorites</string>
+    <string name="settings">settings</string>
+    <string name="menu">menu</string>
+    <string name="morePlus">more +</string>
 </resources>

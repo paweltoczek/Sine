@@ -25,4 +25,8 @@
         <item name="android:windowEnterAnimation">@anim/scale_up_animation</item>
         <item name="android:windowExitAnimation">@anim/scale_down_animation</item>
     </style>
+
+    <style name="BottomNavTheme">
+        <item name="colorPrimary">@color/yellow_rating</item>
+    </style>
 </resources>

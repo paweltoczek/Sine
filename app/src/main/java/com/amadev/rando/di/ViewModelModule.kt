@@ -10,6 +10,7 @@ import com.amadev.rando.ui.fragments.categoryViewPager.topRated.TopRatedFragment
 import com.amadev.rando.ui.fragments.choice.ChoiceFragmentViewModel
 import com.amadev.rando.ui.fragments.favorites.FavoritesFragmentViewModel
 import com.amadev.rando.ui.fragments.mainFragment.MainFragmentViewModel
+import com.amadev.rando.ui.fragments.movieDetails.MovieDetailsViewModel
 import com.amadev.rando.ui.fragments.signin.SignInViewModel
 import com.amadev.rando.ui.fragments.signinorsignup.SignInOrSignUpViewModel
 import com.amadev.rando.ui.fragments.signup.SignUpViewModel
@@ -42,6 +43,7 @@ val viewModelModule = module {
         )
     }
 
+    viewModel { MovieDetailsViewModel(get(), get(), get()) }
     viewModel { TopRatedFragmentViewModel(get()) }
     viewModel { PopularFragmentViewModel(get()) }
     viewModel { NowPlayingViewModel(get()) }

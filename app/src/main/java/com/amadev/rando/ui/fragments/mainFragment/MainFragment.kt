@@ -16,11 +16,6 @@ import com.amadev.rando.adapter.MoviesRecyclerViewAdapter
 import com.amadev.rando.adapter.UpcomingMoviesRecyclerViewAdapter
 import com.amadev.rando.databinding.FragmentMainBinding
 import com.amadev.rando.model.MovieDetailsResults
-import com.amadev.rando.ui.fragments.categoryViewPager.nowPlaying.NowPlayingFragment
-import com.amadev.rando.ui.fragments.categoryViewPager.popularFragment.PopularFragment
-import com.amadev.rando.ui.fragments.categoryViewPager.topRated.TopRatedFragment
-import com.amadev.rando.ui.onboarding.ViewPagerAdapter
-import com.google.android.material.tabs.TabLayoutMediator
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainFragment : Fragment() {
@@ -28,14 +23,6 @@ class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
     private val mainFragmentViewModel: MainFragmentViewModel by viewModel()
-    private val categoryFragmentList = arrayListOf(
-        TopRatedFragment(),
-        PopularFragment(),
-        NowPlayingFragment()
-    )
-
-    private val tabText = arrayOf("Top Rated", "Popular", "Now playing")
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,26 +35,10 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         getMovies()
         setUpObservers()
         setUpOnClickListeners()
         setUpSearchMoviesEditText()
-//        setUpCategoryViewPager()
-        setUpTabLayoutMediator()
-    }
-
-    private fun setUpTabLayoutMediator() {
-        val vp = binding.categoryViewPager
-        vp.adapter = ViewPagerAdapter(categoryFragmentList, childFragmentManager, lifecycle)
-        TabLayoutMediator(binding.categoryTabLayout, vp) { tab, position ->
-            tab.text = tabText[position]
-        }.attach()
-    }
-
-    private fun setUpCategoryViewPager() {
-        binding.categoryViewPager.adapter =
-            ViewPagerAdapter(categoryFragmentList, childFragmentManager, lifecycle)
     }
 
     private fun searchMovies(query: String) {
@@ -79,14 +50,12 @@ class MainFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s != null) {
                     if (s.isEmpty().not()) {
-                        setUpSearchOnViewsVisibility()
                         Handler(Looper.myLooper()!!).postDelayed({
                             searchMovies(s.toString())
                         }, 1500)
                     }
                 }
             }
-
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
         })
@@ -94,17 +63,14 @@ class MainFragment : Fragment() {
 
     private fun setUpOnClickListeners() {
         binding.apply {
-//            topRated.setOnClickListener {
-//                getMovies()
-//            }
-            searchMoviesEditText.setOnClickListener {
+            search.setOnClickListener {
                 setUpSearchOnViewsVisibility()
             }
             searchOff.setOnClickListener {
                 clearSearchedText()
                 setUpSearchOffViewsVisibility()
-            }
 
+            }
         }
     }
 
@@ -115,9 +81,17 @@ class MainFragment : Fragment() {
     private fun setUpSearchOnViewsVisibility() {
         binding.apply {
             setUpViewVisibilityGone(upcoming)
+            setUpViewVisibilityGone(upcomingMore)
             setUpViewVisibilityGone(upcomingRecyclerView)
-            setUpViewVisibilityGone(categoryTabLayout)
-            setUpViewVisibilityGone(categoryViewPager)
+            setUpViewVisibilityGone(topRated)
+            setUpViewVisibilityGone(topRatedMore)
+            setUpViewVisibilityGone(topRatedRecyclerView)
+            setUpViewVisibilityGone(popular)
+            setUpViewVisibilityGone(popularMore)
+            setUpViewVisibilityGone(popularRecyclerView)
+            setUpViewVisibilityGone(nowPlaying)
+            setUpViewVisibilityGone(nowPlayingMore)
+            setUpViewVisibilityGone(nowPlayingRecyclerView)
             setUpViewVisibilityVisible(searchMoviesEditText)
             setUpViewVisibilityVisible(searchedMoviesRecyclerView)
             setUpViewVisibilityVisible(searchedMoviesResults)
@@ -128,12 +102,21 @@ class MainFragment : Fragment() {
     private fun setUpSearchOffViewsVisibility() {
         binding.apply {
             setUpViewVisibilityVisible(upcoming)
+            setUpViewVisibilityVisible(upcomingMore)
             setUpViewVisibilityVisible(upcomingRecyclerView)
-            setUpViewVisibilityVisible(categoryTabLayout)
-            setUpViewVisibilityVisible(categoryViewPager)
+            setUpViewVisibilityVisible(topRated)
+            setUpViewVisibilityVisible(topRatedMore)
+            setUpViewVisibilityVisible(topRatedRecyclerView)
+            setUpViewVisibilityVisible(popular)
+            setUpViewVisibilityVisible(popularMore)
+            setUpViewVisibilityVisible(popularRecyclerView)
+            setUpViewVisibilityVisible(nowPlaying)
+            setUpViewVisibilityVisible(nowPlayingMore)
+            setUpViewVisibilityVisible(nowPlayingRecyclerView)
             setUpViewVisibilityGone(searchedMoviesRecyclerView)
             setUpViewVisibilityGone(searchedMoviesResults)
             setUpViewVisibilityGone(searchOff)
+            setUpViewVisibilityGone(searchMoviesEditText)
         }
     }
 
@@ -148,18 +131,18 @@ class MainFragment : Fragment() {
     private fun setUpObservers() {
         mainFragmentViewModel.apply {
             binding.apply {
-//                topRatedMoviesResultsLiveData.observe(viewLifecycleOwner) {
-//                    setUpMoviesHorizontalRecyclerViewAdapter(it, topRatedRecyclerView)
-//                }
-//                popularMoviesResultsLiveData.observe(viewLifecycleOwner) {
-//                    setUpMoviesHorizontalRecyclerViewAdapter(it, mostPopularRecyclerView)
-//                }
+                topRatedMoviesResultsLiveData.observe(viewLifecycleOwner) {
+                    setUpMoviesHorizontalRecyclerViewAdapter(it, topRatedRecyclerView)
+                }
+                popularMoviesResultsLiveData.observe(viewLifecycleOwner) {
+                    setUpMoviesHorizontalRecyclerViewAdapter(it, popularRecyclerView)
+                }
                 upcomingMoviesResultsLiveData.observe(viewLifecycleOwner) {
                     setUpUpcomingMoviesHorizontalRecyclerViewAdapter(it)
                 }
-//                nowPlayingMoviesLiveData.observe(viewLifecycleOwner) {
-//                    setUpMoviesHorizontalRecyclerViewAdapter(it, nowPlayingRecyclerView)
-//                }
+                nowPlayingMoviesLiveData.observe(viewLifecycleOwner) {
+                    setUpMoviesHorizontalRecyclerViewAdapter(it, nowPlayingRecyclerView)
+                }
                 searchedMoviesLiveData.observe(viewLifecycleOwner) {
                     setUpSearchedMoviesRecyclerViewAdapter(it)
                 }
