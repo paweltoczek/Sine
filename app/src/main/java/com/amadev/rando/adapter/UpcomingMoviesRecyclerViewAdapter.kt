@@ -1,14 +1,15 @@
 package com.amadev.rando.adapter
 
 import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentActivity
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
+import com.amadev.rando.R
 import com.amadev.rando.databinding.CustomUpcomingMoviesRecyclerviewPatternBinding
 import com.amadev.rando.model.MovieDetailsResults
-import com.amadev.rando.ui.dialogs.movieDetails.MovieDetailsDialog
 import com.amadev.rando.util.Util.getProgressDrawable
 import com.amadev.rando.util.Util.loadImageWithGlide
 
@@ -17,10 +18,7 @@ class UpcomingMoviesRecyclerViewAdapter(
     var context: Context,
     var list: ArrayList<MovieDetailsResults>
 ) : RecyclerView.Adapter<UpcomingMoviesRecyclerViewAdapter.ViewHolder>() {
-
-    val activity = context as FragmentActivity
-    private val fragmentManager = activity.supportFragmentManager
-
+    
     class ViewHolder(val binding: CustomUpcomingMoviesRecyclerviewPatternBinding) :
         RecyclerView.ViewHolder(binding.root)
 
@@ -44,9 +42,12 @@ class UpcomingMoviesRecyclerViewAdapter(
         }
 
         holder.itemView.setOnClickListener {
-            val fragmentDialog = MovieDetailsDialog(list[position])
-            fragmentDialog.show(fragmentManager, "fragment_alert")
-
+            val bundle = Bundle()
+            bundle.putParcelable("movieDetails", list[position])
+            Navigation.createNavigateOnClickListener(
+                R.id.action_mainFragment_to_movieDetailsFragment,
+                bundle
+            ).onClick(holder.itemView)
         }
     }
 

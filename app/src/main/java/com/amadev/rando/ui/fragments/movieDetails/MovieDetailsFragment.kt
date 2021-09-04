@@ -21,12 +21,13 @@ import com.amadev.rando.util.Util.getProgressDrawable
 import com.amadev.rando.util.Util.loadImageWithGlide
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class MovieDetailsFragment : Fragment() {
+class MovieDetailsFragment() : Fragment() {
 
     private var _binding: MovieDetailsFragmentBinding? = null
     private val binding get() = _binding!!
     private val movieDetailsViewModel: MovieDetailsViewModel by viewModel()
     lateinit var intent: Intent
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +43,9 @@ class MovieDetailsFragment : Fragment() {
         setUpViewModel()
         setUpObservers()
         setUpOnClickListeners()
+
     }
+
 
     private fun setUpOnClickListeners() {
         binding.apply {
@@ -73,24 +76,24 @@ class MovieDetailsFragment : Fragment() {
                     setUpYoutubeIntent(it)
                 }
                 movieDetailsMutableLiveData.observe(viewLifecycleOwner) {
-                    it.genre_ids?.let { genresIntList ->
+                    it?.genre_ids?.let { genresIntList ->
                         setUpMovieGenresRecyclerView(setUpGenreList(genresIntList))
                     }
-                    it.title?.let { title ->
+                    it?.title?.let { title ->
                         movieName.text = title.trim()
                     }
-                    it.release_date?.let { year ->
+                    it?.release_date?.let { year ->
                         releaseDate.text = year.take(4)
                     }
-                    it.vote_average?.let { votes ->
+                    it?.vote_average?.let { votes ->
                         rating.text = votes.toString()
                         ratingBar.rating = (votes / 2).toFloat()
                     }
-                    it.overview?.let { overviewText ->
+                    it?.overview?.let { overviewText ->
                         overviewTv.text = overviewText.trim()
                         Log.e("overview", overviewText)
                     }
-                    it.poster_path?.let { uri ->
+                    it?.poster_path?.let { uri ->
                         movieImage.loadImageWithGlide(uri, getProgressDrawable(requireContext()))
                     }
 
@@ -146,18 +149,12 @@ class MovieDetailsFragment : Fragment() {
         }
     }
 
-    private fun getMovieDetailsArgs(): ArrayList<MovieDetailsResults> {
-        return arguments?.getSerializable("movieDetails") as ArrayList<MovieDetailsResults>
+    private fun getMovieDetailsArgs(): MovieDetailsResults? {
+        return arguments?.getParcelable<MovieDetailsResults>("movieDetails")
     }
 
-    private fun getRecyclerviewClickedPositionArgs(): Int {
-        return arguments?.getSerializable("position") as Int
-    }
 
     private fun setUpViewModel() {
-        movieDetailsViewModel.setUpMovieDetails(
-            getMovieDetailsArgs(),
-            getRecyclerviewClickedPositionArgs()
-        )
+        movieDetailsViewModel.setUpMovieDetails(getMovieDetailsArgs())
     }
 }

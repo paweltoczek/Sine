@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/favoriteMoviesBaseConstraintLayout"
     android:layout_width="110dp"
-    android:layout_height="180dp"
+    android:layout_height="220dp"
     android:layout_marginEnd="8dp">
 
     <RatingBar
@@ -35,7 +35,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="150dp"
         app:cardCornerRadius="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

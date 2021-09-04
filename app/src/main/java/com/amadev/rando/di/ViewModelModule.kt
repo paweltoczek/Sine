@@ -3,7 +3,6 @@ package com.amadev.rando.di
 import com.amadev.rando.ui.dialogs.castDetails.CastDetailsViewModel
 import com.amadev.rando.ui.dialogs.forgotPassword.ForgotPasswordDialogViewModel
 import com.amadev.rando.ui.dialogs.logout.LogoutDialogViewModel
-import com.amadev.rando.ui.dialogs.movieDetails.MovieDetailsDialogViewModel
 import com.amadev.rando.ui.fragments.categoryViewPager.nowPlaying.NowPlayingViewModel
 import com.amadev.rando.ui.fragments.categoryViewPager.popularFragment.PopularFragmentViewModel
 import com.amadev.rando.ui.fragments.categoryViewPager.topRated.TopRatedFragmentViewModel
@@ -53,7 +52,6 @@ val viewModelModule = module {
     viewModel { ForgotPasswordDialogViewModel(get(), get()) }
     viewModel { CastDetailsViewModel() }
     viewModel { LogoutDialogViewModel(get(), get()) }
-    viewModel { MovieDetailsDialogViewModel(get()) }
 }
 
 

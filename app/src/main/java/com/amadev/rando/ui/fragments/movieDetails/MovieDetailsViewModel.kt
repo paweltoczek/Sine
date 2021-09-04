@@ -25,7 +25,7 @@ class MovieDetailsViewModel(
         var addedToFavorites = Messages.AddedToFavorites
     }
 
-    private val _movieDetailsMutableLiveData = MutableLiveData<MovieDetailsResults>()
+    private val _movieDetailsMutableLiveData = MutableLiveData<MovieDetailsResults?>()
     val movieDetailsMutableLiveData = _movieDetailsMutableLiveData
 
     private val _videoEndPoint = MutableLiveData<String>()
@@ -36,11 +36,13 @@ class MovieDetailsViewModel(
 
     private val username = provideFirebaseUsername()
 
-    fun setUpMovieDetails(list: ArrayList<MovieDetailsResults>, itemPosition: Int) {
-        _movieDetailsMutableLiveData.value = list[itemPosition]
-        list[itemPosition].id?.let {
-            getTrailerVideo(it)
-            getCastDetails(it)
+    fun setUpMovieDetails(results: MovieDetailsResults?) {
+        if (results != null) {
+            _movieDetailsMutableLiveData.value = results
+            results.id.let {
+                getTrailerVideo(it)
+                getCastDetails(it)
+            }
         }
     }
 

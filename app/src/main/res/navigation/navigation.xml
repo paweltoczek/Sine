@@ -118,18 +118,19 @@
             android:id="@+id/action_mainFragment_to_youtubeActivity"
             app:destination="@id/youtubeActivity" />
         <action
-            android:id="@+id/action_mainFragment_to_movieDetailsDialog"
-            app:destination="@id/movieDetailsDialog"
-            app:enterAnim="@anim/scale_up_animation" />
-        <action
             android:id="@+id/action_mainFragment_to_movieDetailsFragment"
             app:destination="@id/movieDetailsFragment" />
         <argument android:name="results" />
+        <action
+            android:id="@+id/action_mainFragment_to_nowPlayingFragment"
+            app:destination="@id/nowPlayingFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_popularFragment"
+            app:destination="@id/popularFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_topRatedFragment"
+            app:destination="@id/topRatedFragment" />
     </fragment>
-    <dialog
-        android:id="@+id/movieDetailsDialog"
-        android:name="com.amadev.rando.ui.dialogs.movieDetails.MovieDetailsDialog"
-        android:label="MovieDetailsDialog" />
     <fragment
         android:id="@+id/movieDetailsFragment"
         android:name="com.amadev.rando.ui.fragments.movieDetails.MovieDetailsFragment"
@@ -137,6 +138,33 @@
         tools:layout="@layout/movie_details_fragment" >
         <action
             android:id="@+id/action_movieDetailsFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/nowPlayingFragment"
+        android:name="com.amadev.rando.ui.fragments.categoryViewPager.nowPlaying.NowPlayingFragment"
+        android:label="fragment_now_playing"
+        tools:layout="@layout/fragment_now_playing" >
+        <action
+            android:id="@+id/action_nowPlayingFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/popularFragment"
+        android:name="com.amadev.rando.ui.fragments.categoryViewPager.popularFragment.PopularFragment"
+        android:label="fragment_popular"
+        tools:layout="@layout/fragment_popular" >
+        <action
+            android:id="@+id/action_popularFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/topRatedFragment"
+        android:name="com.amadev.rando.ui.fragments.categoryViewPager.topRated.TopRatedFragment"
+        android:label="fragment_top_rated"
+        tools:layout="@layout/fragment_top_rated" >
+        <action
+            android:id="@+id/action_topRatedFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
     </fragment>
 

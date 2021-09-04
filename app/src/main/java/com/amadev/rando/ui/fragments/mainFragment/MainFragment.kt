@@ -9,9 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.amadev.rando.R
 import com.amadev.rando.adapter.MoviesRecyclerViewAdapter
 import com.amadev.rando.adapter.UpcomingMoviesRecyclerViewAdapter
 import com.amadev.rando.databinding.FragmentMainBinding
@@ -19,7 +21,6 @@ import com.amadev.rando.model.MovieDetailsResults
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainFragment : Fragment() {
-
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
     private val mainFragmentViewModel: MainFragmentViewModel by viewModel()
@@ -39,6 +40,10 @@ class MainFragment : Fragment() {
         setUpObservers()
         setUpOnClickListeners()
         setUpSearchMoviesEditText()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
     }
 
     private fun searchMovies(query: String) {
@@ -71,7 +76,29 @@ class MainFragment : Fragment() {
                 setUpSearchOffViewsVisibility()
 
             }
+            topRatedMore.setOnClickListener {
+                navigateToTopRatedFragment()
+            }
+            nowPlayingMore.setOnClickListener {
+                navigateToNowPlayingFragment()
+            }
+            popularMore.setOnClickListener {
+                navigateToPopularFragment()
+            }
+
         }
+    }
+
+    private fun navigateToPopularFragment() {
+        findNavController().navigate(R.id.action_mainFragment_to_popularFragment)
+    }
+
+    private fun navigateToTopRatedFragment() {
+        findNavController().navigate(R.id.action_mainFragment_to_topRatedFragment)
+    }
+
+    private fun navigateToNowPlayingFragment() {
+        findNavController().navigate(R.id.action_mainFragment_to_nowPlayingFragment)
     }
 
     private fun clearSearchedText() {
