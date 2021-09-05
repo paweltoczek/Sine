@@ -1,25 +1,25 @@
 package com.amadev.rando.adapter
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.amadev.rando.R
 import com.amadev.rando.databinding.CustomMoviesRecyclerviewPatternBinding
 import com.amadev.rando.model.MovieDetailsResults
-import com.amadev.rando.ui.fragments.movieDetails.MovieDetailsFragment
 import com.amadev.rando.util.Util.getProgressDrawable
 import com.amadev.rando.util.Util.loadImageWithGlide
 
 class MoviesRecyclerViewAdapter(
     val view: View,
     var context: Context,
-    var list: ArrayList<MovieDetailsResults>
+    var list: ArrayList<MovieDetailsResults>,
+    private val action : Int
 ) : RecyclerView.Adapter<MoviesRecyclerViewAdapter.ViewHolder>() {
 
     val activity = context as FragmentActivity
@@ -47,11 +47,10 @@ class MoviesRecyclerViewAdapter(
         }
 
         holder.itemView.setOnClickListener {
-
             val bundle = Bundle()
             bundle.putParcelable("movieDetails", list[position])
             Navigation.createNavigateOnClickListener(
-                R.id.action_mainFragment_to_movieDetailsFragment,
+                action,
                 bundle
             ).onClick(holder.itemView)
         }

@@ -1,4 +1,4 @@
-package com.amadev.rando.ui.fragments.categoryViewPager.nowPlaying
+package com.amadev.rando.ui.fragments.nowPlaying
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,17 +11,20 @@ import kotlinx.coroutines.launch
 
 class NowPlayingViewModel(private val apiClient: ApiClient) : ViewModel() {
 
+    private val nowPlayingMoviesArrayList = ArrayList<MovieDetailsResults>()
+
     private val nowPlayingMoviesResultsMutableLiveData =
         MutableLiveData<ArrayList<MovieDetailsResults>>()
     val nowPlayingMoviesResultsLiveData = nowPlayingMoviesResultsMutableLiveData
 
-    fun getPopularMovies() {
+    fun getPopularMovies(page : Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val response = ApiService(apiClient).getNowPlayingMovies(1)
+            val response = ApiService(apiClient).getNowPlayingMovies(page)
             if (response.isSuccessful) {
                 response.body()?.let {
                     val results = it.results as ArrayList<MovieDetailsResults>
-                    nowPlayingMoviesResultsMutableLiveData.postValue(results)
+                    nowPlayingMoviesArrayList.addAll(results)
+                    nowPlayingMoviesResultsMutableLiveData.postValue(nowPlayingMoviesArrayList)
                 }
             }
         }

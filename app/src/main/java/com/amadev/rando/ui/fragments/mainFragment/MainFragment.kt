@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,8 @@ class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
     private val mainFragmentViewModel: MainFragmentViewModel by viewModel()
+    private val action = R.id.action_mainFragment_to_movieDetailsFragment
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,14 +39,13 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (savedInstanceState != null) {
+
+        }
         getMovies()
         setUpObservers()
         setUpOnClickListeners()
         setUpSearchMoviesEditText()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
     }
 
     private fun searchMovies(query: String) {
@@ -178,7 +180,7 @@ class MainFragment : Fragment() {
     }
 
     private fun setUpSearchedMoviesRecyclerViewAdapter(list: ArrayList<MovieDetailsResults>) {
-        val adapter = MoviesRecyclerViewAdapter(requireView(), requireContext(), arrayListOf())
+        val adapter = MoviesRecyclerViewAdapter(requireView(), requireContext(), arrayListOf(), action)
         adapter.list.apply {
             clear()
             addAll(list)
@@ -207,7 +209,7 @@ class MainFragment : Fragment() {
         val layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
-        val adapter = MoviesRecyclerViewAdapter(requireView(), requireContext(), arrayListOf())
+        val adapter = MoviesRecyclerViewAdapter(requireView(), requireContext(), arrayListOf(), action)
         adapter.list.apply {
             clear()
             addAll(list)

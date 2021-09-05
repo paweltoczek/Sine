@@ -1,4 +1,4 @@
-package com.amadev.rando.ui.fragments.categoryViewPager.topRated
+package com.amadev.rando.ui.fragments.popularFragment
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,19 +9,22 @@ import com.amadev.rando.model.MovieDetailsResults
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class TopRatedFragmentViewModel(private val apiClient: ApiClient) : ViewModel() {
+class PopularFragmentViewModel(private val apiClient: ApiClient) : ViewModel() {
 
-    private val topRatedMoviesResultsMutableLiveData =
+    private val popularMoviesArrayList = ArrayList<MovieDetailsResults>()
+
+    private val popularMoviesResultsMutableLiveData =
         MutableLiveData<ArrayList<MovieDetailsResults>>()
-    val topRatedMoviesResultsLiveData = topRatedMoviesResultsMutableLiveData
+    val popularMoviesResultsLiveData = popularMoviesResultsMutableLiveData
 
-    fun getTopRatedMovies() {
+    fun getPopularMovies(page : Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val response = ApiService(apiClient).getTopRatedMovie(1)
+            val response = ApiService(apiClient).getPopularMovie(page)
             if (response.isSuccessful) {
                 response.body()?.let {
                     val results = it.results as ArrayList<MovieDetailsResults>
-                    topRatedMoviesResultsMutableLiveData.postValue(results)
+                    popularMoviesArrayList.addAll(results)
+                    popularMoviesResultsMutableLiveData.postValue(popularMoviesArrayList)
                 }
             }
         }

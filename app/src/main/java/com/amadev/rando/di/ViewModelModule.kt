@@ -3,9 +3,9 @@ package com.amadev.rando.di
 import com.amadev.rando.ui.dialogs.castDetails.CastDetailsViewModel
 import com.amadev.rando.ui.dialogs.forgotPassword.ForgotPasswordDialogViewModel
 import com.amadev.rando.ui.dialogs.logout.LogoutDialogViewModel
-import com.amadev.rando.ui.fragments.categoryViewPager.nowPlaying.NowPlayingViewModel
-import com.amadev.rando.ui.fragments.categoryViewPager.popularFragment.PopularFragmentViewModel
-import com.amadev.rando.ui.fragments.categoryViewPager.topRated.TopRatedFragmentViewModel
+import com.amadev.rando.ui.fragments.nowPlaying.NowPlayingViewModel
+import com.amadev.rando.ui.fragments.popularFragment.PopularFragmentViewModel
+import com.amadev.rando.ui.fragments.topRated.TopRatedFragmentViewModel
 import com.amadev.rando.ui.fragments.choice.ChoiceFragmentViewModel
 import com.amadev.rando.ui.fragments.favorites.FavoritesFragmentViewModel
 import com.amadev.rando.ui.fragments.mainFragment.MainFragmentViewModel
