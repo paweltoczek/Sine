@@ -1,4 +1,4 @@
-package com.amadev.rando.ui.fragments.favorites
+package com.amadev.rando.ui.fragments.favoritesFragment
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData

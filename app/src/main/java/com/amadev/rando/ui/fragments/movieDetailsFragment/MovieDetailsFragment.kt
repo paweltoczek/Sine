@@ -1,4 +1,4 @@
-package com.amadev.rando.ui.fragments.movieDetails
+package com.amadev.rando.ui.fragments.movieDetailsFragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -19,6 +19,7 @@ import com.amadev.rando.model.MovieDetailsResults
 import com.amadev.rando.util.Genres
 import com.amadev.rando.util.Util.getProgressDrawable
 import com.amadev.rando.util.Util.loadImageWithGlide
+import com.amadev.rando.util.Util.showSnackBar
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class MovieDetailsFragment() : Fragment() {
@@ -27,7 +28,6 @@ class MovieDetailsFragment() : Fragment() {
     private val binding get() = _binding!!
     private val movieDetailsViewModel: MovieDetailsViewModel by viewModel()
     lateinit var intent: Intent
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,14 +47,18 @@ class MovieDetailsFragment() : Fragment() {
 
     }
 
-
     private fun setUpOnClickListeners() {
         binding.apply {
             watchTrailer.setOnClickListener {
                 startYoutubeActivity()
             }
+
             back.setOnClickListener {
                 navigateToMainFragment()
+            }
+
+            addToFavorites.setOnClickListener {
+                addCurrentMovieToFavoriteMovies()
             }
         }
     }
@@ -75,6 +79,9 @@ class MovieDetailsFragment() : Fragment() {
                 }
                 videoEndPoint.observe(viewLifecycleOwner) {
                     setUpYoutubeIntent(it)
+                }
+                popUpMessageMutableLiveData.observe(viewLifecycleOwner) {
+                    showSnackBar(requireView(), it)
                 }
                 movieDetailsMutableLiveData.observe(viewLifecycleOwner) {
                     it?.genre_ids?.let { genresIntList ->
@@ -97,7 +104,9 @@ class MovieDetailsFragment() : Fragment() {
                     it?.poster_path?.let { uri ->
                         movieImage.loadImageWithGlide(uri, getProgressDrawable(requireContext()))
                     }
-
+                }
+                favoriteMoviesMutableLiveData.observe(viewLifecycleOwner) {
+                    Log.e("fav", it.toString())
                 }
             }
         }
@@ -150,12 +159,22 @@ class MovieDetailsFragment() : Fragment() {
         }
     }
 
+    private fun addCurrentMovieToFavoriteMovies() {
+        movieDetailsViewModel.addCurrentMovieToFavoriteMovies()
+    }
+
     private fun getMovieDetailsArgs(): MovieDetailsResults? {
         return arguments?.getParcelable<MovieDetailsResults>("movieDetails")
     }
 
 
     private fun setUpViewModel() {
-        movieDetailsViewModel.setUpMovieDetails(getMovieDetailsArgs())
+        movieDetailsViewModel.apply {
+            setUpMovieDetails(getMovieDetailsArgs())
+            getFavoriteMovies()
+        }
     }
+
+
+
 }

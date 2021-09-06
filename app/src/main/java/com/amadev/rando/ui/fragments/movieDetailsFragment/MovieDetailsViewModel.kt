@@ -1,20 +1,30 @@
-package com.amadev.rando.ui.fragments.movieDetails
+package com.amadev.rando.ui.fragments.movieDetailsFragment
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.amadev.rando.R
 import com.amadev.rando.data.ApiClient
 import com.amadev.rando.data.ApiService
 import com.amadev.rando.model.CastModelResults
 import com.amadev.rando.model.MovieDetailsResults
-import com.amadev.rando.ui.fragments.choice.Messages
+import com.amadev.rando.util.Util
+import com.amadev.rando.util.Util.replaceFirebaseForbiddenChars
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+sealed class Messages {
+    object FailedToLoadFavoriteMovies : Messages()
+    object FailedAddingToFavorites : Messages()
+    object AddedToFavorites : Messages()
+}
+
 class MovieDetailsViewModel(
-    private val apiClient : ApiClient,
+    val context: Context,
+    private val apiClient: ApiClient,
     private val firebaseAuth: FirebaseAuth,
     private val firebaseDatabase: FirebaseDatabase
 ) : ViewModel() {
@@ -33,6 +43,12 @@ class MovieDetailsViewModel(
 
     private val _castList = MutableLiveData<List<CastModelResults>>()
     val castList = _castList
+
+    private val _popUpMessageMutableLiveData = MutableLiveData<String>()
+    val popUpMessageMutableLiveData = _popUpMessageMutableLiveData
+
+    private val _favoriteMoviesMutableLiveData = MutableLiveData<ArrayList<MovieDetailsResults>>()
+    val favoriteMoviesMutableLiveData = _favoriteMoviesMutableLiveData
 
     private val username = provideFirebaseUsername()
 
@@ -90,36 +106,63 @@ class MovieDetailsViewModel(
         }
     }
 
-//    fun addCurrentMovieToFavoriteMovies() {
-//        val firebaseReference =
-//            firebaseDatabase.getReference("Users")
-//                .child(Util.replaceFirebaseForbiddenChars(username))
-//                .child(ChoiceFragmentViewModel.FAVORITE_MOVIES)
-//
-//        firebaseReference
-//            .push()
-//            .setValue(popularMoviesRandomResultsMutableLiveData.value)
-//            .addOnSuccessListener {
-//                popUpMessageMutableLiveData.value = getMessage(ChoiceFragmentViewModel.addedToFavorites)
-//            }
-//            .addOnFailureListener {
-//                popUpMessageMutableLiveData.value = getMessage(ChoiceFragmentViewModel.failedAddingToFavorites)
-//
-//            }
-//    }
+    fun addCurrentMovieToFavoriteMovies() {
+        val firebaseReference =
+            firebaseDatabase.getReference("Users")
+                .child(replaceFirebaseForbiddenChars(username))
+                .child(FAVORITE_MOVIES)
+
+        firebaseReference
+            .push()
+            .setValue(_movieDetailsMutableLiveData.value)
+            .addOnSuccessListener {
+                popUpMessageMutableLiveData.value = getMessage(addedToFavorites)
+            }
+            .addOnFailureListener {
+                popUpMessageMutableLiveData.value = getMessage(failedAddingToFavorites)
+
+            }
+    }
+
+    fun getFavoriteMovies() {
+        val firebaseReference =
+            firebaseDatabase.getReference("Users")
+                .child(replaceFirebaseForbiddenChars(username))
+                .child(FAVORITE_MOVIES)
+
+        val query: Query = firebaseReference
+        query.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val favoriteMoviesList = ArrayList<MovieDetailsResults>()
+
+                snapshot.children.forEach { data ->
+                    val test = data.getValue(MovieDetailsResults::class.java)
+                    favoriteMoviesList.add(test!!)
+                }
+                _favoriteMoviesMutableLiveData.value = favoriteMoviesList
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                _popUpMessageMutableLiveData.value = getMessage(failedAddingToFavorites)
+            }
+        })
+    }
 
     private fun provideFirebaseUsername(): String {
-        val currentUser = firebaseAuth.currentUser
-        when {
-            currentUser != null -> {
-                currentUser.let {
-                    lateinit var username: String
-                    for (profiler in it.providerData) {
-                        username = profiler.email.toString()
-                    }
-                }
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        lateinit var username: String
+        currentUser?.let {
+            for (profiler in it.providerData) {
+                username = profiler.email.toString()
             }
         }
         return username
     }
+
+    private fun getMessage(message: Messages) =
+        when (message) {
+            is Messages.AddedToFavorites -> context.getString(R.string.addedToFavorites)
+            is Messages.FailedAddingToFavorites -> context.getString(R.string.failedAddingToFavorites)
+            is Messages.FailedToLoadFavoriteMovies -> context.getString(R.string.failedToLoadFavoriteMovies)
+        }
 }

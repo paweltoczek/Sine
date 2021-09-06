@@ -1,4 +1,4 @@
-package com.amadev.rando.ui.fragments.signinorsignup
+package com.amadev.rando.ui.fragments.signinorsignupFragment
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

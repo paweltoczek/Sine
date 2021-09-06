@@ -1,4 +1,4 @@
-package com.amadev.rando.ui.fragments.choice
+package com.amadev.rando.ui.fragments.choiceFragment
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

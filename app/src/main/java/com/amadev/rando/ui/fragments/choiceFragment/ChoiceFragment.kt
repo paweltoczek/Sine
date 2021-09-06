@@ -1,4 +1,4 @@
-package com.amadev.rando.ui.fragments.choice
+package com.amadev.rando.ui.fragments.choiceFragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -121,7 +121,7 @@ class ChoiceFragment : Fragment() {
             }
 
             addToFavorite.setOnLongClickListener {
-                findNavController().navigate(R.id.action_choiceFragment_to_favoritesFragment)
+//                findNavController().navigate(R.id.action_choiceFragment_to_favoritesFragment)
                 true
             }
         }

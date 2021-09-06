@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutDescription="@xml/movie_details_fragment_scene"
-    tools:context=".ui.fragments.movieDetails.MovieDetailsFragment">
+    tools:context=".ui.fragments.movieDetailsFragment.MovieDetailsFragment">
 
     <ImageView
         android:id="@+id/movieImage"
@@ -39,6 +39,7 @@
         android:layout_marginEnd="32dp"
         android:fontFamily="@font/titilliumweb_bold"
         android:gravity="center"
+        android:scrollHorizontally="true"
         android:singleLine="true"
         android:textColor="@color/white"
         android:textSize="32sp"
@@ -161,6 +162,19 @@
         android:background="@drawable/ic_baseline_arrow_back_24"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <LinearLayout
+        android:id="@+id/addToFavorites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/ic_baseline_star_border_24"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

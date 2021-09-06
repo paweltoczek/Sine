@@ -1,6 +1,5 @@
-package com.amadev.rando.ui.fragments.signin
+package com.amadev.rando.ui.fragments.signinFragment
 
-import android.app.Application
 import android.content.Context
 import android.util.Patterns
 import androidx.lifecycle.MutableLiveData

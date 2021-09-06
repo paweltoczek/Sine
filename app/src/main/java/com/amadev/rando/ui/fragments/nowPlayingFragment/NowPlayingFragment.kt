@@ -1,4 +1,4 @@
-package com.amadev.rando.ui.fragments.nowPlaying
+package com.amadev.rando.ui.fragments.nowPlayingFragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,9 +24,8 @@ class NowPlayingFragment : Fragment() {
     lateinit var gridLayoutManager: GridLayoutManager
     lateinit var adapter: MoviesRecyclerViewAdapter
 
-    companion object {
-        var CURRENT_PAGE = 0
-    }
+    private var currentPage = 0
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,7 +92,7 @@ class NowPlayingFragment : Fragment() {
     }
 
     private fun getTopRatedMovies() {
-        CURRENT_PAGE++
-        nowPlayingViewModel.getPopularMovies(CURRENT_PAGE)
+        currentPage++
+        nowPlayingViewModel.getPopularMovies(currentPage)
     }
 }

@@ -57,7 +57,7 @@ class LogoutDialog : DialogFragment() {
     }
 
     private fun navigateToWelcomeScreen() {
-        findNavController().navigate(R.id.action_choiceFragment_to_welcomeScreen)
+//        findNavController().navigate(R.id.action_choiceFragment_to_welcomeScreen)
     }
 
     private fun logOut() {

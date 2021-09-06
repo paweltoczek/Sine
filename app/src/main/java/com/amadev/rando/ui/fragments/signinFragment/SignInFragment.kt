@@ -1,4 +1,4 @@
-package com.amadev.rando.ui.fragments.signin
+package com.amadev.rando.ui.fragments.signinFragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

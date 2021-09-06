@@ -1,4 +1,4 @@
-package com.amadev.rando.ui.fragments.topRated
+package com.amadev.rando.ui.fragments.topRatedFragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,9 +24,8 @@ class TopRatedFragment : Fragment() {
     lateinit var gridLayoutManager: GridLayoutManager
     lateinit var adapter: MoviesRecyclerViewAdapter
 
-    companion object {
-        var CURRENT_PAGE = 0
-    }
+
+    private var currentPage = 0
 
 
     override fun onCreateView(
@@ -97,7 +96,7 @@ class TopRatedFragment : Fragment() {
     }
 
     private fun getTopRatedMovies() {
-        CURRENT_PAGE++
-        topRatedFragmentViewModel.getTopRatedMovies(CURRENT_PAGE)
+        currentPage++
+        topRatedFragmentViewModel.getTopRatedMovies(currentPage)
     }
 }

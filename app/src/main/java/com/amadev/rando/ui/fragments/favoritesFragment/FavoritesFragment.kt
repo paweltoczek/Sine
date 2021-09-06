@@ -1,12 +1,13 @@
-package com.amadev.rando.ui.fragments.favorites
+package com.amadev.rando.ui.fragments.favoritesFragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.amadev.rando.adapter.FavoriteMoviesRecyclerViewAdapter
+import androidx.recyclerview.widget.GridLayoutManager
+import com.amadev.rando.R
+import com.amadev.rando.adapter.MoviesRecyclerViewAdapter
 import com.amadev.rando.databinding.FragmentFavoritesBinding
 import com.amadev.rando.model.MovieDetailsResults
 import com.amadev.rando.util.Util.showSnackBar
@@ -17,6 +18,9 @@ class FavoritesFragment : Fragment() {
     private var _binding: FragmentFavoritesBinding? = null
     private val binding get() = _binding!!
     private val favoritesFragmentViewModel: FavoritesFragmentViewModel by viewModel()
+    private val action = R.id.action_favoritesFragment_to_movieDetailsFragment
+    lateinit var gridLayoutManager: GridLayoutManager
+    lateinit var adapter: MoviesRecyclerViewAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,8 +35,20 @@ class FavoritesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         getFavoriteMovies()
+        setUpRecyclerviewAdapter()
         setUpObservers()
 
+    }
+
+    private fun setUpRecyclerviewAdapter() {
+        gridLayoutManager = GridLayoutManager(requireContext(), 3)
+        adapter =
+            MoviesRecyclerViewAdapter(requireView(), requireContext(), arrayListOf(), action)
+        binding.apply {
+            favoriteMoviesRecyclerView.layoutManager = gridLayoutManager
+            favoriteMoviesRecyclerView.adapter = adapter
+
+        }
     }
 
     private fun getFavoriteMovies() {
@@ -43,14 +59,12 @@ class FavoritesFragment : Fragment() {
         favoritesFragmentViewModel.apply {
             favoritesMoviesLiveData.observe(viewLifecycleOwner) { favoriteMoviesList ->
                 if (favoriteMoviesList != null) {
-                    setUpFavoriteMoviesAdapter(favoriteMoviesList)
+                    setUpFavoriteMoviesRecyclerview(favoriteMoviesList)
                 }
             }
-
             popUpMessageLiveData.observe(viewLifecycleOwner) {
                 showSnackBar(requireView(), it)
             }
-
             progressBarLiveData.observe(viewLifecycleOwner) {
                 when (it) {
                     false -> {
@@ -61,19 +75,14 @@ class FavoritesFragment : Fragment() {
         }
     }
 
-    private fun setUpFavoriteMoviesAdapter(favoriteMoviesList: ArrayList<MovieDetailsResults>) {
-        val reversedFavoriteMoviesList = favoriteMoviesList.reversed() as ArrayList<MovieDetailsResults>
+    private fun setUpFavoriteMoviesRecyclerview(favoriteMoviesList: ArrayList<MovieDetailsResults>) {
+        val reversedFavoriteMoviesList =
+            favoriteMoviesList.reversed() as ArrayList<MovieDetailsResults>
 
-        val adapter =
-            FavoriteMoviesRecyclerViewAdapter(
-                requireView(),
-                requireContext(),
-                arrayListOf()
-            )
-        adapter.list = reversedFavoriteMoviesList
-        binding.apply {
-            favoriteMoviesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-            favoriteMoviesRecyclerView.adapter = adapter
+        adapter.notifyDataSetChanged()
+        adapter.list.apply {
+            clear()
+            addAll(reversedFavoriteMoviesList)
         }
     }
 }

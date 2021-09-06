@@ -20,13 +20,13 @@ class PopularFragment : Fragment() {
     private var _binding: FragmentPopularBinding? = null
     private val binding get() = _binding!!
     private val popularFragmentViewModel: PopularFragmentViewModel by viewModel()
+
     private val action = R.id.action_popularFragment_to_movieDetailsFragment
     lateinit var gridLayoutManager: GridLayoutManager
     lateinit var adapter: MoviesRecyclerViewAdapter
 
-    companion object {
-        var CURRENT_PAGE = 0
-    }
+    private var currentPage = 0
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,7 +93,7 @@ class PopularFragment : Fragment() {
     }
 
     private fun getTopRatedMovies() {
-        CURRENT_PAGE++
-        popularFragmentViewModel.getPopularMovies(CURRENT_PAGE)
+        currentPage++
+        popularFragmentViewModel.getPopularMovies(currentPage)
     }
 }

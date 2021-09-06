@@ -1,4 +1,4 @@
-package com.amadev.rando.ui.fragments.signup
+package com.amadev.rando.ui.fragments.signupFragment
 
 import android.content.Context
 import android.util.Patterns

@@ -1,4 +1,4 @@
-package com.amadev.rando.ui.fragments.signinorsignup
+package com.amadev.rando.ui.fragments.signinorsignupFragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -41,7 +41,7 @@ class SigninOrSignUpFragment : Fragment() {
         signInOrSignUpViewModel.apply {
             loginAutomaticallyIfPossibleLiveData.observe(viewLifecycleOwner) {
                 if (it == true) {
-                    findNavController().navigate(R.id.action_signinOrSignUpFragment_to_choiceFragment)
+                    findNavController().navigate(R.id.action_signinOrSignUpFragment_to_mainFragment)
                 }
             }
             messageLiveData.observe(viewLifecycleOwner) {

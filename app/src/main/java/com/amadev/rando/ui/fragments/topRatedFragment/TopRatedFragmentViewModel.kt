@@ -1,4 +1,4 @@
-package com.amadev.rando.ui.fragments.nowPlaying
+package com.amadev.rando.ui.fragments.topRatedFragment
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,22 +9,22 @@ import com.amadev.rando.model.MovieDetailsResults
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class NowPlayingViewModel(private val apiClient: ApiClient) : ViewModel() {
+class TopRatedFragmentViewModel(private val apiClient: ApiClient) : ViewModel() {
 
-    private val nowPlayingMoviesArrayList = ArrayList<MovieDetailsResults>()
+    private val topRaterMoviesArrayList = ArrayList<MovieDetailsResults>()
 
-    private val nowPlayingMoviesResultsMutableLiveData =
+    private val topRatedMoviesResultsMutableLiveData =
         MutableLiveData<ArrayList<MovieDetailsResults>>()
-    val nowPlayingMoviesResultsLiveData = nowPlayingMoviesResultsMutableLiveData
+    val topRatedMoviesResultsLiveData = topRatedMoviesResultsMutableLiveData
 
-    fun getPopularMovies(page : Int) {
+    fun getTopRatedMovies(page: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val response = ApiService(apiClient).getNowPlayingMovies(page)
+            val response = ApiService(apiClient).getTopRatedMovie(page)
             if (response.isSuccessful) {
                 response.body()?.let {
                     val results = it.results as ArrayList<MovieDetailsResults>
-                    nowPlayingMoviesArrayList.addAll(results)
-                    nowPlayingMoviesResultsMutableLiveData.postValue(nowPlayingMoviesArrayList)
+                    topRaterMoviesArrayList.addAll(results)
+                    topRatedMoviesResultsMutableLiveData.postValue(topRaterMoviesArrayList)
                 }
             }
         }
