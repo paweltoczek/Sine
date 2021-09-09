@@ -7,7 +7,6 @@ data class VideoDetailsModel(
     @SerializedName("results") val results: List<VideoDetailsResults>
 )
 
-
 data class VideoDetailsResults(
     @SerializedName("id") val id: String?,
     @SerializedName("iso_639_1") val iso_639_1: String?,
@@ -18,4 +17,3 @@ data class VideoDetailsResults(
     @SerializedName("size") val size: Int?,
     @SerializedName("type") val type: String?
 )
-

@@ -18,8 +18,7 @@ class SecondScreenOnboarding : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-//        val view = inflater.inflate(R.layout.fragment_second_screen_onboarding, container, false)
+    ): View {
         _binding = FragmentSecondScreenOnboardingBinding.inflate(inflater, container, false)
         return binding.root
     }

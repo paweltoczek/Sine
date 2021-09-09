@@ -43,7 +43,6 @@ class PopularFragment : Fragment() {
         getTopRatedMovies()
         setUpRecyclerviewAdapter()
         setUpObservers()
-        setUpOnClickListeners()
     }
 
     private fun setUpRecyclerviewAdapter() {
@@ -54,14 +53,6 @@ class PopularFragment : Fragment() {
             popularRecyclerView.layoutManager = gridLayoutManager
             popularRecyclerView.adapter = adapter
 
-        }
-    }
-
-    private fun setUpOnClickListeners() {
-        binding.apply {
-            backBtn.setOnClickListener {
-                navigateToMainFragment()
-            }
         }
     }
 

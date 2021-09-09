@@ -19,8 +19,8 @@ class FavoritesFragment : Fragment() {
     private val binding get() = _binding!!
     private val favoritesFragmentViewModel: FavoritesFragmentViewModel by viewModel()
     private val action = R.id.action_favoritesFragment_to_movieDetailsFragment
-    lateinit var gridLayoutManager: GridLayoutManager
-    lateinit var adapter: MoviesRecyclerViewAdapter
+    private lateinit var gridLayoutManager: GridLayoutManager
+    private lateinit var adapter: MoviesRecyclerViewAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,7 +47,6 @@ class FavoritesFragment : Fragment() {
         binding.apply {
             favoriteMoviesRecyclerView.layoutManager = gridLayoutManager
             favoriteMoviesRecyclerView.adapter = adapter
-
         }
     }
 
@@ -78,7 +77,6 @@ class FavoritesFragment : Fragment() {
     private fun setUpFavoriteMoviesRecyclerview(favoriteMoviesList: ArrayList<MovieDetailsResults>) {
         val reversedFavoriteMoviesList =
             favoriteMoviesList.reversed() as ArrayList<MovieDetailsResults>
-
         adapter.notifyDataSetChanged()
         adapter.list.apply {
             clear()

@@ -26,7 +26,6 @@ class MainFragment : Fragment() {
     private val mainFragmentViewModel: MainFragmentViewModel by viewModel()
     private val action = R.id.action_mainFragment_to_movieDetailsFragment
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,9 +37,7 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (savedInstanceState != null) {
 
-        }
         getMovies()
         setUpObservers()
         setUpOnClickListeners()
@@ -80,6 +77,9 @@ class MainFragment : Fragment() {
             topRatedMore.setOnClickListener {
                 navigateToTopRatedFragment()
             }
+            upcomingMore.setOnClickListener {
+                navigateToUpcomingFragment()
+            }
             nowPlayingMore.setOnClickListener {
                 navigateToNowPlayingFragment()
             }
@@ -91,6 +91,10 @@ class MainFragment : Fragment() {
             }
 
         }
+    }
+
+    private fun navigateToUpcomingFragment() {
+        findNavController().navigate(R.id.action_mainFragment_to_upcomingFragment)
     }
 
     private fun navigateToFavoritesFragment() {

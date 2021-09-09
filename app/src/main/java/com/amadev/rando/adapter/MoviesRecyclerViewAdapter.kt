@@ -5,11 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
-import com.amadev.rando.R
 import com.amadev.rando.databinding.CustomMoviesRecyclerviewPatternBinding
 import com.amadev.rando.model.MovieDetailsResults
 import com.amadev.rando.util.Util.getProgressDrawable

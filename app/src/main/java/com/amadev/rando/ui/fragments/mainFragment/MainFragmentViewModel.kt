@@ -1,23 +1,29 @@
 package com.amadev.rando.ui.fragments.mainFragment
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.amadev.rando.R
 import com.amadev.rando.data.ApiClient
 import com.amadev.rando.data.ApiService
 import com.amadev.rando.model.MovieDetailsResults
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.net.URLEncoder
 
+sealed class Messages {
+    object SomethingWentWrong : Messages()
+}
 class MainFragmentViewModel(
-    private val apiClient: ApiClient,
-    private val firebaseAuth: FirebaseAuth,
-    private val firebaseDatabase: FirebaseDatabase
-) : ViewModel() {
+    private val context: Context,
+    private val apiClient: ApiClient
+    ) : ViewModel() {
+
+    companion object {
+        val somethingWentWrong = Messages.SomethingWentWrong
+    }
 
     private val upComingMoviesResultsMutableLiveData =
         MutableLiveData<ArrayList<MovieDetailsResults>>()
@@ -40,10 +46,6 @@ class MainFragmentViewModel(
     val searchedMoviesLiveData = searchedMoviesMutableLiveData
 
     private val popUpMessageMutableLiveData = MutableLiveData<String>()
-    private val currentPage = MutableLiveData<Int>()
-
-
-
 
     fun getSearchedMovies(query: String) {
         val queryEncoded = encodeUrlString(query)
@@ -54,11 +56,9 @@ class MainFragmentViewModel(
                 response.body()?.let {
                     val results = it.results as ArrayList<MovieDetailsResults>
                     searchedMoviesMutableLiveData.postValue(results)
-                    Log.e("searched", query)
-                    Log.e("results", results.toString())
                 }
             } else if (response.isSuccessful.not()) {
-                Log.e("failed", "failed")
+                popUpMessageMutableLiveData.postValue(getMessage(somethingWentWrong))
             }
         }
     }
@@ -101,7 +101,7 @@ class MainFragmentViewModel(
                         topRatedMoviesResultsMutableLiveData.postValue(results)
                 }
             } else {
-                popUpMessageMutableLiveData.postValue("Please check internet connection")
+                popUpMessageMutableLiveData.postValue(getMessage(somethingWentWrong))
             }
 
         }
@@ -117,16 +117,16 @@ class MainFragmentViewModel(
                     val results = responseBody.results as ArrayList<MovieDetailsResults>
                     results.apply {
                         popularMoviesResultsMutableLiveData.postValue(results)
-                        Log.e("results", popularMoviesResultsMutableLiveData.value.toString())
-
                     }
                 }
             } else if (response.isSuccessful.not()) {
-                popUpMessageMutableLiveData.postValue("Please check internet connection")
-                Log.e("results", "error")
-
+                popUpMessageMutableLiveData.postValue(getMessage(somethingWentWrong))
             }
-
         }
     }
+
+    private fun getMessage(messages: Messages) =
+        when (messages) {
+            is Messages.SomethingWentWrong -> context.getString(R.string.somethingWentWrong)
+        }
 }

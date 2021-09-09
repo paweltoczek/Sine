@@ -7,9 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.amadev.rando.R
 import com.amadev.rando.YoutubeActivity
 import com.amadev.rando.adapter.CastRecyclerViewAdapter
 import com.amadev.rando.adapter.GenresRecyclerViewAdapter
@@ -22,12 +20,13 @@ import com.amadev.rando.util.Util.loadImageWithGlide
 import com.amadev.rando.util.Util.showSnackBar
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class MovieDetailsFragment() : Fragment() {
+class MovieDetailsFragment : Fragment() {
 
     private var _binding: MovieDetailsFragmentBinding? = null
     private val binding get() = _binding!!
     private val movieDetailsViewModel: MovieDetailsViewModel by viewModel()
     lateinit var intent: Intent
+    var movieId: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,19 +51,17 @@ class MovieDetailsFragment() : Fragment() {
             watchTrailer.setOnClickListener {
                 startYoutubeActivity()
             }
-
-            back.setOnClickListener {
-                navigateToMainFragment()
-            }
-
             addToFavorites.setOnClickListener {
                 addCurrentMovieToFavoriteMovies()
+            }
+            removeFromFavorites.setOnClickListener {
+                removeCurrentMovieFromFavorites(movieId)
             }
         }
     }
 
-    private fun navigateToMainFragment() {
-        findNavController().navigate(R.id.action_movieDetailsFragment_to_mainFragment)
+    private fun removeCurrentMovieFromFavorites(movieId: Int?) {
+        movieDetailsViewModel.removeCurrentMovieFromFavoriteMovies(movieId)
     }
 
     private fun startYoutubeActivity() {
@@ -84,6 +81,7 @@ class MovieDetailsFragment() : Fragment() {
                     showSnackBar(requireView(), it)
                 }
                 movieDetailsMutableLiveData.observe(viewLifecycleOwner) {
+                    it?.id?.let { movieId = it }
                     it?.genre_ids?.let { genresIntList ->
                         setUpMovieGenresRecyclerView(setUpGenreList(genresIntList))
                     }
@@ -106,12 +104,43 @@ class MovieDetailsFragment() : Fragment() {
                     }
                 }
                 favoriteMoviesMutableLiveData.observe(viewLifecycleOwner) {
-                    Log.e("fav", it.toString())
+                    it?.let {
+                        movieId?.let { movieId ->
+                            checkIfFirebaseContainsCurrentMovie(
+                                it,
+                                movieId
+                            )
+                        }
+                    }
                 }
             }
         }
-
     }
+
+    private fun checkIfFirebaseContainsCurrentMovie(
+        favoriteMoviesList: ArrayList<MovieDetailsResults>,
+        movieId: Int
+    ) {
+        Log.e("list", favoriteMoviesList.toString())
+        Log.e("id", movieId.toString())
+
+        if (favoriteMoviesList.toString().contains(movieId.toString())) {
+            binding.apply {
+                removeFromFavorites.visibility = View.VISIBLE
+                addToFavorites.visibility = View.GONE
+                Log.e("contains", "true")
+
+            }
+        } else {
+            binding.apply {
+                removeFromFavorites.visibility = View.GONE
+                addToFavorites.visibility = View.VISIBLE
+                Log.e("contains", "false")
+
+            }
+        }
+    }
+
 
     private fun setUpYoutubeIntent(videoEndPoint: String): Intent {
         if (videoEndPoint.isEmpty().not()) {
@@ -174,7 +203,6 @@ class MovieDetailsFragment() : Fragment() {
             getFavoriteMovies()
         }
     }
-
 
 
 }

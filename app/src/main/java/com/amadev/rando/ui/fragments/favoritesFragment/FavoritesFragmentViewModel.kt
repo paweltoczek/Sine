@@ -14,6 +14,7 @@ sealed class Messages {
 }
 
 class FavoritesFragmentViewModel(
+    private val firebaseAuth: FirebaseAuth,
     private val firebaseDatabase: FirebaseDatabase,
     private val context: Context
 ) : ViewModel() {
@@ -68,7 +69,7 @@ class FavoritesFragmentViewModel(
         }
 
     private fun provideFirebaseUsername(): String {
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        val currentUser = firebaseAuth.currentUser
         lateinit var username: String
         currentUser?.let {
             for (profiler in it.providerData) {
@@ -77,5 +78,4 @@ class FavoritesFragmentViewModel(
         }
         return username
     }
-
 }

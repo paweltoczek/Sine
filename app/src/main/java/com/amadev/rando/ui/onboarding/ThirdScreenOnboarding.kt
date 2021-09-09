@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.amadev.rando.R
-import com.amadev.rando.databinding.FragmentSecondScreenOnboardingBinding
 import com.amadev.rando.databinding.FragmentThirdScreenOnboardingBinding
 import com.amadev.rando.util.Animations
 
@@ -21,8 +20,7 @@ class ThirdScreenOnboarding : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-//        val view = inflater.inflate(R.layout.fragment_third_screen_onboarding, container, false)
+    ): View {
         _binding = FragmentThirdScreenOnboardingBinding.inflate(inflater, container, false)
         return binding.root
     }

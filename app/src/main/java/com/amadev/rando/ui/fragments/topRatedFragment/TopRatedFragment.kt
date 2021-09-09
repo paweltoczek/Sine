@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amadev.rando.R
@@ -24,9 +23,7 @@ class TopRatedFragment : Fragment() {
     lateinit var gridLayoutManager: GridLayoutManager
     lateinit var adapter: MoviesRecyclerViewAdapter
 
-
     private var currentPage = 0
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,7 +42,6 @@ class TopRatedFragment : Fragment() {
         getTopRatedMovies()
         setUpRecyclerviewAdapter()
         setUpObservers()
-        setUpOnClickListeners()
     }
 
     private fun setUpRecyclerviewAdapter() {
@@ -57,18 +53,6 @@ class TopRatedFragment : Fragment() {
             topRatedRecyclerView.adapter = adapter
 
         }
-    }
-
-    private fun setUpOnClickListeners() {
-        binding.apply {
-            backBtn.setOnClickListener {
-                navigateToMainFragment()
-            }
-        }
-    }
-
-    private fun navigateToMainFragment() {
-        findNavController().navigate(R.id.action_topRatedFragment_to_mainFragment)
     }
 
     private fun setUpObservers() {

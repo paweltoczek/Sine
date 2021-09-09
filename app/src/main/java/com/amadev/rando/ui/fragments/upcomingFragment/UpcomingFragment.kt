@@ -1,45 +1,45 @@
-package com.amadev.rando.ui.fragments.nowPlayingFragment
+package com.amadev.rando.ui.fragments.upcomingFragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amadev.rando.R
 import com.amadev.rando.adapter.EndlessRecyclerOnScrollListener
 import com.amadev.rando.adapter.MoviesRecyclerViewAdapter
-import com.amadev.rando.databinding.FragmentNowPlayingBinding
+import com.amadev.rando.databinding.FragmentUpcomingBinding
 import com.amadev.rando.model.MovieDetailsResults
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class NowPlayingFragment : Fragment() {
 
-    private var _binding: FragmentNowPlayingBinding? = null
+class UpcomingFragment : Fragment() {
+
+    private var _binding: FragmentUpcomingBinding? = null
     private val binding get() = _binding!!
-    private val nowPlayingViewModel: NowPlayingViewModel by viewModel()
-    private val action = R.id.action_nowPlayingFragment_to_movieDetailsFragment
+    private val upcomingFragmentViewModel: UpcomingFragmentViewModel by viewModel()
+    private val action = R.id.action_upcomingFragment_to_movieDetailsFragment
     lateinit var gridLayoutManager: GridLayoutManager
     lateinit var adapter: MoviesRecyclerViewAdapter
 
     private var currentPage = 0
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentNowPlayingBinding.inflate(inflater, container, false)
+        _binding = FragmentUpcomingBinding.inflate(inflater, container, false)
         return binding.root
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getTopRatedMovies()
+        getUpcomingMovies()
         setUpRecyclerviewAdapter()
         setUpObservers()
     }
@@ -49,15 +49,15 @@ class NowPlayingFragment : Fragment() {
         adapter =
             MoviesRecyclerViewAdapter(requireView(), requireContext(), arrayListOf(), action)
         binding.apply {
-            nowPlayingRecyclerView.layoutManager = gridLayoutManager
-            nowPlayingRecyclerView.adapter = adapter
+            upcomingRecyclerView.layoutManager = gridLayoutManager
+            upcomingRecyclerView.adapter = adapter
 
         }
     }
 
     private fun setUpObservers() {
-        nowPlayingViewModel.nowPlayingMoviesResultsLiveData.observe(viewLifecycleOwner) {
-            setUpRecyclerView(it, binding.nowPlayingRecyclerView)
+        upcomingFragmentViewModel.upcomingMoviesResultsLiveData.observe(viewLifecycleOwner) {
+            setUpRecyclerView(it, binding.upcomingRecyclerView)
         }
     }
 
@@ -73,13 +73,13 @@ class NowPlayingFragment : Fragment() {
         recyclerView.addOnScrollListener(object :
             EndlessRecyclerOnScrollListener(gridLayoutManager) {
             override fun onLoadMore(current_page: Int) {
-                getTopRatedMovies()
+                getUpcomingMovies()
             }
         })
     }
 
-    private fun getTopRatedMovies() {
+    private fun getUpcomingMovies() {
         currentPage++
-        nowPlayingViewModel.getPopularMovies(currentPage)
+        upcomingFragmentViewModel.getUpcomingMovies(currentPage)
     }
 }

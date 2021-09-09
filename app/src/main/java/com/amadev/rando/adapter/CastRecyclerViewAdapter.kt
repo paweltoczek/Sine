@@ -42,14 +42,17 @@ class CastRecyclerViewAdapter(
         }
 
         holder.itemView.setOnClickListener {
-            val fragmentDialog = CastDetailsDialog(list[position])
-            fragmentDialog.show(fragmentManager, "fragment_alert")
-
+            showCastDialog(list[position])
         }
     }
 
     override fun getItemCount(): Int {
         return list.size
+    }
+
+    private fun showCastDialog(cast : CastModelResults) {
+        val fragmentDialog = CastDetailsDialog(cast)
+        fragmentDialog.show(fragmentManager, "")
     }
 
 }

@@ -9,7 +9,6 @@ import com.amadev.rando.data.ApiClient
 import com.amadev.rando.data.ApiService
 import com.amadev.rando.model.CastModelResults
 import com.amadev.rando.model.MovieDetailsResults
-import com.amadev.rando.util.Util
 import com.amadev.rando.util.Util.replaceFirebaseForbiddenChars
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -20,6 +19,8 @@ sealed class Messages {
     object FailedToLoadFavoriteMovies : Messages()
     object FailedAddingToFavorites : Messages()
     object AddedToFavorites : Messages()
+    object MovieRemovedFromFavorites : Messages()
+    object FailedToRemoveMovie : Messages()
 }
 
 class MovieDetailsViewModel(
@@ -31,8 +32,10 @@ class MovieDetailsViewModel(
 
     companion object {
         const val FAVORITE_MOVIES = "Favorite movies"
-        var failedAddingToFavorites = Messages.FailedAddingToFavorites
-        var addedToFavorites = Messages.AddedToFavorites
+        val failedAddingToFavorites = Messages.FailedAddingToFavorites
+        val addedToFavorites = Messages.AddedToFavorites
+        val movieRemovedFromFavorites = Messages.MovieRemovedFromFavorites
+        val failedToRemoveMovie = Messages.FailedToRemoveMovie
     }
 
     private val _movieDetailsMutableLiveData = MutableLiveData<MovieDetailsResults?>()
@@ -106,6 +109,23 @@ class MovieDetailsViewModel(
         }
     }
 
+    fun removeCurrentMovieFromFavoriteMovies(movieId: Int?) {
+        val firebaseReference =
+            firebaseDatabase.getReference("Users")
+                .child(replaceFirebaseForbiddenChars(username))
+                .child(FAVORITE_MOVIES)
+
+        firebaseReference
+            .child(movieId.toString()).removeValue()
+            .addOnSuccessListener {
+                popUpMessageMutableLiveData.value = getMessage(movieRemovedFromFavorites)
+            }
+            .addOnFailureListener {
+                popUpMessageMutableLiveData.value = getMessage(failedToRemoveMovie)
+
+            }
+    }
+
     fun addCurrentMovieToFavoriteMovies() {
         val firebaseReference =
             firebaseDatabase.getReference("Users")
@@ -113,7 +133,7 @@ class MovieDetailsViewModel(
                 .child(FAVORITE_MOVIES)
 
         firebaseReference
-            .push()
+            .child(_movieDetailsMutableLiveData.value?.id.toString())
             .setValue(_movieDetailsMutableLiveData.value)
             .addOnSuccessListener {
                 popUpMessageMutableLiveData.value = getMessage(addedToFavorites)
@@ -149,7 +169,7 @@ class MovieDetailsViewModel(
     }
 
     private fun provideFirebaseUsername(): String {
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        val currentUser = firebaseAuth.currentUser
         lateinit var username: String
         currentUser?.let {
             for (profiler in it.providerData) {
@@ -164,5 +184,7 @@ class MovieDetailsViewModel(
             is Messages.AddedToFavorites -> context.getString(R.string.addedToFavorites)
             is Messages.FailedAddingToFavorites -> context.getString(R.string.failedAddingToFavorites)
             is Messages.FailedToLoadFavoriteMovies -> context.getString(R.string.failedToLoadFavoriteMovies)
+            is Messages.MovieRemovedFromFavorites -> context.getString(R.string.movieRemovedFromFavorites)
+            is Messages.FailedToRemoveMovie -> context.getString(R.string.failedToRemoveMovie)
         }
 }
