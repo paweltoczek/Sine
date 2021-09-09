@@ -28,7 +28,6 @@ class WelcomeScreen : Fragment() {
                 findNavController().navigate(R.id.action_welcomeScreen_to_signinOrSignUpFragment)
             } else {
                 findNavController().navigate(R.id.action_welcomeScreen_to_viewPagerFragment)
-
             }
         }, 2000)
 

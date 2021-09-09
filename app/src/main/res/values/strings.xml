@@ -64,4 +64,7 @@
     <string name="movieRemovedFromFavorites">Movie removed from favorites</string>
     <string name="failedToRemoveMovie">Failed to remove movie</string>
     <string name="somethingWentWrong">Something went wrong</string>
+    <string name="youMustBeLoggedIn">You must be logged in</string>
+    <string name="noMoviesHere">No movies here</string>
+    <string name="thereIsNoMoviesHere">There is no movies here</string>
 </resources>

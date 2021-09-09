@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
+import com.amadev.rando.R
 import com.amadev.rando.databinding.CustomMoviesRecyclerviewPatternBinding
 import com.amadev.rando.model.MovieDetailsResults
 import com.amadev.rando.util.Util.getProgressDrawable
@@ -21,6 +22,7 @@ class MoviesRecyclerViewAdapter(
 ) : RecyclerView.Adapter<MoviesRecyclerViewAdapter.ViewHolder>() {
 
     val activity = context as FragmentActivity
+    val bundle = Bundle()
 
     class ViewHolder(val binding: CustomMoviesRecyclerviewPatternBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -34,29 +36,48 @@ class MoviesRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder) {
             binding.apply {
-                movieName.text = list[position].title
-                rating.text = list[position].vote_average.toString()
+                if (list.isEmpty()) {
+                    movieName.text = context.getString(R.string.noMoviesHere)
+                } else {
+                    setUpViews(list[position], holder)
+
+                    holder.itemView.setOnClickListener {
+                        bundle.putParcelable("movieDetails", list[position])
+                        navigateAndSendData(bundle, holder)
+                    }
+                }
+            }
+
+        }
+    }
+
+    private fun navigateAndSendData(bundle: Bundle?, holder: ViewHolder) {
+        Navigation.createNavigateOnClickListener(
+            action,
+            bundle
+        ).onClick(holder.itemView)
+    }
+
+    private fun setUpViews(
+        list: MovieDetailsResults,
+        holder: ViewHolder
+    ) {
+        with(holder) {
+            binding.apply {
+                movieName.text = list.title
+                rating.text = list.vote_average.toString()
                 ratingBar.rating = 1f
                 movieImage.loadImageWithGlide(
-                    list[position].poster_path,
+                    list.poster_path,
                     getProgressDrawable(context)
                 )
             }
         }
-
-        holder.itemView.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putParcelable("movieDetails", list[position])
-            Navigation.createNavigateOnClickListener(
-                action,
-                bundle
-            ).onClick(holder.itemView)
-        }
     }
+
     override fun getItemCount(): Int {
         return list.size
     }
-
 }
 
 

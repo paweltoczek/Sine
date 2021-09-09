@@ -18,6 +18,7 @@ import com.amadev.rando.adapter.MoviesRecyclerViewAdapter
 import com.amadev.rando.adapter.UpcomingMoviesRecyclerViewAdapter
 import com.amadev.rando.databinding.FragmentMainBinding
 import com.amadev.rando.model.MovieDetailsResults
+import com.amadev.rando.util.Util.showToast
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainFragment : Fragment() {
@@ -25,6 +26,7 @@ class MainFragment : Fragment() {
     private val binding get() = _binding!!
     private val mainFragmentViewModel: MainFragmentViewModel by viewModel()
     private val action = R.id.action_mainFragment_to_movieDetailsFragment
+    private var userIsLoggedIn : Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,10 +40,12 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        checkIsUserLoggedIn()
         getMovies()
         setUpObservers()
         setUpOnClickListeners()
         setUpSearchMoviesEditText()
+
     }
 
     private fun searchMovies(query: String) {
@@ -87,10 +91,18 @@ class MainFragment : Fragment() {
                 navigateToPopularFragment()
             }
             favoriteMovies.setOnClickListener {
-                navigateToFavoritesFragment()
+                if(userIsLoggedIn) {
+                    navigateToFavoritesFragment()
+                } else {
+                    showToast(requireContext(), getString(R.string.youMustBeLoggedIn))
+                }
             }
 
         }
+    }
+
+    private fun checkIsUserLoggedIn() {
+        mainFragmentViewModel.isUserLoggedIn()
     }
 
     private fun navigateToUpcomingFragment() {
@@ -184,6 +196,9 @@ class MainFragment : Fragment() {
                 }
                 searchedMoviesLiveData.observe(viewLifecycleOwner) {
                     setUpSearchedMoviesRecyclerViewAdapter(it)
+                }
+                isUserLoggedIn.observe(viewLifecycleOwner) {
+                    userIsLoggedIn = it
                 }
             }
         }

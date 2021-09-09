@@ -3,11 +3,11 @@ package com.amadev.rando.ui.fragments.favoritesFragment
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.amadev.rando.R
 import com.amadev.rando.model.MovieDetailsResults
 import com.amadev.rando.util.Util
-import com.google.firebase.database.*
-import com.amadev.rando.R
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 
 sealed class Messages {
     object FailedToLoadFavoriteMovies : Messages()
@@ -48,11 +48,14 @@ class FavoritesFragmentViewModel(
                 val favoriteMoviesList = ArrayList<MovieDetailsResults>()
 
                 snapshot.children.forEach { data ->
-                    val test = data.getValue(MovieDetailsResults::class.java)
-                    favoriteMoviesList.add(test!!)
+                    data.getValue(MovieDetailsResults::class.java)
+                        ?.let { favoriteMoviesList.add(it) }
                 }
+
                 _favoritesMoviesMutableLiveData.value = favoriteMoviesList
                 _progressBarVisibilityMutableLiveData.value = false
+
+
             }
 
             override fun onCancelled(error: DatabaseError) {

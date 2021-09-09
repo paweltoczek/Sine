@@ -97,7 +97,6 @@ class MovieDetailsFragment : Fragment() {
                     }
                     it?.overview?.let { overviewText ->
                         overviewTv.text = overviewText.trim()
-                        Log.e("overview", overviewText)
                     }
                     it?.poster_path?.let { uri ->
                         movieImage.loadImageWithGlide(uri, getProgressDrawable(requireContext()))
@@ -118,29 +117,22 @@ class MovieDetailsFragment : Fragment() {
     }
 
     private fun checkIfFirebaseContainsCurrentMovie(
-        favoriteMoviesList: ArrayList<MovieDetailsResults>,
+        favoriteMoviesList: ArrayList<MovieDetailsResults?>,
         movieId: Int
     ) {
-        Log.e("list", favoriteMoviesList.toString())
-        Log.e("id", movieId.toString())
-
         if (favoriteMoviesList.toString().contains(movieId.toString())) {
             binding.apply {
                 removeFromFavorites.visibility = View.VISIBLE
                 addToFavorites.visibility = View.GONE
-                Log.e("contains", "true")
-
             }
         } else {
             binding.apply {
                 removeFromFavorites.visibility = View.GONE
                 addToFavorites.visibility = View.VISIBLE
-                Log.e("contains", "false")
 
             }
         }
     }
-
 
     private fun setUpYoutubeIntent(videoEndPoint: String): Intent {
         if (videoEndPoint.isEmpty().not()) {

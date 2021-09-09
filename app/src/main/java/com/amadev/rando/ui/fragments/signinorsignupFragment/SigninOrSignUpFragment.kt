@@ -22,7 +22,6 @@ class SigninOrSignUpFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-//        return inflater.inflate(R.layout.fragment_signin_or_sign_up, container, false)
         _binding = FragmentSigninOrSignUpBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -49,7 +48,6 @@ class SigninOrSignUpFragment : Fragment() {
                 snack.show()
             }
         }
-
     }
 
     private fun setUpViewModel() {

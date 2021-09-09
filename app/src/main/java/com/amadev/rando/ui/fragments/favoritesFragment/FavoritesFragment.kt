@@ -11,6 +11,7 @@ import com.amadev.rando.adapter.MoviesRecyclerViewAdapter
 import com.amadev.rando.databinding.FragmentFavoritesBinding
 import com.amadev.rando.model.MovieDetailsResults
 import com.amadev.rando.util.Util.showSnackBar
+import com.amadev.rando.util.Util.showToast
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class FavoritesFragment : Fragment() {
@@ -75,12 +76,16 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun setUpFavoriteMoviesRecyclerview(favoriteMoviesList: ArrayList<MovieDetailsResults>) {
-        val reversedFavoriteMoviesList =
-            favoriteMoviesList.reversed() as ArrayList<MovieDetailsResults>
-        adapter.notifyDataSetChanged()
-        adapter.list.apply {
-            clear()
-            addAll(reversedFavoriteMoviesList)
+        if (favoriteMoviesList.toString().isEmpty().not()) {
+            val reversedFavoriteMoviesList =
+                favoriteMoviesList.reversed() as ArrayList<MovieDetailsResults>
+            adapter.notifyDataSetChanged()
+            adapter.list.apply {
+                clear()
+                addAll(reversedFavoriteMoviesList)
+            }
+        } else {
+            showToast(requireContext(), getString(R.string.thereIsNoMoviesHere))
         }
     }
 }

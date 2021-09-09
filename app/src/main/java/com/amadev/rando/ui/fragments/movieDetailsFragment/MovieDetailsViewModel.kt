@@ -50,7 +50,7 @@ class MovieDetailsViewModel(
     private val _popUpMessageMutableLiveData = MutableLiveData<String>()
     val popUpMessageMutableLiveData = _popUpMessageMutableLiveData
 
-    private val _favoriteMoviesMutableLiveData = MutableLiveData<ArrayList<MovieDetailsResults>>()
+    private val _favoriteMoviesMutableLiveData = MutableLiveData<ArrayList<MovieDetailsResults?>>()
     val favoriteMoviesMutableLiveData = _favoriteMoviesMutableLiveData
 
     private val username = provideFirebaseUsername()
@@ -114,12 +114,14 @@ class MovieDetailsViewModel(
             firebaseDatabase.getReference("Users")
                 .child(replaceFirebaseForbiddenChars(username))
                 .child(FAVORITE_MOVIES)
+                .child(movieId.toString())
 
-        firebaseReference
-            .child(movieId.toString()).removeValue()
+        firebaseReference.removeValue()
+
             .addOnSuccessListener {
                 popUpMessageMutableLiveData.value = getMessage(movieRemovedFromFavorites)
             }
+
             .addOnFailureListener {
                 popUpMessageMutableLiveData.value = getMessage(failedToRemoveMovie)
 
@@ -153,11 +155,11 @@ class MovieDetailsViewModel(
         val query: Query = firebaseReference
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val favoriteMoviesList = ArrayList<MovieDetailsResults>()
+                val favoriteMoviesList = ArrayList<MovieDetailsResults?>()
 
                 snapshot.children.forEach { data ->
-                    val test = data.getValue(MovieDetailsResults::class.java)
-                    favoriteMoviesList.add(test!!)
+                    val list = data.getValue(MovieDetailsResults::class.java)
+                    favoriteMoviesList.add(list)
                 }
                 _favoriteMoviesMutableLiveData.value = favoriteMoviesList
             }
