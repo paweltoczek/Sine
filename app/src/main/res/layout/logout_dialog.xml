@@ -23,12 +23,12 @@
         android:id="@+id/logout_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/glacial_indifference_bold"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/titilliumweb_regular"
         android:gravity="center"
-        android:text="@string/logout"
+        android:text="@string/doYouWantToLogOut"
         android:textColor="@color/black"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/linearLayout" />
@@ -45,22 +45,39 @@
         app:layout_constraintTop_toTopOf="@+id/linearLayout"
         android:focusable="true" />
 
-    <Button
-        android:id="@+id/logout_btn"
+    <TextView
+        android:id="@+id/logout_btn_yes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
         android:clickable="true"
-        android:text="@string/yes"
-        android:textSize="14sp"
-        android:layout_marginTop="20dp"
-        android:textColor="@color/black"
+        android:focusable="true"
         android:fontFamily="@font/glacial_indifference_regular"
-        app:layout_constraintEnd_toEndOf="@+id/linearLayout"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout"
-        app:layout_constraintTop_toBottomOf="@+id/logout_tv"
+        android:text="@string/yes"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+        app:layout_constraintEnd_toStartOf="@+id/logout_tv"
+        app:layout_constraintStart_toStartOf="@+id/logout_tv" />
+
+    <TextView
+        android:id="@+id/logout_btn_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:fontFamily="@font/glacial_indifference_bold"
+        android:text="@string/no"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="@+id/logout_tv"
+        app:layout_constraintStart_toEndOf="@+id/logout_tv"
         app:strokeColor="@color/black"
-        app:strokeWidth="1dp"
-        android:focusable="true" />
+        app:strokeWidth="1dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

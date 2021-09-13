@@ -24,13 +24,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:fontFamily="@font/glacial_indifference_bold"
                 android:text="@string/app_name"
                 android:textColor="@color/yellow_rating"
                 android:textSize="28sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/ic_baseline_exit_to_app_24"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="@id/appName"
+                app:layout_constraintStart_toEndOf="@id/appName"
+                app:layout_constraintTop_toTopOf="@id/appName" />
 
             <EditText
                 android:id="@+id/searchMoviesEditText"
@@ -68,13 +79,28 @@
                 android:id="@+id/favoriteMovies"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/ic_baseline_star_24"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="@+id/search"
-                app:layout_constraintEnd_toStartOf="@+id/search"
-                app:layout_constraintTop_toTopOf="@+id/search" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appName">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_baseline_star_24"
+                    android:gravity="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:fontFamily="@font/titilliumweb_regular"
+                    android:text="@string/favoriteMovies"
+                    android:textColor="@color/yellow_rating"
+                    android:textSize="14sp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/searchOff"
@@ -93,13 +119,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:fontFamily="@font/glacial_indifference_regular"
                 android:text="@string/upcoming"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/appName" />
+                app:layout_constraintTop_toBottomOf="@+id/favoriteMovies" />
 
             <TextView
                 android:id="@+id/upcomingMore"

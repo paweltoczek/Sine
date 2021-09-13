@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -18,6 +19,7 @@ import com.amadev.rando.adapter.MoviesRecyclerViewAdapter
 import com.amadev.rando.adapter.UpcomingMoviesRecyclerViewAdapter
 import com.amadev.rando.databinding.FragmentMainBinding
 import com.amadev.rando.model.MovieDetailsResults
+import com.amadev.rando.ui.dialogs.logout.LogoutDialog
 import com.amadev.rando.util.Util.showToast
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -26,7 +28,7 @@ class MainFragment : Fragment() {
     private val binding get() = _binding!!
     private val mainFragmentViewModel: MainFragmentViewModel by viewModel()
     private val action = R.id.action_mainFragment_to_movieDetailsFragment
-    private var userIsLoggedIn : Boolean = false
+    private var isUserLoggedIn: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,7 +47,26 @@ class MainFragment : Fragment() {
         setUpObservers()
         setUpOnClickListeners()
         setUpSearchMoviesEditText()
+        setUpOnBackPressedCallback()
 
+    }
+
+    private fun setUpOnBackPressedCallback() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (!isUserLoggedIn) {
+                    navigateToSignInOrSignUpFragment()
+                } else {
+                    activity?.finishAffinity()
+                }
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+
+    }
+
+    private fun navigateToSignInOrSignUpFragment() {
+        findNavController().navigate(R.id.action_mainFragment_to_signinOrSignUpFragment)
     }
 
     private fun searchMovies(query: String) {
@@ -90,8 +111,11 @@ class MainFragment : Fragment() {
             popularMore.setOnClickListener {
                 navigateToPopularFragment()
             }
+            logout.setOnClickListener {
+                provideLogoutDialog()
+            }
             favoriteMovies.setOnClickListener {
-                if(userIsLoggedIn) {
+                if (isUserLoggedIn) {
                     navigateToFavoritesFragment()
                 } else {
                     showToast(requireContext(), getString(R.string.youMustBeLoggedIn))
@@ -99,6 +123,11 @@ class MainFragment : Fragment() {
             }
 
         }
+    }
+
+    private fun provideLogoutDialog() {
+        val dialog = LogoutDialog()
+        dialog.show(childFragmentManager, null)
     }
 
     private fun checkIsUserLoggedIn() {
@@ -143,6 +172,8 @@ class MainFragment : Fragment() {
             setUpViewVisibilityGone(nowPlaying)
             setUpViewVisibilityGone(nowPlayingMore)
             setUpViewVisibilityGone(nowPlayingRecyclerView)
+            setUpViewVisibilityGone(search)
+            setUpViewVisibilityGone(favoriteMovies)
             setUpViewVisibilityVisible(searchMoviesEditText)
             setUpViewVisibilityVisible(searchedMoviesRecyclerView)
             setUpViewVisibilityVisible(searchedMoviesResults)
@@ -164,6 +195,8 @@ class MainFragment : Fragment() {
             setUpViewVisibilityVisible(nowPlaying)
             setUpViewVisibilityVisible(nowPlayingMore)
             setUpViewVisibilityVisible(nowPlayingRecyclerView)
+            setUpViewVisibilityVisible(search)
+            setUpViewVisibilityVisible(favoriteMovies)
             setUpViewVisibilityGone(searchedMoviesRecyclerView)
             setUpViewVisibilityGone(searchedMoviesResults)
             setUpViewVisibilityGone(searchOff)
@@ -198,7 +231,7 @@ class MainFragment : Fragment() {
                     setUpSearchedMoviesRecyclerViewAdapter(it)
                 }
                 isUserLoggedIn.observe(viewLifecycleOwner) {
-                    userIsLoggedIn = it
+                    this@MainFragment.isUserLoggedIn = it
                 }
             }
         }

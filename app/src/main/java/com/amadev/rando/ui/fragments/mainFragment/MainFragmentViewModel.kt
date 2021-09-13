@@ -1,7 +1,8 @@
 package com.amadev.rando.ui.fragments.mainFragment
 
 import android.content.Context
-import android.util.Log
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -62,6 +63,7 @@ class MainFragmentViewModel(
                     val results = it.results as ArrayList<MovieDetailsResults>
                     searchedMoviesMutableLiveData.postValue(results)
                 }
+
             } else if (response.isSuccessful.not()) {
                 popUpMessageMutableLiveData.postValue(getMessage(somethingWentWrong))
             }

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.amadev.rando.R
 import com.amadev.rando.YoutubeActivity
 import com.amadev.rando.adapter.CastRecyclerViewAdapter
 import com.amadev.rando.adapter.GenresRecyclerViewAdapter
@@ -18,6 +19,7 @@ import com.amadev.rando.util.Genres
 import com.amadev.rando.util.Util.getProgressDrawable
 import com.amadev.rando.util.Util.loadImageWithGlide
 import com.amadev.rando.util.Util.showSnackBar
+import com.amadev.rando.util.Util.showToast
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class MovieDetailsFragment : Fragment() {
@@ -27,6 +29,7 @@ class MovieDetailsFragment : Fragment() {
     private val movieDetailsViewModel: MovieDetailsViewModel by viewModel()
     lateinit var intent: Intent
     var movieId: Int? = null
+    private var userLogged: Boolean? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,10 +43,15 @@ class MovieDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setUpViewModel()
+        checkIsUserLoggedIn()
         setUpObservers()
+        setUpViewModel()
         setUpOnClickListeners()
 
+    }
+
+    private fun checkIsUserLoggedIn() {
+        movieDetailsViewModel.isUserLoggedIn()
     }
 
     private fun setUpOnClickListeners() {
@@ -52,7 +60,11 @@ class MovieDetailsFragment : Fragment() {
                 startYoutubeActivity()
             }
             addToFavorites.setOnClickListener {
-                addCurrentMovieToFavoriteMovies()
+                if (userLogged == true) {
+                    addCurrentMovieToFavoriteMovies()
+                } else {
+                    showToast(requireContext(), getString(R.string.youMustBeLoggedIn))
+                }
             }
             removeFromFavorites.setOnClickListener {
                 removeCurrentMovieFromFavorites(movieId)
@@ -71,6 +83,12 @@ class MovieDetailsFragment : Fragment() {
     private fun setUpObservers() {
         binding.apply {
             movieDetailsViewModel.apply {
+                isUserLoggedIn.observe(viewLifecycleOwner) {
+                    userLogged = it
+                    if(it == true) {
+                        getFavoriteMovies()
+                    }
+                }
                 castList.observe(viewLifecycleOwner) {
                     setUpCastRecyclerView(it as ArrayList<CastModelResults>)
                 }
@@ -81,7 +99,7 @@ class MovieDetailsFragment : Fragment() {
                     showSnackBar(requireView(), it)
                 }
                 movieDetailsMutableLiveData.observe(viewLifecycleOwner) {
-                    it?.id?.let { movieId = it }
+                    it?.id?.let { movieIdNo -> movieId = movieIdNo }
                     it?.genre_ids?.let { genresIntList ->
                         setUpMovieGenresRecyclerView(setUpGenreList(genresIntList))
                     }
@@ -129,7 +147,6 @@ class MovieDetailsFragment : Fragment() {
             binding.apply {
                 removeFromFavorites.visibility = View.GONE
                 addToFavorites.visibility = View.VISIBLE
-
             }
         }
     }
@@ -188,13 +205,10 @@ class MovieDetailsFragment : Fragment() {
         return arguments?.getParcelable<MovieDetailsResults>("movieDetails")
     }
 
-
     private fun setUpViewModel() {
         movieDetailsViewModel.apply {
             setUpMovieDetails(getMovieDetailsArgs())
-            getFavoriteMovies()
         }
     }
-
 
 }

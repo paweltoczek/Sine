@@ -120,6 +120,12 @@
         <action
             android:id="@+id/action_mainFragment_to_upcomingFragment2"
             app:destination="@id/upcomingFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_signinOrSignUpFragment"
+            app:destination="@id/signinOrSignUpFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_welcomeScreen"
+            app:destination="@id/welcomeScreen" />
     </fragment>
     <fragment
         android:id="@+id/movieDetailsFragment"

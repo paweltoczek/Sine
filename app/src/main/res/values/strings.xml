@@ -67,4 +67,6 @@
     <string name="youMustBeLoggedIn">You must be logged in</string>
     <string name="noMoviesHere">No movies here</string>
     <string name="thereIsNoMoviesHere">There is no movies here</string>
+    <string name="doYouWantToLogOut">Do you want to logout?</string>
+    <string name="no">No</string>
 </resources>

@@ -21,6 +21,7 @@ sealed class Messages {
     object AddedToFavorites : Messages()
     object MovieRemovedFromFavorites : Messages()
     object FailedToRemoveMovie : Messages()
+    object YouMustBeLoggedIn : Messages()
 }
 
 class MovieDetailsViewModel(
@@ -36,6 +37,7 @@ class MovieDetailsViewModel(
         val addedToFavorites = Messages.AddedToFavorites
         val movieRemovedFromFavorites = Messages.MovieRemovedFromFavorites
         val failedToRemoveMovie = Messages.FailedToRemoveMovie
+        val youMustBeLoggedIn = Messages.YouMustBeLoggedIn
     }
 
     private val _movieDetailsMutableLiveData = MutableLiveData<MovieDetailsResults?>()
@@ -53,7 +55,11 @@ class MovieDetailsViewModel(
     private val _favoriteMoviesMutableLiveData = MutableLiveData<ArrayList<MovieDetailsResults?>>()
     val favoriteMoviesMutableLiveData = _favoriteMoviesMutableLiveData
 
-    private val username = provideFirebaseUsername()
+    private val _isUserLoggedInMutableLiveData = MutableLiveData<Boolean>()
+    var isUserLoggedIn = _isUserLoggedInMutableLiveData
+
+    private var username = provideFirebaseUsername()
+
 
     fun setUpMovieDetails(results: MovieDetailsResults?) {
         if (results != null) {
@@ -109,6 +115,10 @@ class MovieDetailsViewModel(
         }
     }
 
+    fun isUserLoggedIn() {
+        _isUserLoggedInMutableLiveData.value = firebaseAuth.currentUser != null
+    }
+
     fun removeCurrentMovieFromFavoriteMovies(movieId: Int?) {
         val firebaseReference =
             firebaseDatabase.getReference("Users")
@@ -117,14 +127,12 @@ class MovieDetailsViewModel(
                 .child(movieId.toString())
 
         firebaseReference.removeValue()
-
             .addOnSuccessListener {
                 popUpMessageMutableLiveData.value = getMessage(movieRemovedFromFavorites)
             }
 
             .addOnFailureListener {
                 popUpMessageMutableLiveData.value = getMessage(failedToRemoveMovie)
-
             }
     }
 
@@ -172,7 +180,6 @@ class MovieDetailsViewModel(
 
     private fun provideFirebaseUsername(): String {
         val currentUser = firebaseAuth.currentUser
-        lateinit var username: String
         currentUser?.let {
             for (profiler in it.providerData) {
                 username = profiler.email.toString()
@@ -188,5 +195,6 @@ class MovieDetailsViewModel(
             is Messages.FailedToLoadFavoriteMovies -> context.getString(R.string.failedToLoadFavoriteMovies)
             is Messages.MovieRemovedFromFavorites -> context.getString(R.string.movieRemovedFromFavorites)
             is Messages.FailedToRemoveMovie -> context.getString(R.string.failedToRemoveMovie)
+            is Messages.YouMustBeLoggedIn -> context.getString(R.string.youMustBeLoggedIn)
         }
 }

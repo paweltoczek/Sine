@@ -11,6 +11,7 @@ import com.google.firebase.database.*
 
 sealed class Messages {
     object FailedToLoadFavoriteMovies : Messages()
+    object ThereIsNoMoviesHere : Messages()
 }
 
 class FavoritesFragmentViewModel(
@@ -22,6 +23,7 @@ class FavoritesFragmentViewModel(
     companion object {
         const val FAVORITE_MOVIES = "Favorite movies"
         val failedToLoadFavoriteMovies = Messages.FailedToLoadFavoriteMovies
+        val thereIsNoMoviesHere = Messages.ThereIsNoMoviesHere
     }
 
     private val username = provideFirebaseUsername()
@@ -45,23 +47,32 @@ class FavoritesFragmentViewModel(
         val query: Query = firebaseReference
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val favoriteMoviesList = ArrayList<MovieDetailsResults>()
+                _progressBarVisibilityMutableLiveData.value = false
 
+                val favoriteMoviesList = ArrayList<MovieDetailsResults>()
                 snapshot.children.forEach { data ->
                     data.getValue(MovieDetailsResults::class.java)
                         ?.let { favoriteMoviesList.add(it) }
                 }
 
-                _favoritesMoviesMutableLiveData.value = favoriteMoviesList
-                _progressBarVisibilityMutableLiveData.value = false
-
-
+                if (favoriteMoviesList.isEmpty().not()) {
+                    when {
+                        favoriteMoviesList.size > 1 -> {
+                            _favoritesMoviesMutableLiveData.value =
+                                favoriteMoviesList.reversed() as ArrayList<MovieDetailsResults>
+                        }
+                        else -> {
+                            _favoritesMoviesMutableLiveData.value = favoriteMoviesList
+                        }
+                    }
+                } else {
+                    _popUpMessageMutableLiveData.value = getMessages(thereIsNoMoviesHere)
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 _progressBarVisibilityMutableLiveData.value = false
                 _popUpMessageMutableLiveData.value = getMessages(failedToLoadFavoriteMovies)
-
             }
         })
     }
@@ -69,6 +80,7 @@ class FavoritesFragmentViewModel(
     private fun getMessages(messages: Messages) =
         when (messages) {
             is Messages.FailedToLoadFavoriteMovies -> context.getString(R.string.failedToLoadFavoriteMovies)
+            is Messages.ThereIsNoMoviesHere -> context.getString(R.string.thereIsNoMoviesHere)
         }
 
     private fun provideFirebaseUsername(): String {
