@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +30,6 @@ class MainFragment : Fragment() {
     private val mainFragmentViewModel: MainFragmentViewModel by viewModel()
     private val action = R.id.action_mainFragment_to_movieDetailsFragment
     private var isUserLoggedIn: Boolean = false
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,6 +48,7 @@ class MainFragment : Fragment() {
         setUpOnClickListeners()
         setUpSearchMoviesEditText()
         setUpOnBackPressedCallback()
+        Log.e("test", "gitignoreTest")
 
     }
 
